@@ -1,5 +1,5 @@
 //
-// Lilliput.h
+// ByteOrderTests.swift
 // Lilliput
 //
 // Copyright (c) 2014 Justin Kolb - https://github.com/jkolb/Lilliput
@@ -23,12 +23,30 @@
 // THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+import XCTest
 
-//! Project version number for Lilliput.
-FOUNDATION_EXPORT double LilliputVersionNumber;
+class ByteOrderTests: XCTestCase {
 
-//! Project version string for Lilliput.
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+    override func setUp() {
+        super.setUp()
+        // Put setup code here. This method is called before the invocation of each test method in the class.
+    }
+    
+    override func tearDown() {
+        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        super.tearDown()
+    }
 
-// In this header, you should import all the public headers of your framework using statements like #import <Lilliput/PublicHeader.h>
+    func testExample() {
+        // This is an example of a functional test case.
+        XCTAssert(true, "Pass")
+    }
+
+    func testPerformanceExample() {
+        // This is an example of a performance test case.
+        self.measureBlock() {
+            // Put the code you want to measure the time of here.
+        }
+    }
+
+}

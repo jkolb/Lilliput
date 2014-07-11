@@ -9,7 +9,11 @@
 /* Begin PBXBuildFile section */
 		E5BDC5C7196F698B001ABC11 /* Lilliput.h in Headers */ = {isa = PBXBuildFile; fileRef = E5BDC5C6196F698B001ABC11 /* Lilliput.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E5BDC5CD196F698C001ABC11 /* Lilliput.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5BDC5C1196F698B001ABC11 /* Lilliput.framework */; };
-		E5BDC5D4196F698C001ABC11 /* LilliputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5D3196F698C001ABC11 /* LilliputTests.swift */; };
+		E5BDC5DF196F6AC0001ABC11 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DD196F6AC0001ABC11 /* ByteBuffer.swift */; };
+		E5BDC5E0196F6AC0001ABC11 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */; };
+		E5BDC5E2196F6BD2001ABC11 /* ByteOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5E1196F6BD2001ABC11 /* ByteOrderTests.swift */; };
+		E5BDC5E4196F6BFC001ABC11 /* ByteBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5E3196F6BFC001ABC11 /* ByteBufferTests.swift */; };
+		E5BDC5EC196F9B79001ABC11 /* BinaryFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5EB196F9B79001ABC11 /* BinaryFile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,7 +32,11 @@
 		E5BDC5C6196F698B001ABC11 /* Lilliput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Lilliput.h; sourceTree = "<group>"; };
 		E5BDC5CC196F698C001ABC11 /* LilliputTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LilliputTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5BDC5D2196F698C001ABC11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E5BDC5D3196F698C001ABC11 /* LilliputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LilliputTests.swift; sourceTree = "<group>"; };
+		E5BDC5DD196F6AC0001ABC11 /* ByteBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBuffer.swift; sourceTree = "<group>"; };
+		E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteOrder.swift; sourceTree = "<group>"; };
+		E5BDC5E1196F6BD2001ABC11 /* ByteOrderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteOrderTests.swift; sourceTree = "<group>"; };
+		E5BDC5E3196F6BFC001ABC11 /* ByteBufferTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBufferTests.swift; sourceTree = "<group>"; };
+		E5BDC5EB196F9B79001ABC11 /* BinaryFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinaryFile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +80,9 @@
 			isa = PBXGroup;
 			children = (
 				E5BDC5C6196F698B001ABC11 /* Lilliput.h */,
+				E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */,
+				E5BDC5DD196F6AC0001ABC11 /* ByteBuffer.swift */,
+				E5BDC5EB196F9B79001ABC11 /* BinaryFile.swift */,
 				E5BDC5C4196F698B001ABC11 /* Supporting Files */,
 			);
 			path = Lilliput;
@@ -88,7 +99,8 @@
 		E5BDC5D0196F698C001ABC11 /* LilliputTests */ = {
 			isa = PBXGroup;
 			children = (
-				E5BDC5D3196F698C001ABC11 /* LilliputTests.swift */,
+				E5BDC5E1196F6BD2001ABC11 /* ByteOrderTests.swift */,
+				E5BDC5E3196F6BFC001ABC11 /* ByteBufferTests.swift */,
 				E5BDC5D1196F698C001ABC11 /* Supporting Files */,
 			);
 			path = LilliputTests;
@@ -210,6 +222,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5BDC5E0196F6AC0001ABC11 /* ByteOrder.swift in Sources */,
+				E5BDC5EC196F9B79001ABC11 /* BinaryFile.swift in Sources */,
+				E5BDC5DF196F6AC0001ABC11 /* ByteBuffer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,7 +232,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E5BDC5D4196F698C001ABC11 /* LilliputTests.swift in Sources */,
+				E5BDC5E2196F6BD2001ABC11 /* ByteOrderTests.swift in Sources */,
+				E5BDC5E4196F6BFC001ABC11 /* ByteBufferTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
