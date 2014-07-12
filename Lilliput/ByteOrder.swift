@@ -33,6 +33,26 @@ protocol ByteOrder {
     func fromNative(value: UInt64) -> UInt64
 }
 
+func nativeOrder() -> ByteOrder {
+    if (UInt16(littleEndian: 1) == UInt16(1).littleEndian) {
+        return LittleEndian()
+    } else if (UInt16(bigEndian: 1) == UInt16(1).bigEndian) {
+        return BigEndian()
+    } else {
+        fatalError("Unknown byte order")
+    }
+}
+
+func foreignOrder() -> ByteOrder {
+    if (UInt16(littleEndian: 1) == UInt16(1).littleEndian) {
+        return BigEndian()
+    } else if (UInt16(bigEndian: 1) == UInt16(1).bigEndian) {
+        return LittleEndian()
+    } else {
+        fatalError("Unknown byte order")
+    }
+}
+
 struct LittleEndian : ByteOrder {
     func toNative(value: UInt16) -> UInt16 {
         return UInt16(littleEndian: value)

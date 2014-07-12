@@ -14,6 +14,7 @@
 		E5BDC5E2196F6BD2001ABC11 /* ByteOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5E1196F6BD2001ABC11 /* ByteOrderTests.swift */; };
 		E5BDC5E4196F6BFC001ABC11 /* ByteBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5E3196F6BFC001ABC11 /* ByteBufferTests.swift */; };
 		E5BDC5EC196F9B79001ABC11 /* BinaryFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5EB196F9B79001ABC11 /* BinaryFile.swift */; };
+		E5F44F051970D09300F33358 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -232,6 +233,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5F44F051970D09300F33358 /* ByteOrder.swift in Sources */,
 				E5BDC5E2196F6BD2001ABC11 /* ByteOrderTests.swift in Sources */,
 				E5BDC5E4196F6BFC001ABC11 /* ByteBufferTests.swift in Sources */,
 			);
@@ -414,6 +416,7 @@
 				E5BDC5D9196F698C001ABC11 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E5BDC5DA196F698C001ABC11 /* Build configuration list for PBXNativeTarget "LilliputTests" */ = {
 			isa = XCConfigurationList;
@@ -422,6 +425,7 @@
 				E5BDC5DC196F698C001ABC11 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
