@@ -40,6 +40,15 @@ class ByteBuffer {
         buffer.dealloc(length)
         bits.dealloc(sizeof(UIntMax))
     }
+
+    func seek(offset: Int) {
+        self.offset = offset
+    }
+    
+    func fill(data: Array<UInt8>) {
+        let fillLength = min(data.count, length)
+        buffer.initializeFrom(data[0..<fillLength])
+    }
     
     func nextInt8() -> Int8 {
         return nextUInt8().asSigned()

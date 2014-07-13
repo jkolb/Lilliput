@@ -26,27 +26,42 @@
 import XCTest
 
 class ByteBufferTests: XCTestCase {
-
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    func testFill() {
+        let buffer = ByteBuffer(order: BigEndian(), length: 4)
+        buffer.fill([1, 2, 3, 4])
+        XCTAssertEqual(UInt8(1), buffer.nextUInt8(), "Fail")
+        XCTAssertEqual(UInt8(2), buffer.nextUInt8(), "Fail")
+        XCTAssertEqual(UInt8(3), buffer.nextUInt8(), "Fail")
+        XCTAssertEqual(UInt8(4), buffer.nextUInt8(), "Fail")
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+    func testNextUInt16() {
+        let bigEndian = ByteBuffer(order: BigEndian(), length: 4)
+        bigEndian.fill([0x00, 0xFF])
+        XCTAssertEqual(UInt16(0x00FF), bigEndian.nextUInt16(), "Fail")
+        
+        let littleEndian = ByteBuffer(order: LittleEndian(), length: 4)
+        littleEndian.fill([0x00, 0xFF])
+        XCTAssertEqual(UInt16(0xFF00), littleEndian.nextUInt16(), "Fail")
     }
-
-    func testExample() {
-        // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
+    
+    func testNextUInt32() {
+        let bigEndian = ByteBuffer(order: BigEndian(), length: 4)
+        bigEndian.fill([0x00, 0x00, 0x00, 0xFF])
+        XCTAssertEqual(UInt32(0x000000FF), bigEndian.nextUInt32(), "Fail")
+        
+        let littleEndian = ByteBuffer(order: LittleEndian(), length: 4)
+        littleEndian.fill([0x00, 0x00, 0x00, 0xFF])
+        XCTAssertEqual(UInt32(0xFF000000), littleEndian.nextUInt32(), "Fail")
     }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock() {
-            // Put the code you want to measure the time of here.
-        }
+    
+    func testNextFloat32() {
+        let bigEndian = ByteBuffer(order: BigEndian(), length: 4)
+        bigEndian.fill([0x3F, 0x80, 0x00, 0x00])
+        XCTAssertEqual(Float32(1.0), bigEndian.nextFloat32(), "Fail")
+        
+        let littleEndian = ByteBuffer(order: LittleEndian(), length: 4)
+        littleEndian.fill([0x00, 0x00, 0x80, 0x3F])
+        XCTAssertEqual(Float32(1.0), littleEndian.nextFloat32(), "Fail")
     }
-
 }
