@@ -36,11 +36,11 @@ class ByteBufferTests: XCTestCase {
     }
     
     func testNextUInt16() {
-        let bigEndian = ByteBuffer(order: BigEndian(), length: 4)
+        let bigEndian = ByteBuffer(order: BigEndian(), length: 2)
         bigEndian.fill([0x00, 0xFF])
         XCTAssertEqual(UInt16(0x00FF), bigEndian.nextUInt16(), "Fail")
         
-        let littleEndian = ByteBuffer(order: LittleEndian(), length: 4)
+        let littleEndian = ByteBuffer(order: LittleEndian(), length: 2)
         littleEndian.fill([0x00, 0xFF])
         XCTAssertEqual(UInt16(0xFF00), littleEndian.nextUInt16(), "Fail")
     }
@@ -53,6 +53,16 @@ class ByteBufferTests: XCTestCase {
         let littleEndian = ByteBuffer(order: LittleEndian(), length: 4)
         littleEndian.fill([0x00, 0x00, 0x00, 0xFF])
         XCTAssertEqual(UInt32(0xFF000000), littleEndian.nextUInt32(), "Fail")
+    }
+    
+    func testNextUInt64() {
+        let bigEndian = ByteBuffer(order: BigEndian(), length: 8)
+        bigEndian.fill([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF])
+        XCTAssertEqual(UInt64(0x00000000000000FF), bigEndian.nextUInt64(), "Fail")
+        
+        let littleEndian = ByteBuffer(order: LittleEndian(), length: 8)
+        littleEndian.fill([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00])
+        XCTAssertEqual(UInt64(0x00FF000000000000), littleEndian.nextUInt64(), "Fail")
     }
     
     func testNextFloat32() {
