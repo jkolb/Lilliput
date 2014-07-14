@@ -24,61 +24,90 @@
 //
 
 class BinaryFile {
-    var handle: UnsafePointer<FILE>
+    let fileDescriptor: CInt
+    let closeOnDeinit: Bool
     
     class func openForReading(path: String) -> BinaryFile? {
-        var file = BinaryFile(path: path, mode: "r")
-        if file.handle == UnsafePointer<FILE>.null() {
-            return nil
-        }
-        return file
+        return openBinaryFile(path, flags: O_RDONLY)
     }
     
     class func openForWriting(path: String) -> BinaryFile? {
-        var file = BinaryFile(path: path, mode: "w")
-        if file.handle == UnsafePointer<FILE>.null() {
-            return nil
-        }
-        return file
+        return openBinaryFile(path, flags: O_WRONLY)
     }
     
     class func openForUpdating(path: String) -> BinaryFile? {
-        var file = BinaryFile(path: path, mode: "rw")
-        if file.handle == UnsafePointer<FILE>.null() {
-            return nil
-        }
-        return file
+        return openBinaryFile(path, flags: O_RDWR)
     }
     
-    init(path: String, mode: String) {
-        var handle: UnsafePointer<FILE>!
+    class func openBinaryFile(path: String, flags: CInt) -> BinaryFile? {
+        var fd: CInt = -1
         
         path.withCString {
-            cPath in mode.withCString {
-                cMode in handle = fopen(cPath, cMode)
-            }
+            cPath in fd = open(cPath, flags)
         }
         
-        self.handle = handle
+        if (fd == -1) {
+            return nil;
+        }
+        
+        return BinaryFile(fileDescriptor: fd)
+    }
+    
+    init(fileDescriptor: CInt, closeOnDeinit: Bool = true) {
+        assert(fileDescriptor >= 0)
+        self.fileDescriptor = fileDescriptor
+        self.closeOnDeinit = closeOnDeinit
     }
     
     deinit {
-        if handle != UnsafePointer<FILE>.null() {
-            fclose(handle)
+        if (closeOnDeinit) {
+            close(fileDescriptor)
         }
     }
     
-    func read(buffer: ByteBuffer) -> Int {
-        return Int(fread(buffer.buffer, UInt(sizeof(UInt8)), UInt(buffer.length), handle))
+    func readBuffer(buffer: ByteBuffer) -> Int {
+        let bytesRead = read(fileDescriptor, buffer.data + buffer.position, UInt(buffer.remaining))
+        
+        if (bytesRead < 0) {
+            // error!
+            return -1
+        } else if (bytesRead == 0) {
+            // EOF
+            return 0
+        } else {
+            buffer.position += bytesRead
+            return bytesRead
+        }
     }
     
-    func write(buffer: ByteBuffer, length: Int) -> Int {
-        return Int(fwrite(buffer.buffer, UInt(sizeof(UInt8)), UInt(length), handle))
+    func writeBuffer(buffer: ByteBuffer) -> Int {
+        let bytesWritten = write(fileDescriptor, buffer.data + buffer.position, UInt(buffer.remaining))
+        
+        if (bytesWritten < 0) {
+            // error!
+            return -1
+        } else {
+            buffer.position += bytesWritten
+            return bytesWritten
+        }
     }
     
-    func seek(offset: Int) {
-        //SEEK_SET, SEEK_CUR, or SEEK_END
-        let result = fseek(handle, offset, SEEK_SET)
+    func seekFromStart(offset: Int) {
+        let result = lseek(fileDescriptor, off_t(offset), SEEK_SET)
+        if (result == -1) {
+            // error!
+        }
+    }
+    
+    func seekFromCurrent(offset: Int) {
+        let result = lseek(fileDescriptor, off_t(offset), SEEK_CUR)
+        if (result == -1) {
+            // error!
+        }
+    }
+    
+    func seekFromEnd(offset: Int) {
+        let result = lseek(fileDescriptor, off_t(offset), SEEK_END)
         if (result == -1) {
             // error!
         }

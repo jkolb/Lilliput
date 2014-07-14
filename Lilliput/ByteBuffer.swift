@@ -25,132 +25,218 @@
 
 class ByteBuffer {
     let order: ByteOrder
-    let buffer: UnsafePointer<UInt8>
-    let length: Int
+    var data: UnsafePointer<UInt8>
+    let capacity: Int
     let bits = UnsafePointer<UInt8>.alloc(sizeof(UIntMax))
-    var offset = 0
+    var privatePosition = 0
+    var privateLimit = 0
+    var privateMark = -1
     
-    init(order: ByteOrder, length: Int) {
+    init(order: ByteOrder, capacity: Int) {
         self.order = order
-        self.length = length
-        self.buffer = UnsafePointer<UInt8>.alloc(length)
+        self.capacity = capacity
+        self.data = UnsafePointer<UInt8>.alloc(capacity)
+        
+        self.limit = capacity
     }
 
     deinit {
-        buffer.dealloc(length)
+        data.dealloc(capacity)
         bits.dealloc(sizeof(UIntMax))
     }
+    
+    var limit: Int {
+    get {
+        return privateLimit
+    }
+    set {
+        if (newValue < 0 || newValue > capacity) {
+            fatalError("Illegal limit")
+        }
+        privateLimit = newValue
+        
+        if (privatePosition > privateLimit) {
+            privatePosition = privateLimit
+        }
+        
+        if (privateMark > privateLimit) {
+            privateMark = -1
+        }
+    }
+    }
+    
+    var position: Int {
+    get {
+        return privatePosition
+    }
+    set {
+        if (newValue < 0 || newValue > limit) {
+            fatalError("Illegal position")
+        }
+        privatePosition = newValue
+        
+        if (privateMark > privatePosition) {
+            privateMark = -1
+        }
+    }
+    }
+    
+    var hasRemaining: Bool {
+    return remaining > 0
+    }
+    
+    var remaining: Int {
+    return limit - position
+    }
+    
+    func mark() {
+        privateMark = position
+    }
 
-    func seek(offset: Int) {
-        self.offset = offset
+    func reset() {
+        if (privateMark == -1) {
+            fatalError("Invalid mark")
+        }
+        position = privateMark
     }
     
-    func fill(data: Array<UInt8>) {
-        let fillLength = min(data.count, length)
-        buffer.initializeFrom(data[0..<fillLength])
+    func rewind() {
+        position = 0
+        privateMark = -1
     }
     
-    func nextInt8() -> Int8 {
-        return nextUInt8().asSigned()
+    func clear() {
+        rewind()
+        limit = capacity
     }
     
-    func nextInt16() -> Int16 {
-        return nextUInt16().asSigned()
+    func flip() {
+        privateLimit = privatePosition
+        privatePosition = 0
+        privateMark = -1
     }
     
-    func nextInt32() -> Int32 {
-        return nextUInt32().asSigned()
+    func compact() {
+        data.moveInitializeFrom(data+position, count: remaining)
+        position = remaining
+        limit = capacity
     }
     
-    func nextInt64() -> Int64 {
-        return nextUInt64().asSigned()
+    func put(source: Array<UInt8>) {
+        put(source, offset: 0, length: source.count)
     }
     
-    func nextUInt8() -> UInt8 {
-        return buffer[offset++]
+    func put(source: Array<UInt8>, offset: Int, length: Int) {
+        if (length > remaining) {
+            fatalError("Buffer overflow")
+        }
+
+        let destination = data + position
+        destination.initializeFrom(source[offset..<offset+length])
+        position += length
+    }
+    
+    func getInt8() -> Int8 {
+        return getUInt8().asSigned()
+    }
+    
+    func getInt16() -> Int16 {
+        return getUInt16().asSigned()
+    }
+    
+    func getInt32() -> Int32 {
+        return getUInt32().asSigned()
+    }
+    
+    func getInt64() -> Int64 {
+        return getUInt64().asSigned()
+    }
+    
+    func getUInt8() -> UInt8 {
+        return data[position++]
     }
 
-    func nextUInt16() -> UInt16 {
+    func getUInt16() -> UInt16 {
         return order.toNative(readBytes())
     }
     
-    func nextUInt24() -> UInt32 {
+    func getUInt24() -> UInt32 {
         return order.toNative(readBytes())
     }
     
-    func nextUInt32() -> UInt32 {
+    func getUInt32() -> UInt32 {
         return order.toNative(readBytes())
     }
     
-    func nextUInt64() -> UInt64 {
+    func getUInt64() -> UInt64 {
         return order.toNative(readBytes())
     }
     
-    func nextFloat32() -> Float32 {
-        UnsafePointer<UInt32>(bits).memory = nextUInt32()
+    func getFloat32() -> Float32 {
+        UnsafePointer<UInt32>(bits).memory = getUInt32()
         return UnsafePointer<Float32>(bits).memory
     }
     
-    func nextFloat64() -> Float64 {
-        UnsafePointer<UInt64>(bits).memory = nextUInt64()
+    func getFloat64() -> Float64 {
+        UnsafePointer<UInt64>(bits).memory = getUInt64()
         return UnsafePointer<Float64>(bits).memory
     }
     
     func readBytes<T>() -> T {
         for index in 0..<sizeof(T) {
-            bits[index] = buffer[offset++]
+            bits[index] = data[position++]
         }
         
         return UnsafePointer<T>(bits).memory
     }
     
-    func nextInt8(value: Int8) {
-        nextUInt8(value.asUnsigned())
+    func putInt8(value: Int8) {
+        putUInt8(value.asUnsigned())
     }
     
-    func nextInt16(value: Int16) {
-        nextUInt16(value.asUnsigned())
+    func putInt16(value: Int16) {
+        putUInt16(value.asUnsigned())
     }
     
-    func nextInt32(value: Int32) {
-        nextUInt32(value.asUnsigned())
+    func putInt32(value: Int32) {
+        putUInt32(value.asUnsigned())
     }
     
-    func nextInt64(value: Int64) {
-        nextUInt64(value.asUnsigned())
+    func putInt64(value: Int64) {
+        putUInt64(value.asUnsigned())
     }
     
-    func nextUInt8(value: UInt8) {
-        buffer[offset++] = value
+    func putUInt8(value: UInt8) {
+        data[position++] = value
     }
     
-    func nextUInt16(value: UInt16) {
+    func putUInt16(value: UInt16) {
         writeBytes(order.fromNative(value))
     }
     
-    func nextUInt32(value: UInt32) {
+    func putUInt32(value: UInt32) {
         writeBytes(order.fromNative(value))
     }
     
-    func nextUInt64(value: UInt64) {
+    func putUInt64(value: UInt64) {
         writeBytes(order.fromNative(value))
     }
     
-    func nextFloat32(value: Float32) {
+    func putFloat32(value: Float32) {
         UnsafePointer<Float32>(bits).memory = value
-        nextUInt32(UnsafePointer<UInt32>(bits).memory)
+        putUInt32(UnsafePointer<UInt32>(bits).memory)
     }
     
-    func nextFloat64(value: Float64) {
+    func putFloat64(value: Float64) {
         UnsafePointer<Float64>(bits).memory = value
-        nextUInt64(UnsafePointer<UInt64>(bits).memory)
+        putUInt64(UnsafePointer<UInt64>(bits).memory)
     }
     
     func writeBytes<T>(value: T) {
         UnsafePointer<T>(bits).memory = value
         
         for index in 0..<sizeof(T) {
-            buffer[offset++] = bits[index]
+            data[position++] = bits[index]
         }
     }
 }
