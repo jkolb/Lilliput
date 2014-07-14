@@ -65,27 +65,28 @@ class BinaryFile {
         }
     }
     
-    func readBuffer(buffer: ByteBuffer) -> Int {
+    func readBuffer(buffer: ByteBuffer, inout error: Int) -> Int? {
         let bytesRead = read(fileDescriptor, buffer.data + buffer.position, UInt(buffer.remaining))
         
         if (bytesRead < 0) {
             // error!
-            return -1
+            error = Int(errno)
+            return nil
         } else if (bytesRead == 0) {
             // EOF
-            return 0
+            return -1
         } else {
             buffer.position += bytesRead
             return bytesRead
         }
     }
     
-    func writeBuffer(buffer: ByteBuffer) -> Int {
+    func writeBuffer(buffer: ByteBuffer, inout error: Int) -> Int? {
         let bytesWritten = write(fileDescriptor, buffer.data + buffer.position, UInt(buffer.remaining))
         
         if (bytesWritten < 0) {
-            // error!
-            return -1
+            error = Int(errno)
+            return nil
         } else {
             buffer.position += bytesWritten
             return bytesWritten
