@@ -23,6 +23,9 @@
 // THE SOFTWARE.
 //
 
+typealias Offset = off_t
+typealias ByteCount = ssize_t
+
 class BinaryFile {
     let fileDescriptor: CInt
     let closeOnDeinit: Bool
@@ -65,27 +68,23 @@ class BinaryFile {
         }
     }
     
-    func readBuffer(buffer: ByteBuffer, inout error: Int) -> Int? {
+    func readBuffer(buffer: ByteBuffer, inout error: Error) -> ByteCount? {
         let bytesRead = read(fileDescriptor, buffer.data + buffer.position, UInt(buffer.remaining))
         
         if (bytesRead < 0) {
-            // error!
-            error = Int(errno)
+            error = Error(code: Int(errno))
             return nil
-        } else if (bytesRead == 0) {
-            // EOF
-            return -1
         } else {
             buffer.position += bytesRead
             return bytesRead
         }
     }
     
-    func writeBuffer(buffer: ByteBuffer, inout error: Int) -> Int? {
+    func writeBuffer(buffer: ByteBuffer, inout error: Error) -> ByteCount? {
         let bytesWritten = write(fileDescriptor, buffer.data + buffer.position, UInt(buffer.remaining))
         
         if (bytesWritten < 0) {
-            error = Int(errno)
+            error = Error(code: Int(errno))
             return nil
         } else {
             buffer.position += bytesWritten
@@ -93,24 +92,37 @@ class BinaryFile {
         }
     }
     
-    func seekFromStart(offset: Int) {
-        let result = lseek(fileDescriptor, off_t(offset), SEEK_SET)
-        if (result == -1) {
-            // error!
+    func seekFromStart(offset: Offset, inout error: Error) -> Offset? {
+        let offset = lseek(fileDescriptor, off_t(offset), SEEK_SET)
+        if (offset < 0) {
+            error = Error(code: Int(errno))
+            return nil
+        } else {
+            return offset
         }
     }
     
-    func seekFromCurrent(offset: Int) {
-        let result = lseek(fileDescriptor, off_t(offset), SEEK_CUR)
-        if (result == -1) {
-            // error!
+    func seekFromCurrent(offset: Offset, inout error: Error) -> Offset? {
+        let offset = lseek(fileDescriptor, off_t(offset), SEEK_CUR)
+        if (offset < 0) {
+            error = Error(code: Int(errno))
+            return nil
+        } else {
+            return offset
         }
     }
     
-    func seekFromEnd(offset: Int) {
-        let result = lseek(fileDescriptor, off_t(offset), SEEK_END)
-        if (result == -1) {
-            // error!
+    func seekFromEnd(offset: Offset, inout error: Error) -> Offset? {
+        let offset = lseek(fileDescriptor, off_t(offset), SEEK_END)
+        if (offset < 0) {
+            error = Error(code: Int(errno))
+            return nil
+        } else {
+            return offset
         }
+    }
+    
+    struct Error {
+        let code: Int
     }
 }
