@@ -213,63 +213,43 @@ class ByteBuffer {
     }
     
     func getInt8(length: Int) -> Array<Int8> {
-        return getArray(length, defaultValue: 0) {
-            self.getInt8()
-        }
+        return getArray(length, defaultValue: 0) { self.getInt8() }
     }
     
     func getInt16(length: Int) -> Array<Int16> {
-        return getArray(length, defaultValue: 0) {
-            self.getInt16()
-        }
+        return getArray(length, defaultValue: 0) { self.getInt16() }
     }
     
     func getInt32(length: Int) -> Array<Int32> {
-        return getArray(length, defaultValue: 0) {
-            self.getInt32()
-        }
+        return getArray(length, defaultValue: 0) { self.getInt32() }
     }
     
     func getInt64(length: Int) -> Array<Int64> {
-        return getArray(length, defaultValue: 0) {
-            self.getInt64()
-        }
+        return getArray(length, defaultValue: 0) { self.getInt64() }
     }
     
     func getUInt8(length: Int) -> Array<UInt8> {
-        return getArray(length, defaultValue: 0) {
-            self.getUInt8()
-        }
+        return getArray(length, defaultValue: 0) { self.getUInt8() }
     }
     
     func getUInt16(length: Int) -> Array<UInt16> {
-        return getArray(length, defaultValue: 0) {
-            self.getUInt16()
-        }
+        return getArray(length, defaultValue: 0) { self.getUInt16() }
     }
     
     func getUInt32(length: Int) -> Array<UInt32> {
-        return getArray(length, defaultValue: 0) {
-            self.getUInt32()
-        }
+        return getArray(length, defaultValue: 0) { self.getUInt32() }
     }
     
     func getUInt64(length: Int) -> Array<UInt64> {
-        return getArray(length, defaultValue: 0) {
-            self.getUInt64()
-        }
+        return getArray(length, defaultValue: 0) { self.getUInt64() }
     }
     
     func getFloat32(length: Int) -> Array<Float32> {
-        return getArray(length, defaultValue: 0.0) {
-            self.getFloat32()
-        }
+        return getArray(length, defaultValue: 0.0) { self.getFloat32() }
     }
     
     func getFloat64(length: Int) -> Array<Float64> {
-        return getArray(length, defaultValue: 0.0) {
-            self.getFloat64()
-        }
+        return getArray(length, defaultValue: 0.0) { self.getFloat64() }
     }
     
     func getArray<T>(length: Int, defaultValue: T, getter: () -> T) -> Array<T> {
@@ -334,15 +314,15 @@ class ByteBuffer {
     }
     
     func putUInt16(value: UInt16) {
-        writeBytes(order.fromNative(value))
+        put(order.fromNative(value))
     }
     
     func putUInt32(value: UInt32) {
-        writeBytes(order.fromNative(value))
+        put(order.fromNative(value))
     }
     
     func putUInt64(value: UInt64) {
-        writeBytes(order.fromNative(value))
+        put(order.fromNative(value))
     }
     
     func putFloat32(value: Float32) {
@@ -356,9 +336,47 @@ class ByteBuffer {
     }
     
     func putUTF8(value: String) {
-        for unit in value.utf8 {
-            putUInt8(unit)
-        }
+        putArray(value.utf8) { self.putUInt8($0) }
+    }
+    
+    func putInt8(values: Array<Int8>) {
+        putArray(values) { self.putInt8($0) }
+    }
+    
+    func putInt16(values: Array<Int16>) {
+        putArray(values) { self.putInt16($0) }
+    }
+    
+    func putInt32(values: Array<Int32>) {
+        putArray(values) { self.putInt32($0) }
+    }
+    
+    func putInt64(values: Array<Int64>) {
+        putArray(values) { self.putInt64($0) }
+    }
+
+    func putUInt8(values: Array<UInt8>) {
+        putArray(values) { self.putUInt8($0) }
+    }
+    
+    func putUInt16(values: Array<UInt16>) {
+        putArray(values) { self.putUInt16($0) }
+    }
+    
+    func putUInt32(values: Array<UInt32>) {
+        putArray(values) { self.putUInt32($0) }
+    }
+    
+    func putUInt64(values: Array<UInt64>) {
+        putArray(values) { self.putUInt64($0) }
+    }
+    
+    func putFloat32(values: Array<Float32>) {
+        putArray(values) { self.putFloat32($0) }
+    }
+    
+    func putFloat64(values: Array<Float64>) {
+        putArray(values) { self.putFloat64($0) }
     }
     
     func putTerminatedUTF8(value: String, terminator: UInt8 = 0) {
@@ -366,7 +384,13 @@ class ByteBuffer {
         putUInt8(terminator)
     }
     
-    func writeBytes<T>(value: T) {
+    func putArray<S : Sequence>(values: S, putter: (S.GeneratorType.Element) -> ()) {
+        for value in values {
+            putter(value)
+        }
+    }
+    
+    func put<T>(value: T) {
         UnsafePointer<T>(bits).memory = value
         
         for index in 0..<sizeof(T) {
