@@ -121,7 +121,7 @@ class ByteBuffer {
         position = remaining
         limit = capacity
     }
-    
+/*
     func put(source: Array<UInt8>) {
         put(source, offset: 0, length: source.count)
     }
@@ -135,7 +135,7 @@ class ByteBuffer {
         destination.initializeFrom(source[offset..<offset+length])
         position += length
     }
-    
+*/    
     func getInt8() -> Int8 {
         return getUInt8().asSigned()
     }
