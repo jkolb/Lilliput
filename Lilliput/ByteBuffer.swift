@@ -157,15 +157,15 @@ class ByteBuffer {
     }
 
     func getUInt16() -> UInt16 {
-        return order.toNative(readBytes())
+        return order.toNative(get())
     }
     
     func getUInt32() -> UInt32 {
-        return order.toNative(readBytes())
+        return order.toNative(get())
     }
     
     func getUInt64() -> UInt64 {
-        return order.toNative(readBytes())
+        return order.toNative(get())
     }
     
     func getFloat32() -> Float32 {
@@ -179,11 +179,11 @@ class ByteBuffer {
     }
     
     func getUTF8(length: Int) -> String {
-        return decodeCodeUnits(readUInt8(length), codec: UTF8())
+        return decodeCodeUnits(getUInt8(length), codec: UTF8())
     }
     
     func getTerminatedUTF8(terminator: UInt8 = 0) -> String {
-        return decodeCodeUnits(readUInt8(terminator), codec: UTF8())
+        return decodeCodeUnits(getTerminatedUInt8(terminator), codec: UTF8())
     }
 
     func decodeCodeUnits<C : UnicodeCodec>(codeUnits: Array<C.CodeUnit>, var codec: C) -> String {
@@ -212,34 +212,100 @@ class ByteBuffer {
         return string
     }
     
-    func readUInt8(length: Int) -> Array<UInt8> {
-        var values = Array<UInt8>(count: length, repeatedValue: 0)
-        
-        for index in 0..<length {
-            values[index] = getUInt8()
+    func getInt8(length: Int) -> Array<Int8> {
+        return getArray(length, defaultValue: 0) {
+            self.getInt8()
         }
-        
-        return values
     }
     
-    func readUInt8(terminator: UInt8) -> Array<UInt8> {
-        var values = Array<UInt8>()
+    func getInt16(length: Int) -> Array<Int16> {
+        return getArray(length, defaultValue: 0) {
+            self.getInt16()
+        }
+    }
+    
+    func getInt32(length: Int) -> Array<Int32> {
+        return getArray(length, defaultValue: 0) {
+            self.getInt32()
+        }
+    }
+    
+    func getInt64(length: Int) -> Array<Int64> {
+        return getArray(length, defaultValue: 0) {
+            self.getInt64()
+        }
+    }
+    
+    func getUInt8(length: Int) -> Array<UInt8> {
+        return getArray(length, defaultValue: 0) {
+            self.getUInt8()
+        }
+    }
+    
+    func getUInt16(length: Int) -> Array<UInt16> {
+        return getArray(length, defaultValue: 0) {
+            self.getUInt16()
+        }
+    }
+    
+    func getUInt32(length: Int) -> Array<UInt32> {
+        return getArray(length, defaultValue: 0) {
+            self.getUInt32()
+        }
+    }
+    
+    func getUInt64(length: Int) -> Array<UInt64> {
+        return getArray(length, defaultValue: 0) {
+            self.getUInt64()
+        }
+    }
+    
+    func getFloat32(length: Int) -> Array<Float32> {
+        return getArray(length, defaultValue: 0.0) {
+            self.getFloat32()
+        }
+    }
+    
+    func getFloat64(length: Int) -> Array<Float64> {
+        return getArray(length, defaultValue: 0.0) {
+            self.getFloat64()
+        }
+    }
+    
+    func getArray<T>(length: Int, defaultValue: T, getter: () -> T) -> Array<T> {
+        var array = Array<T>(count: length, repeatedValue: defaultValue)
+        
+        for index in 0..<length {
+            array[index] = getter()
+        }
+        
+        return array
+    }
+    
+    func getTerminatedUInt8(terminator: UInt8) -> Array<UInt8> {
+        return getArray(terminator) {
+            self.getUInt8()
+        }
+    }
+    
+    func getArray<T : Equatable>(terminator: T, getter: () -> T) -> Array<T> {
+        var array = Array<T>()
         var done = true
         
         while (!done) {
-            let value = getUInt8()
+            let value = getter()
             
             if (value == terminator) {
                 done = true
             } else {
-                values += value
+                array += value
             }
         }
         
-        return values
+        return array
     }
-    
-    func readBytes<T>() -> T {
+
+    func get<T>() -> T {
         for index in 0..<sizeof(T) {
             bits[index] = data[position++]
         }
