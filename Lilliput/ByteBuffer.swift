@@ -178,6 +178,67 @@ class ByteBuffer {
         return UnsafePointer<Float64>(bits).memory
     }
     
+    func getUTF8(length: Int) -> String {
+        return decodeCodeUnits(readUInt8(length), codec: UTF8())
+    }
+    
+    func getTerminatedUTF8(terminator: UInt8 = 0) -> String {
+        return decodeCodeUnits(readUInt8(terminator), codec: UTF8())
+    }
+
+    func decodeCodeUnits<C : UnicodeCodec>(codeUnits: Array<C.CodeUnit>, var codec: C) -> String {
+        var generator = codeUnits.generate()
+        var characters = Array<Character>()
+        characters.reserveCapacity(codeUnits.count)
+        var done = false
+        
+        while (!done) {
+            switch codec.decode(&generator) {
+            case .Result(let scalar):
+                characters += Character(scalar)
+                
+            case .EmptyInput:
+                done = true
+                
+            case .Error:
+                done = true
+            }
+        }
+        
+        var string = String()
+        string.reserveCapacity(characters.count)
+        string.extend(characters)
+        
+        return string
+    }
+    
+    func readUInt8(length: Int) -> Array<UInt8> {
+        var values = Array<UInt8>(count: length, repeatedValue: 0)
+        
+        for index in 0..<length {
+            values[index] = getUInt8()
+        }
+        
+        return values
+    }
+    
+    func readUInt8(terminator: UInt8) -> Array<UInt8> {
+        var values = Array<UInt8>()
+        var done = true
+        
+        while (!done) {
+            let value = getUInt8()
+            
+            if (value == terminator) {
+                done = true
+            } else {
+                values += value
+            }
+        }
+        
+        return values
+    }
+    
     func readBytes<T>() -> T {
         for index in 0..<sizeof(T) {
             bits[index] = data[position++]
@@ -226,6 +287,17 @@ class ByteBuffer {
     func putFloat64(value: Float64) {
         UnsafePointer<Float64>(bits).memory = value
         putUInt64(UnsafePointer<UInt64>(bits).memory)
+    }
+    
+    func putUTF8(value: String) {
+        for unit in value.utf8 {
+            putUInt8(unit)
+        }
+    }
+    
+    func putTerminatedUTF8(value: String, terminator: UInt8 = 0) {
+        putUTF8(value)
+        putUInt8(terminator)
     }
     
     func writeBytes<T>(value: T) {
