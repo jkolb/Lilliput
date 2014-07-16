@@ -212,50 +212,50 @@ class ByteBuffer {
         return string
     }
     
-    func getInt8(length: Int) -> Array<Int8> {
-        return getArray(length, defaultValue: 0) { self.getInt8() }
+    func getInt8(count: Int) -> Array<Int8> {
+        return getArray(count, defaultValue: 0) { self.getInt8() }
     }
     
-    func getInt16(length: Int) -> Array<Int16> {
-        return getArray(length, defaultValue: 0) { self.getInt16() }
+    func getInt16(count: Int) -> Array<Int16> {
+        return getArray(count, defaultValue: 0) { self.getInt16() }
     }
     
-    func getInt32(length: Int) -> Array<Int32> {
-        return getArray(length, defaultValue: 0) { self.getInt32() }
+    func getInt32(count: Int) -> Array<Int32> {
+        return getArray(count, defaultValue: 0) { self.getInt32() }
     }
     
-    func getInt64(length: Int) -> Array<Int64> {
-        return getArray(length, defaultValue: 0) { self.getInt64() }
+    func getInt64(count: Int) -> Array<Int64> {
+        return getArray(count, defaultValue: 0) { self.getInt64() }
     }
     
-    func getUInt8(length: Int) -> Array<UInt8> {
-        return getArray(length, defaultValue: 0) { self.getUInt8() }
+    func getUInt8(count: Int) -> Array<UInt8> {
+        return getArray(count, defaultValue: 0) { self.getUInt8() }
     }
     
-    func getUInt16(length: Int) -> Array<UInt16> {
-        return getArray(length, defaultValue: 0) { self.getUInt16() }
+    func getUInt16(count: Int) -> Array<UInt16> {
+        return getArray(count, defaultValue: 0) { self.getUInt16() }
     }
     
-    func getUInt32(length: Int) -> Array<UInt32> {
-        return getArray(length, defaultValue: 0) { self.getUInt32() }
+    func getUInt32(count: Int) -> Array<UInt32> {
+        return getArray(count, defaultValue: 0) { self.getUInt32() }
     }
     
-    func getUInt64(length: Int) -> Array<UInt64> {
-        return getArray(length, defaultValue: 0) { self.getUInt64() }
+    func getUInt64(count: Int) -> Array<UInt64> {
+        return getArray(count, defaultValue: 0) { self.getUInt64() }
     }
     
-    func getFloat32(length: Int) -> Array<Float32> {
-        return getArray(length, defaultValue: 0.0) { self.getFloat32() }
+    func getFloat32(count: Int) -> Array<Float32> {
+        return getArray(count, defaultValue: 0.0) { self.getFloat32() }
     }
     
-    func getFloat64(length: Int) -> Array<Float64> {
-        return getArray(length, defaultValue: 0.0) { self.getFloat64() }
+    func getFloat64(count: Int) -> Array<Float64> {
+        return getArray(count, defaultValue: 0.0) { self.getFloat64() }
     }
     
-    func getArray<T>(length: Int, defaultValue: T, getter: () -> T) -> Array<T> {
-        var array = Array<T>(count: length, repeatedValue: defaultValue)
+    func getArray<T>(count: Int, defaultValue: T, getter: () -> T) -> Array<T> {
+        var array = Array<T>(count: count, repeatedValue: defaultValue)
         
-        for index in 0..<length {
+        for index in 0..<count {
             array[index] = getter()
         }
         
