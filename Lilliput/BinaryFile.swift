@@ -30,22 +30,23 @@ class BinaryFile {
     let fileDescriptor: CInt
     let closeOnDeinit: Bool
     
-    class func openForReading(path: String) -> BinaryFile? {
-        return openBinaryFile(path, flags: O_RDONLY)
+    class func openForReading(path: String, inout error: Error) -> BinaryFile? {
+        return openBinaryFile(path, flags: O_RDONLY, error: &error)
     }
     
-    class func openForWriting(path: String) -> BinaryFile? {
-        return openBinaryFile(path, flags: O_WRONLY)
+    class func openForWriting(path: String, inout error: Error) -> BinaryFile? {
+        return openBinaryFile(path, flags: O_WRONLY, error: &error)
     }
     
-    class func openForUpdating(path: String) -> BinaryFile? {
-        return openBinaryFile(path, flags: O_RDWR)
+    class func openForUpdating(path: String, inout error: Error) -> BinaryFile? {
+        return openBinaryFile(path, flags: O_RDWR, error: &error)
     }
     
-    class func openBinaryFile(path: String, flags: CInt) -> BinaryFile? {
+    class func openBinaryFile(path: String, flags: CInt, inout error: Error) -> BinaryFile? {
         let fd = path.withCString { open($0, flags) }
         
         if (fd == -1) {
+            error = Error(code: Int(errno))
             return nil;
         }
         
