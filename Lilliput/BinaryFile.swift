@@ -43,11 +43,7 @@ class BinaryFile {
     }
     
     class func openBinaryFile(path: String, flags: CInt) -> BinaryFile? {
-        var fd: CInt = -1
-        
-        path.withCString {
-            cPath in fd = open(cPath, flags)
-        }
+        let fd = path.withCString { open($0, flags) }
         
         if (fd == -1) {
             return nil;
@@ -93,7 +89,7 @@ class BinaryFile {
     }
     
     func seekFromStart(offset: Offset, inout error: Error) -> Offset? {
-        let offset = lseek(fileDescriptor, off_t(offset), SEEK_SET)
+        let offset = lseek(fileDescriptor, offset, SEEK_SET)
         if (offset < 0) {
             error = Error(code: Int(errno))
             return nil
@@ -103,7 +99,7 @@ class BinaryFile {
     }
     
     func seekFromCurrent(offset: Offset, inout error: Error) -> Offset? {
-        let offset = lseek(fileDescriptor, off_t(offset), SEEK_CUR)
+        let offset = lseek(fileDescriptor, offset, SEEK_CUR)
         if (offset < 0) {
             error = Error(code: Int(errno))
             return nil
@@ -113,7 +109,7 @@ class BinaryFile {
     }
     
     func seekFromEnd(offset: Offset, inout error: Error) -> Offset? {
-        let offset = lseek(fileDescriptor, off_t(offset), SEEK_END)
+        let offset = lseek(fileDescriptor, offset, SEEK_END)
         if (offset < 0) {
             error = Error(code: Int(errno))
             return nil

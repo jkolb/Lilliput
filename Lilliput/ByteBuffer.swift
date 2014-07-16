@@ -160,10 +160,6 @@ class ByteBuffer {
         return order.toNative(readBytes())
     }
     
-    func getUInt24() -> UInt32 {
-        return order.toNative(readBytes())
-    }
-    
     func getUInt32() -> UInt32 {
         return order.toNative(readBytes())
     }
