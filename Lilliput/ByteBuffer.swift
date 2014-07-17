@@ -121,21 +121,7 @@ class ByteBuffer {
         position = remaining
         limit = capacity
     }
-/*
-    func put(source: Array<UInt8>) {
-        put(source, offset: 0, length: source.count)
-    }
-    
-    func put(source: Array<UInt8>, offset: Int, length: Int) {
-        if (length > remaining) {
-            fatalError("Buffer overflow")
-        }
 
-        let destination = data + position
-        destination.initializeFrom(source[offset..<offset+length])
-        position += length
-    }
-*/    
     func getInt8() -> Int8 {
         return getUInt8().asSigned()
     }
@@ -157,15 +143,15 @@ class ByteBuffer {
     }
 
     func getUInt16() -> UInt16 {
-        return order.toNative(get())
+        return order.toNative(getBits())
     }
     
     func getUInt32() -> UInt32 {
-        return order.toNative(get())
+        return order.toNative(getBits())
     }
     
     func getUInt64() -> UInt64 {
-        return order.toNative(get())
+        return order.toNative(getBits())
     }
     
     func getFloat32() -> Float32 {
@@ -263,9 +249,7 @@ class ByteBuffer {
     }
     
     func getTerminatedUInt8(terminator: UInt8) -> Array<UInt8> {
-        return getArray(terminator) {
-            self.getUInt8()
-        }
+        return getArray(terminator) { self.getUInt8() }
     }
     
     func getArray<T : Equatable>(terminator: T, getter: () -> T) -> Array<T> {
@@ -285,7 +269,7 @@ class ByteBuffer {
         return array
     }
 
-    func get<T>() -> T {
+    func getBits<T>() -> T {
         for index in 0..<sizeof(T) {
             bits[index] = data[position++]
         }
@@ -314,15 +298,15 @@ class ByteBuffer {
     }
     
     func putUInt16(value: UInt16) {
-        put(order.fromNative(value))
+        putBits(order.fromNative(value))
     }
     
     func putUInt32(value: UInt32) {
-        put(order.fromNative(value))
+        putBits(order.fromNative(value))
     }
     
     func putUInt64(value: UInt64) {
-        put(order.fromNative(value))
+        putBits(order.fromNative(value))
     }
     
     func putFloat32(value: Float32) {
@@ -338,7 +322,7 @@ class ByteBuffer {
     func putUTF8(value: String) {
         putArray(value.utf8) { self.putUInt8($0) }
     }
-    
+
     func putInt8(values: Array<Int8>) {
         putArray(values) { self.putInt8($0) }
     }
@@ -354,9 +338,19 @@ class ByteBuffer {
     func putInt64(values: Array<Int64>) {
         putArray(values) { self.putInt64($0) }
     }
-
-    func putUInt8(values: Array<UInt8>) {
-        putArray(values) { self.putUInt8($0) }
+    
+    func putUInt8(source: Array<UInt8>) {
+        putUInt8(source, offset: 0, length: source.count)
+    }
+    
+    func putUInt8(source: Array<UInt8>, offset: Int, length: Int) {
+        if (length > remaining) {
+            fatalError("Buffer overflow")
+        }
+        
+        let destination = data + position
+        destination.initializeFrom(source[offset..<offset+length])
+        position += length
     }
     
     func putUInt16(values: Array<UInt16>) {
@@ -390,7 +384,7 @@ class ByteBuffer {
         }
     }
     
-    func put<T>(value: T) {
+    func putBits<T>(value: T) {
         UnsafePointer<T>(bits).memory = value
         
         for index in 0..<sizeof(T) {
