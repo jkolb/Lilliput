@@ -23,103 +23,97 @@
 // THE SOFTWARE.
 //
 
-typealias Offset = off_t
-typealias ByteCount = ssize_t
+typealias FileOffset = off_t
+typealias FilePosition = off_t
+typealias ErrorCode = Int32
+typealias FileDescriptor = Int32
 
 class BinaryFile {
-    let fileDescriptor: CInt
+    let fileDescriptor: FileDescriptor
     let closeOnDeinit: Bool
     
-    class func openForReading(path: String, inout error: Error) -> BinaryFile? {
-        return openBinaryFile(path, flags: O_RDONLY, error: &error)
+    enum OpenResult {
+        case File(BinaryFile)
+        case Error(ErrorCode)
     }
     
-    class func openForWriting(path: String, inout error: Error) -> BinaryFile? {
-        return openBinaryFile(path, flags: O_WRONLY, error: &error)
+    class func openForReading(path: String) -> OpenResult {
+        return openBinaryFile(path, flags: O_RDONLY)
     }
     
-    class func openForUpdating(path: String, inout error: Error) -> BinaryFile? {
-        return openBinaryFile(path, flags: O_RDWR, error: &error)
+    class func openForWriting(path: String) -> OpenResult {
+        return openBinaryFile(path, flags: O_WRONLY)
     }
     
-    class func openBinaryFile(path: String, flags: CInt, inout error: Error) -> BinaryFile? {
-        let fd = path.withCString { open($0, flags) }
-        
-        if (fd == -1) {
-            error = Error(code: Int(errno))
-            return nil;
-        }
-        
-        return BinaryFile(fileDescriptor: fd)
+    class func openForUpdating(path: String) -> OpenResult {
+        return openBinaryFile(path, flags: O_RDWR)
     }
     
-    init(fileDescriptor: CInt, closeOnDeinit: Bool = true) {
+    class func openBinaryFile(path: String, flags: CInt) -> OpenResult {
+        let fileDescriptor = path.withCString { open($0, flags) }
+        if (fileDescriptor == -1) { return .Error(errno) }
+        return .File(BinaryFile(fileDescriptor: fileDescriptor))
+    }
+    
+    init(fileDescriptor: FileDescriptor, closeOnDeinit: Bool = true) {
         assert(fileDescriptor >= 0)
         self.fileDescriptor = fileDescriptor
         self.closeOnDeinit = closeOnDeinit
     }
     
     deinit {
-        if (closeOnDeinit) {
-            close(fileDescriptor)
-        }
+        if (closeOnDeinit) { close(fileDescriptor) }
     }
     
-    func readBuffer(buffer: ByteBuffer, inout error: Error) -> ByteCount? {
+    enum ReadResult {
+        case BytesRead(Int)
+        case Error(ErrorCode)
+    }
+    
+    func readBuffer(buffer: ByteBuffer) -> ReadResult {
         let bytesRead = read(fileDescriptor, buffer.data + buffer.position, UInt(buffer.remaining))
-        
-        if (bytesRead < 0) {
-            error = Error(code: Int(errno))
-            return nil
-        } else {
-            buffer.position += bytesRead
-            return bytesRead
-        }
+        if (bytesRead < 0) { return .Error(errno) }
+        buffer.position += bytesRead
+        return .BytesRead(bytesRead)
     }
     
-    func writeBuffer(buffer: ByteBuffer, inout error: Error) -> ByteCount? {
+    enum WriteResult {
+        case BytesWritten(Int)
+        case Error(ErrorCode)
+    }
+    
+    func writeBuffer(buffer: ByteBuffer) -> WriteResult {
         let bytesWritten = write(fileDescriptor, buffer.data + buffer.position, UInt(buffer.remaining))
+        if (bytesWritten < 0) { return .Error(errno) }
+        buffer.position += bytesWritten
+        return .BytesWritten(bytesWritten)
+    }
+    
+    enum SeekResult {
+        case Position(FilePosition)
+        case Error(ErrorCode)
+    }
+    
+    enum SeekFrom {
+        case Start
+        case Current
+        case End
+    }
+    
+    func seek(offset: FileOffset, from: SeekFrom = .Start) -> SeekResult {
+        var position: FilePosition
         
-        if (bytesWritten < 0) {
-            error = Error(code: Int(errno))
-            return nil
-        } else {
-            buffer.position += bytesWritten
-            return bytesWritten
+        switch from {
+        case .Start:
+            position = lseek(fileDescriptor, offset, SEEK_SET)
+        case .Current:
+            position = lseek(fileDescriptor, offset, SEEK_CUR)
+        case .End:
+            position = lseek(fileDescriptor, offset, SEEK_END)
         }
-    }
-    
-    func seekFromStart(offset: Offset, inout error: Error) -> Offset? {
-        let offset = lseek(fileDescriptor, offset, SEEK_SET)
-        if (offset < 0) {
-            error = Error(code: Int(errno))
-            return nil
-        } else {
-            return offset
-        }
-    }
-    
-    func seekFromCurrent(offset: Offset, inout error: Error) -> Offset? {
-        let offset = lseek(fileDescriptor, offset, SEEK_CUR)
-        if (offset < 0) {
-            error = Error(code: Int(errno))
-            return nil
-        } else {
-            return offset
-        }
-    }
-    
-    func seekFromEnd(offset: Offset, inout error: Error) -> Offset? {
-        let offset = lseek(fileDescriptor, offset, SEEK_END)
-        if (offset < 0) {
-            error = Error(code: Int(errno))
-            return nil
-        } else {
-            return offset
-        }
-    }
-    
-    struct Error {
-        let code: Int
+        
+        if (offset < 0) { return .Error(errno) }
+        
+        return .Position(position)
     }
 }
