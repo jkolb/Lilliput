@@ -27,32 +27,61 @@ typealias FileOffset = off_t
 typealias FilePosition = off_t
 typealias ErrorCode = Int32
 typealias FileDescriptor = Int32
+typealias ByteCount = Int
 
 class BinaryFile {
     let fileDescriptor: FileDescriptor
     let closeOnDeinit: Bool
-    
-    enum OpenResult {
-        case File(BinaryFile)
-        case Error(ErrorCode)
+
+    struct Error {
+        let code: ErrorCode
+        let message: String
+        
+        init(code: ErrorCode, message: String = "") {
+            self.code = code
+            self.message = message
+        }
     }
     
-    class func openForReading(path: String) -> OpenResult {
+    enum Result<T> {
+        case Success(@auto_closure () -> T)
+        case Failure(Error)
+        
+        var error: Error? {
+            switch self {
+            case .Success:
+                return nil
+            case .Failure(let error):
+                return error
+            }
+        }
+        
+        var value: T! {
+            switch self {
+            case .Success(let value):
+                return value()
+            case .Failure:
+                return nil
+            }
+        }
+    }
+    
+    class func openForReading(path: String) -> Result<BinaryFile> {
         return openBinaryFile(path, flags: O_RDONLY)
     }
     
-    class func openForWriting(path: String) -> OpenResult {
+    class func openForWriting(path: String) -> Result<BinaryFile> {
         return openBinaryFile(path, flags: O_WRONLY)
     }
     
-    class func openForUpdating(path: String) -> OpenResult {
+    class func openForUpdating(path: String) -> Result<BinaryFile> {
         return openBinaryFile(path, flags: O_RDWR)
     }
     
-    class func openBinaryFile(path: String, flags: CInt) -> OpenResult {
+    class func openBinaryFile(path: String, flags: CInt) -> Result<BinaryFile> {
         let fileDescriptor = path.withCString { open($0, flags) }
-        if (fileDescriptor == -1) { return .Error(errno) }
-        return .File(BinaryFile(fileDescriptor: fileDescriptor))
+        if (fileDescriptor == -1) { return .Failure(Error(code: errno)) }
+        return .Success(BinaryFile(fileDescriptor: fileDescriptor))
     }
     
     init(fileDescriptor: FileDescriptor, closeOnDeinit: Bool = true) {
@@ -65,16 +94,11 @@ class BinaryFile {
         if (closeOnDeinit) { close(fileDescriptor) }
     }
     
-    enum ReadResult {
-        case BytesRead(Int)
-        case Error(ErrorCode)
-    }
-    
-    func readBuffer(buffer: ByteBuffer) -> ReadResult {
+    func readBuffer(buffer: ByteBuffer) -> Result<ByteCount> {
         let bytesRead = read(fileDescriptor, buffer.data + buffer.position, UInt(buffer.remaining))
-        if (bytesRead < 0) { return .Error(errno) }
+        if (bytesRead < 0) { return .Failure(Error(code: errno)) }
         buffer.position += bytesRead
-        return .BytesRead(bytesRead)
+        return .Success(bytesRead)
     }
     
     enum WriteResult {
@@ -82,16 +106,11 @@ class BinaryFile {
         case Error(ErrorCode)
     }
     
-    func writeBuffer(buffer: ByteBuffer) -> WriteResult {
+    func writeBuffer(buffer: ByteBuffer) -> Result<ByteCount> {
         let bytesWritten = write(fileDescriptor, buffer.data + buffer.position, UInt(buffer.remaining))
-        if (bytesWritten < 0) { return .Error(errno) }
+        if (bytesWritten < 0) { return .Failure(Error(code: errno)) }
         buffer.position += bytesWritten
-        return .BytesWritten(bytesWritten)
-    }
-    
-    enum SeekResult {
-        case Position(FilePosition)
-        case Error(ErrorCode)
+        return .Success(bytesWritten)
     }
     
     enum SeekFrom {
@@ -100,7 +119,7 @@ class BinaryFile {
         case End
     }
     
-    func seek(offset: FileOffset, from: SeekFrom = .Start) -> SeekResult {
+    func seek(offset: FileOffset, from: SeekFrom = .Start) -> Result<FilePosition> {
         var position: FilePosition
         
         switch from {
@@ -112,8 +131,8 @@ class BinaryFile {
             position = lseek(fileDescriptor, offset, SEEK_END)
         }
         
-        if (offset < 0) { return .Error(errno) }
+        if (offset < 0) { return .Failure(Error(code: errno)) }
         
-        return .Position(position)
+        return .Success(position)
     }
 }
