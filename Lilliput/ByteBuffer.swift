@@ -26,23 +26,29 @@
 class ByteBuffer {
     let order: ByteOrder
     var data: UnsafePointer<UInt8>
+    let freeOnDeinit: Bool
     let capacity: Int
     let bits = UnsafePointer<UInt8>.alloc(sizeof(UIntMax))
     var privatePosition = 0
     var privateLimit = 0
     var privateMark = -1
     
-    init(order: ByteOrder, capacity: Int) {
+    init(order: ByteOrder, data: UnsafePointer<UInt8>, capacity: Int, freeOnDeinit: Bool) {
+        assert(capacity >= 0)
         self.order = order
+        self.data = data
         self.capacity = capacity
-        self.data = UnsafePointer<UInt8>.alloc(capacity)
-        
+        self.freeOnDeinit = freeOnDeinit
         self.limit = capacity
+    }
+    
+    convenience init(order: ByteOrder, capacity: Int) {
+        self.init(order: order, data: UnsafePointer<UInt8>.alloc(capacity), capacity: capacity, freeOnDeinit: true)
     }
 
     deinit {
-        data.dealloc(capacity)
         bits.dealloc(sizeof(UIntMax))
+        if freeOnDeinit { data.dealloc(capacity) }
     }
     
     var limit: Int {
