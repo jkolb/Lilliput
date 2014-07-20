@@ -397,4 +397,16 @@ class ByteBuffer {
             data[position++] = bits[index]
         }
     }
+    
+    subscript(subRange: Range<Int>) -> ByteBuffer {
+        let length = subRange.endIndex - subRange.startIndex + 1
+        return ByteBuffer(order: order, data: data + subRange.startIndex, capacity: length, freeOnDeinit: false)
+    }
+    
+    func putBuffer(buffer: ByteBuffer) {
+        let count = buffer.remaining
+        data.initializeFrom(buffer.data + buffer.position, count: count)
+        position += count
+        buffer.position += count
+    }
 }
