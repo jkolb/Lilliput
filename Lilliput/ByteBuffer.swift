@@ -246,11 +246,14 @@ class ByteBuffer {
     
     func getArray<T>(count: Int, defaultValue: T, getter: () -> T) -> Array<T> {
         var array = Array<T>(count: count, repeatedValue: defaultValue)
-        
-        for index in 0..<count {
-            array[index] = getter()
-        }
-        
+        for index in 0..<count { array[index] = getter() }
+        return array
+    }
+    
+    func getArray<T>(count: Int, getter: () -> T) -> Array<T> {
+        var array = Array<T>()
+        array.reserveCapacity(count)
+        for index in 0..<count { array += getter() }
         return array
     }
     
