@@ -23,17 +23,17 @@
 // THE SOFTWARE.
 //
 
-class ByteBuffer {
-    let order: ByteOrder
+public class ByteBuffer {
+    public let order: ByteOrder
     var data: UnsafePointer<UInt8>
-    let freeOnDeinit: Bool
-    let capacity: Int
-    let bits = UnsafePointer<UInt8>.alloc(sizeof(UIntMax))
-    var privatePosition = 0
-    var privateLimit = 0
-    var privateMark = -1
+    private let freeOnDeinit: Bool
+    public let capacity: Int
+    private let bits = UnsafePointer<UInt8>.alloc(sizeof(UIntMax))
+    private var privatePosition = 0
+    private var privateLimit = 0
+    private var privateMark = -1
     
-    init(order: ByteOrder, data: UnsafePointer<UInt8>, capacity: Int, freeOnDeinit: Bool) {
+    public init(order: ByteOrder, data: UnsafePointer<UInt8>, capacity: Int, freeOnDeinit: Bool) {
         assert(capacity >= 0)
         self.order = order
         self.data = data
@@ -42,7 +42,7 @@ class ByteBuffer {
         self.limit = capacity
     }
     
-    convenience init(order: ByteOrder, capacity: Int) {
+    public convenience init(order: ByteOrder, capacity: Int) {
         self.init(order: order, data: UnsafePointer<UInt8>.alloc(capacity), capacity: capacity, freeOnDeinit: true)
     }
 
@@ -51,7 +51,7 @@ class ByteBuffer {
         if freeOnDeinit { data.dealloc(capacity) }
     }
     
-    var limit: Int {
+    public var limit: Int {
     get {
         return privateLimit
     }
@@ -71,7 +71,7 @@ class ByteBuffer {
     }
     }
     
-    var position: Int {
+    public var position: Int {
     get {
         return privatePosition
     }
@@ -87,7 +87,7 @@ class ByteBuffer {
     }
     }
     
-    var hasRemaining: Bool {
+    public var hasRemaining: Bool {
     return remaining > 0
     }
     
@@ -95,90 +95,90 @@ class ByteBuffer {
     return limit - position
     }
     
-    func mark() {
+    public func mark() {
         privateMark = position
     }
 
-    func reset() {
+    public func reset() {
         if (privateMark == -1) {
             fatalError("Invalid mark")
         }
         position = privateMark
     }
     
-    func rewind() {
+    public func rewind() {
         position = 0
         privateMark = -1
     }
     
-    func clear() {
+    public func clear() {
         rewind()
         limit = capacity
     }
     
-    func flip() {
+    public func flip() {
         privateLimit = privatePosition
         privatePosition = 0
         privateMark = -1
     }
     
-    func compact() {
+    public func compact() {
         data.moveInitializeFrom(data+position, count: remaining)
         position = remaining
         limit = capacity
     }
 
-    func getInt8() -> Int8 {
+    public func getInt8() -> Int8 {
         return getUInt8().asSigned()
     }
     
-    func getInt16() -> Int16 {
+    public func getInt16() -> Int16 {
         return getUInt16().asSigned()
     }
     
-    func getInt32() -> Int32 {
+    public func getInt32() -> Int32 {
         return getUInt32().asSigned()
     }
     
-    func getInt64() -> Int64 {
+    public func getInt64() -> Int64 {
         return getUInt64().asSigned()
     }
     
-    func getUInt8() -> UInt8 {
+    public func getUInt8() -> UInt8 {
         return data[position++]
     }
 
-    func getUInt16() -> UInt16 {
+    public func getUInt16() -> UInt16 {
         return order.toNative(getBits())
     }
     
-    func getUInt32() -> UInt32 {
+    public func getUInt32() -> UInt32 {
         return order.toNative(getBits())
     }
     
-    func getUInt64() -> UInt64 {
+    public func getUInt64() -> UInt64 {
         return order.toNative(getBits())
     }
     
-    func getFloat32() -> Float32 {
+    public func getFloat32() -> Float32 {
         UnsafePointer<UInt32>(bits).memory = getUInt32()
         return UnsafePointer<Float32>(bits).memory
     }
     
-    func getFloat64() -> Float64 {
+    public func getFloat64() -> Float64 {
         UnsafePointer<UInt64>(bits).memory = getUInt64()
         return UnsafePointer<Float64>(bits).memory
     }
     
-    func getUTF8(length: Int) -> String {
+    public func getUTF8(length: Int) -> String {
         return decodeCodeUnits(getUInt8(length), codec: UTF8())
     }
     
-    func getTerminatedUTF8(terminator: UInt8 = 0) -> String {
+    public func getTerminatedUTF8(terminator: UInt8 = 0) -> String {
         return decodeCodeUnits(getTerminatedUInt8(terminator), codec: UTF8())
     }
 
-    func decodeCodeUnits<C : UnicodeCodec>(codeUnits: Array<C.CodeUnit>, var codec: C) -> String {
+    public func decodeCodeUnits<C : UnicodeCodec>(codeUnits: Array<C.CodeUnit>, var codec: C) -> String {
         var generator = codeUnits.generate()
         var characters = Array<Character>()
         characters.reserveCapacity(codeUnits.count)
@@ -204,64 +204,64 @@ class ByteBuffer {
         return string
     }
     
-    func getInt8(count: Int) -> Array<Int8> {
+    public func getInt8(count: Int) -> Array<Int8> {
         return getArray(count, defaultValue: 0) { self.getInt8() }
     }
     
-    func getInt16(count: Int) -> Array<Int16> {
+    public func getInt16(count: Int) -> Array<Int16> {
         return getArray(count, defaultValue: 0) { self.getInt16() }
     }
     
-    func getInt32(count: Int) -> Array<Int32> {
+    public func getInt32(count: Int) -> Array<Int32> {
         return getArray(count, defaultValue: 0) { self.getInt32() }
     }
     
-    func getInt64(count: Int) -> Array<Int64> {
+    public func getInt64(count: Int) -> Array<Int64> {
         return getArray(count, defaultValue: 0) { self.getInt64() }
     }
     
-    func getUInt8(count: Int) -> Array<UInt8> {
+    public func getUInt8(count: Int) -> Array<UInt8> {
         return getArray(count, defaultValue: 0) { self.getUInt8() }
     }
     
-    func getUInt16(count: Int) -> Array<UInt16> {
+    public func getUInt16(count: Int) -> Array<UInt16> {
         return getArray(count, defaultValue: 0) { self.getUInt16() }
     }
     
-    func getUInt32(count: Int) -> Array<UInt32> {
+    public func getUInt32(count: Int) -> Array<UInt32> {
         return getArray(count, defaultValue: 0) { self.getUInt32() }
     }
     
-    func getUInt64(count: Int) -> Array<UInt64> {
+    public func getUInt64(count: Int) -> Array<UInt64> {
         return getArray(count, defaultValue: 0) { self.getUInt64() }
     }
     
-    func getFloat32(count: Int) -> Array<Float32> {
+    public func getFloat32(count: Int) -> Array<Float32> {
         return getArray(count, defaultValue: 0.0) { self.getFloat32() }
     }
     
-    func getFloat64(count: Int) -> Array<Float64> {
+    public func getFloat64(count: Int) -> Array<Float64> {
         return getArray(count, defaultValue: 0.0) { self.getFloat64() }
     }
     
-    func getArray<T>(count: Int, defaultValue: T, getter: () -> T) -> Array<T> {
+    public func getArray<T>(count: Int, defaultValue: T, getter: () -> T) -> Array<T> {
         var array = Array<T>(count: count, repeatedValue: defaultValue)
         for index in 0..<count { array[index] = getter() }
         return array
     }
     
-    func getArray<T>(count: Int, getter: () -> T) -> Array<T> {
+    public func getArray<T>(count: Int, getter: () -> T) -> Array<T> {
         var array = Array<T>()
         array.reserveCapacity(count)
         for index in 0..<count { array += getter() }
         return array
     }
     
-    func getTerminatedUInt8(terminator: UInt8) -> Array<UInt8> {
+    public func getTerminatedUInt8(terminator: UInt8) -> Array<UInt8> {
         return getArray(terminator) { self.getUInt8() }
     }
     
-    func getArray<T : Equatable>(terminator: T, getter: () -> T) -> Array<T> {
+    public func getArray<T : Equatable>(terminator: T, getter: () -> T) -> Array<T> {
         var array = Array<T>()
         var done = true
         
@@ -278,7 +278,7 @@ class ByteBuffer {
         return array
     }
 
-    func getBits<T>() -> T {
+    public func getBits<T>() -> T {
         for index in 0..<sizeof(T) {
             bits[index] = data[position++]
         }
@@ -286,73 +286,73 @@ class ByteBuffer {
         return UnsafePointer<T>(bits).memory
     }
     
-    func putInt8(value: Int8) {
+    public func putInt8(value: Int8) {
         putUInt8(value.asUnsigned())
     }
     
-    func putInt16(value: Int16) {
+    public func putInt16(value: Int16) {
         putUInt16(value.asUnsigned())
     }
     
-    func putInt32(value: Int32) {
+    public func putInt32(value: Int32) {
         putUInt32(value.asUnsigned())
     }
     
-    func putInt64(value: Int64) {
+    public func putInt64(value: Int64) {
         putUInt64(value.asUnsigned())
     }
     
-    func putUInt8(value: UInt8) {
+    public func putUInt8(value: UInt8) {
         data[position++] = value
     }
     
-    func putUInt16(value: UInt16) {
+    public func putUInt16(value: UInt16) {
         putBits(order.fromNative(value))
     }
     
-    func putUInt32(value: UInt32) {
+    public func putUInt32(value: UInt32) {
         putBits(order.fromNative(value))
     }
     
-    func putUInt64(value: UInt64) {
+    public func putUInt64(value: UInt64) {
         putBits(order.fromNative(value))
     }
     
-    func putFloat32(value: Float32) {
+    public func putFloat32(value: Float32) {
         UnsafePointer<Float32>(bits).memory = value
         putUInt32(UnsafePointer<UInt32>(bits).memory)
     }
     
-    func putFloat64(value: Float64) {
+    public func putFloat64(value: Float64) {
         UnsafePointer<Float64>(bits).memory = value
         putUInt64(UnsafePointer<UInt64>(bits).memory)
     }
     
-    func putUTF8(value: String) {
+    public func putUTF8(value: String) {
         putArray(value.utf8) { self.putUInt8($0) }
     }
 
-    func putInt8(values: Array<Int8>) {
+    public func putInt8(values: Array<Int8>) {
         putArray(values) { self.putInt8($0) }
     }
     
-    func putInt16(values: Array<Int16>) {
+    public func putInt16(values: Array<Int16>) {
         putArray(values) { self.putInt16($0) }
     }
     
-    func putInt32(values: Array<Int32>) {
+    public func putInt32(values: Array<Int32>) {
         putArray(values) { self.putInt32($0) }
     }
     
-    func putInt64(values: Array<Int64>) {
+    public func putInt64(values: Array<Int64>) {
         putArray(values) { self.putInt64($0) }
     }
     
-    func putUInt8(source: Array<UInt8>) {
+    public func putUInt8(source: Array<UInt8>) {
         putUInt8(source, offset: 0, length: source.count)
     }
     
-    func putUInt8(source: Array<UInt8>, offset: Int, length: Int) {
+    public func putUInt8(source: Array<UInt8>, offset: Int, length: Int) {
         if (length > remaining) {
             fatalError("Buffer overflow")
         }
@@ -362,38 +362,38 @@ class ByteBuffer {
         position += length
     }
     
-    func putUInt16(values: Array<UInt16>) {
+    public func putUInt16(values: Array<UInt16>) {
         putArray(values) { self.putUInt16($0) }
     }
     
-    func putUInt32(values: Array<UInt32>) {
+    public func putUInt32(values: Array<UInt32>) {
         putArray(values) { self.putUInt32($0) }
     }
     
-    func putUInt64(values: Array<UInt64>) {
+    public func putUInt64(values: Array<UInt64>) {
         putArray(values) { self.putUInt64($0) }
     }
     
-    func putFloat32(values: Array<Float32>) {
+    public func putFloat32(values: Array<Float32>) {
         putArray(values) { self.putFloat32($0) }
     }
     
-    func putFloat64(values: Array<Float64>) {
+    public func putFloat64(values: Array<Float64>) {
         putArray(values) { self.putFloat64($0) }
     }
     
-    func putTerminatedUTF8(value: String, terminator: UInt8 = 0) {
+    public func putTerminatedUTF8(value: String, terminator: UInt8 = 0) {
         putUTF8(value)
         putUInt8(terminator)
     }
     
-    func putArray<S : Sequence>(values: S, putter: (S.GeneratorType.Element) -> ()) {
+    public func putArray<S : Sequence>(values: S, putter: (S.GeneratorType.Element) -> ()) {
         for value in values {
             putter(value)
         }
     }
     
-    func putBits<T>(value: T) {
+    public func putBits<T>(value: T) {
         UnsafePointer<T>(bits).memory = value
         
         for index in 0..<sizeof(T) {
@@ -401,12 +401,12 @@ class ByteBuffer {
         }
     }
     
-    subscript(subRange: Range<Int>) -> ByteBuffer {
+    public subscript(subRange: Range<Int>) -> ByteBuffer {
         let length = subRange.endIndex - subRange.startIndex + 1
         return ByteBuffer(order: order, data: data + subRange.startIndex, capacity: length, freeOnDeinit: false)
     }
     
-    func putBuffer(buffer: ByteBuffer) {
+    public func putBuffer(buffer: ByteBuffer) {
         let count = buffer.remaining
         data.initializeFrom(buffer.data + buffer.position, count: count)
         position += count

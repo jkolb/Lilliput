@@ -23,7 +23,7 @@
 // THE SOFTWARE.
 //
 
-protocol ByteOrder {
+public protocol ByteOrder {
     func toNative(value: UInt16) -> UInt16
     func toNative(value: UInt32) -> UInt32
     func toNative(value: UInt64) -> UInt64
@@ -33,7 +33,7 @@ protocol ByteOrder {
     func fromNative(value: UInt64) -> UInt64
 }
 
-func nativeOrder() -> ByteOrder {
+public func nativeOrder() -> ByteOrder {
     if (UInt16(littleEndian: 1) == UInt16(1).littleEndian) {
         return LittleEndian()
     } else if (UInt16(bigEndian: 1) == UInt16(1).bigEndian) {
@@ -43,7 +43,7 @@ func nativeOrder() -> ByteOrder {
     }
 }
 
-func foreignOrder() -> ByteOrder {
+public func foreignOrder() -> ByteOrder {
     if (UInt16(littleEndian: 1) == UInt16(1).littleEndian) {
         return BigEndian()
     } else if (UInt16(bigEndian: 1) == UInt16(1).bigEndian) {
@@ -53,54 +53,54 @@ func foreignOrder() -> ByteOrder {
     }
 }
 
-struct LittleEndian : ByteOrder {
-    func toNative(value: UInt16) -> UInt16 {
+public struct LittleEndian : ByteOrder {
+    public func toNative(value: UInt16) -> UInt16 {
         return UInt16(littleEndian: value)
     }
     
-    func toNative(value: UInt32) -> UInt32 {
+    public func toNative(value: UInt32) -> UInt32 {
         return UInt32(littleEndian: value)
     }
     
-    func toNative(value: UInt64) -> UInt64 {
+    public func toNative(value: UInt64) -> UInt64 {
         return UInt64(littleEndian: value)
     }
     
-    func fromNative(value: UInt16) -> UInt16 {
+    public func fromNative(value: UInt16) -> UInt16 {
         return value.littleEndian
     }
     
-    func fromNative(value: UInt32) -> UInt32 {
+    public func fromNative(value: UInt32) -> UInt32 {
         return value.littleEndian
     }
     
-    func fromNative(value: UInt64) -> UInt64 {
+    public func fromNative(value: UInt64) -> UInt64 {
         return value.littleEndian
     }
 }
 
-struct BigEndian : ByteOrder {
-    func toNative(value: UInt16) -> UInt16 {
+public struct BigEndian : ByteOrder {
+    public func toNative(value: UInt16) -> UInt16 {
         return UInt16(bigEndian: value)
     }
     
-    func toNative(value: UInt32) -> UInt32 {
+    public func toNative(value: UInt32) -> UInt32 {
         return UInt32(bigEndian: value)
     }
     
-    func toNative(value: UInt64) -> UInt64 {
+    public func toNative(value: UInt64) -> UInt64 {
         return UInt64(bigEndian: value)
     }
 
-    func fromNative(value: UInt16) -> UInt16 {
+    public func fromNative(value: UInt16) -> UInt16 {
         return value.bigEndian
     }
     
-    func fromNative(value: UInt32) -> UInt32 {
+    public func fromNative(value: UInt32) -> UInt32 {
         return value.bigEndian
     }
     
-    func fromNative(value: UInt64) -> UInt64 {
+    public func fromNative(value: UInt64) -> UInt64 {
         return value.bigEndian
     }
 }
