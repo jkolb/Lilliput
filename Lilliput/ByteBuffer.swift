@@ -91,7 +91,7 @@ public class ByteBuffer {
     return remaining > 0
     }
     
-    var remaining: Int {
+    public var remaining: Int {
     return limit - position
     }
     
