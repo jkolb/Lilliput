@@ -54,6 +54,8 @@ public func foreignOrder() -> ByteOrder {
 }
 
 public struct LittleEndian : ByteOrder {
+    public init() { }
+    
     public func toNative(value: UInt16) -> UInt16 {
         return UInt16(littleEndian: value)
     }
@@ -80,6 +82,8 @@ public struct LittleEndian : ByteOrder {
 }
 
 public struct BigEndian : ByteOrder {
+    public init() { }
+    
     public func toNative(value: UInt16) -> UInt16 {
         return UInt16(bigEndian: value)
     }
