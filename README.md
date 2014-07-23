@@ -4,11 +4,14 @@ Lilliput
 A native Swift framework for working with binary data of varying endianness
 
 There are three types:
-ByteOrder - Handles converting values between little and big endianness
-ByteBuffer - A collection of bytes with a specific byte order
-BinaryFile - A wrapper around POSIX file descriptors that makes it easy to read, write, or map ByteBuffer instances
 
-ByteOrder and ByteBuffer are loosely based on similar ones found in Java of the same name, so knowledge of them should help you here. BinaryFile is based off of a combination of FileChannel & RandomAccessFile.
+*ByteOrder* - Handles converting values between little and big endianness
+
+*ByteBuffer* - A collection of bytes with a specific byte order
+
+*BinaryFile* - A wrapper around POSIX file descriptors that makes it easy to read, write, or map ByteBuffer instances
+
+ByteOrder and ByteBuffer are loosely based on similar ones found in Java of the same name, so knowledge of them should help you here. BinaryFile is based off of a combination of FileChannel and RandomAccessFile.
 
 
 Examples
