@@ -24,7 +24,7 @@
 //
 
 public class ByteBuffer {
-    public let order: ByteOrder
+    public var order: ByteOrder
     var data: UnsafePointer<UInt8>
     private let freeOnDeinit: Bool
     public let capacity: Int
