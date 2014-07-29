@@ -408,7 +408,8 @@ public class ByteBuffer {
     
     public func putBuffer(buffer: ByteBuffer) {
         let count = buffer.remaining
-        data.initializeFrom(buffer.data + buffer.position, count: count)
+        let offset = data + position
+        offset.initializeFrom(buffer.data + buffer.position, count: count)
         position += count
         buffer.position += count
     }

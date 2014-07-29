@@ -88,7 +88,7 @@ public class BinaryFile {
     }
     
     public class func openBinaryFile(path: String, flags: CInt) -> Result<BinaryFile> {
-        let fileDescriptor = path.withCString { open($0, flags) }
+        let fileDescriptor = path.withCString { open($0, flags, 0o644) }
         if fileDescriptor < 0 { return .Failure(Error(code: errno)) }
         return .Success(BinaryFile(fileDescriptor: fileDescriptor))
     }
