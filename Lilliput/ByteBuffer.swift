@@ -402,7 +402,7 @@ public class ByteBuffer {
     }
     
     public subscript(subRange: Range<Int>) -> ByteBuffer {
-        let length = subRange.endIndex - subRange.startIndex + 1
+        let length = subRange.endIndex - subRange.startIndex
         return ByteBuffer(order: order, data: data + subRange.startIndex, capacity: length, freeOnDeinit: false)
     }
     
