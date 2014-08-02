@@ -23,68 +23,68 @@
 // THE SOFTWARE.
 //
 
-protocol ConvertableInteger : IntegerArithmetic {
+public protocol ConvertableInteger : IntegerArithmetic {
     func toInt() -> Int
     init(_ v: Int)
 }
 
 extension Int8 : ConvertableInteger {
-    func toInt() -> Int { return Int(self) }
+    public func toInt() -> Int { return Int(self) }
 }
 
 extension UInt8 : ConvertableInteger {
-    func toInt() -> Int { return Int(self.asSigned()) }
+    public func toInt() -> Int { return Int(self.asSigned()) }
 }
 
 extension Int16 : ConvertableInteger {
-    func toInt() -> Int { return Int(self) }
+    public func toInt() -> Int { return Int(self) }
 }
 
 extension UInt16 : ConvertableInteger {
-    func toInt() -> Int { return Int(self.asSigned()) }
+    public func toInt() -> Int { return Int(self.asSigned()) }
 }
 
 extension Int32 : ConvertableInteger {
-    func toInt() -> Int { return Int(self) }
+    public func toInt() -> Int { return Int(self) }
 }
 
 extension UInt32 : ConvertableInteger {
-    func toInt() -> Int { return Int(self.asSigned()) }
+    public func toInt() -> Int { return Int(self.asSigned()) }
 }
 
 extension Int64 : ConvertableInteger {
-    func toInt() -> Int { return Int(self) }
+    public func toInt() -> Int { return Int(self) }
 }
 
 extension UInt64 : ConvertableInteger {
-    func toInt() -> Int { return Int(self.asSigned()) }
+    public func toInt() -> Int { return Int(self.asSigned()) }
 }
 
 extension Int : ConvertableInteger {
-    func toInt() -> Int { return self }
+    public func toInt() -> Int { return self }
 }
 
 extension UInt : ConvertableInteger {
-    func toInt() -> Int { return self.asSigned() }
+    public func toInt() -> Int { return self.asSigned() }
 }
 
-func hex<T: ConvertableInteger>(value: T) -> String {
+public func hex<T: ConvertableInteger>(value: T) -> String {
     return pad(format(value, 16), "0", sizeof(T) * 2)
 }
 
-func binary<T: ConvertableInteger>(value: T) -> String {
+public func binary<T: ConvertableInteger>(value: T) -> String {
     return pad(format(value, 2), "0", sizeof(T) * 8)
 }
 
-func octal<T: ConvertableInteger>(value: T, length: Int = 0) -> String {
+public func octal<T: ConvertableInteger>(value: T, length: Int = 0) -> String {
     return pad(format(value, 8), "0", length)
 }
 
-func base36<T: ConvertableInteger>(value: T, length: Int = 0) -> String {
+public func base36<T: ConvertableInteger>(value: T, length: Int = 0) -> String {
     return pad(format(value, 36), "0", length)
 }
 
-func format<T: ConvertableInteger>(value: T, base: Int) -> String {
+public func format<T: ConvertableInteger>(value: T, base: Int) -> String {
     assert(base >= 02, "Base must be from 2 to 36")
     assert(base <= 36, "Base must be from 2 to 36")
     let digit = [
@@ -107,7 +107,7 @@ func format<T: ConvertableInteger>(value: T, base: Int) -> String {
     return string
 }
 
-func pad(string: String, padChar: Character, length: Int) -> String {
+public func pad(string: String, padChar: Character, length: Int) -> String {
     let count = countElements(string)
     if (count >= length) { return string }
     let padding = String(count: length - count, repeatedValue: padChar)
