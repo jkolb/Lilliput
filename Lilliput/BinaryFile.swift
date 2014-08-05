@@ -45,7 +45,7 @@ public class BinaryFile {
     }
     
     public enum Result<T> {
-        case Success(@auto_closure () -> T)
+        case Success(@autoclosure () -> T)
         case Failure(Error)
         
         public var error: Error? {
@@ -163,18 +163,18 @@ public class BinaryFile {
     }
     
     public func map(order: ByteOrder, mode: MapMode, position: FilePosition, size: FileSize) -> Result<ByteBuffer> {
-        var pointer: UnsafePointer<()>
+        var pointer: UnsafeMutablePointer<()>
         switch mode {
         case .Private:
-            pointer = mmap(UnsafePointer<UInt8>(0), UInt(size), PROT_READ | PROT_WRITE, MAP_PRIVATE, fileDescriptor, position)
+            pointer = mmap(UnsafeMutablePointer<UInt8>(0), UInt(size), PROT_READ | PROT_WRITE, MAP_PRIVATE, fileDescriptor, position)
         case .ReadOnly:
-            pointer = mmap(UnsafePointer<UInt8>(0), UInt(size), PROT_READ, MAP_SHARED, fileDescriptor, position)
+            pointer = mmap(UnsafeMutablePointer<UInt8>(0), UInt(size), PROT_READ, MAP_SHARED, fileDescriptor, position)
         case .ReadWrite:
-            pointer = mmap(UnsafePointer<UInt8>(0), UInt(size), PROT_READ | PROT_WRITE, MAP_SHARED, fileDescriptor, position)
+            pointer = mmap(UnsafeMutablePointer<UInt8>(0), UInt(size), PROT_READ | PROT_WRITE, MAP_SHARED, fileDescriptor, position)
 
         }
         if pointer == UnsafePointer<()>(-1) { return .Failure(Error(code: errno)) }
-        return .Success(ByteBuffer(order: order, data: UnsafePointer<UInt8>(pointer), capacity: Int(size), freeOnDeinit: false))
+        return .Success(ByteBuffer(order: order, data: UnsafeMutablePointer<UInt8>(pointer), capacity: Int(size), freeOnDeinit: false))
     }
     
     public func unmap(buffer: ByteBuffer) -> Result<Bool> {

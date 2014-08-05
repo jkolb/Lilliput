@@ -23,7 +23,7 @@
 // THE SOFTWARE.
 //
 
-public protocol ConvertableInteger : IntegerArithmetic {
+public protocol ConvertableInteger : IntegerArithmeticType {
     func toInt() -> Int
     init(_ v: Int)
 }
@@ -33,7 +33,7 @@ extension Int8 : ConvertableInteger {
 }
 
 extension UInt8 : ConvertableInteger {
-    public func toInt() -> Int { return Int(self.asSigned()) }
+    public func toInt() -> Int { return Int(Int8(bitPattern: self)) }
 }
 
 extension Int16 : ConvertableInteger {
@@ -41,7 +41,7 @@ extension Int16 : ConvertableInteger {
 }
 
 extension UInt16 : ConvertableInteger {
-    public func toInt() -> Int { return Int(self.asSigned()) }
+    public func toInt() -> Int { return Int(Int16(bitPattern: self)) }
 }
 
 extension Int32 : ConvertableInteger {
@@ -49,7 +49,7 @@ extension Int32 : ConvertableInteger {
 }
 
 extension UInt32 : ConvertableInteger {
-    public func toInt() -> Int { return Int(self.asSigned()) }
+    public func toInt() -> Int { return Int(Int32(bitPattern: self)) }
 }
 
 extension Int64 : ConvertableInteger {
@@ -57,7 +57,7 @@ extension Int64 : ConvertableInteger {
 }
 
 extension UInt64 : ConvertableInteger {
-    public func toInt() -> Int { return Int(self.asSigned()) }
+    public func toInt() -> Int { return Int(Int64(bitPattern: self)) }
 }
 
 extension Int : ConvertableInteger {
@@ -65,7 +65,7 @@ extension Int : ConvertableInteger {
 }
 
 extension UInt : ConvertableInteger {
-    public func toInt() -> Int { return self.asSigned() }
+    public func toInt() -> Int { return Int(bitPattern: self) }
 }
 
 public func hex<T: ConvertableInteger>(value: T) -> String {

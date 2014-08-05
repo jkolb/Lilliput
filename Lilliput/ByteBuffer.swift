@@ -25,15 +25,15 @@
 
 public class ByteBuffer {
     public var order: ByteOrder
-    var data: UnsafePointer<UInt8>
+    var data: UnsafeMutablePointer<UInt8>
     private let freeOnDeinit: Bool
     public let capacity: Int
-    private let bits = UnsafePointer<UInt8>.alloc(sizeof(UIntMax))
+    private let bits = UnsafeMutablePointer<UInt8>.alloc(sizeof(UIntMax))
     private var privatePosition = 0
     private var privateLimit = 0
     private var privateMark = -1
     
-    public init(order: ByteOrder, data: UnsafePointer<UInt8>, capacity: Int, freeOnDeinit: Bool) {
+    public init(order: ByteOrder, data: UnsafeMutablePointer<UInt8>, capacity: Int, freeOnDeinit: Bool) {
         assert(capacity >= 0)
         self.order = order
         self.data = data
@@ -43,7 +43,7 @@ public class ByteBuffer {
     }
     
     public convenience init(order: ByteOrder, capacity: Int) {
-        self.init(order: order, data: UnsafePointer<UInt8>.alloc(capacity), capacity: capacity, freeOnDeinit: true)
+        self.init(order: order, data: UnsafeMutablePointer<UInt8>.alloc(capacity), capacity: capacity, freeOnDeinit: true)
     }
 
     deinit {
@@ -129,19 +129,19 @@ public class ByteBuffer {
     }
 
     public func getInt8() -> Int8 {
-        return getUInt8().asSigned()
+        return Int8(bitPattern: getUInt8())
     }
     
     public func getInt16() -> Int16 {
-        return getUInt16().asSigned()
+        return Int16(bitPattern: getUInt16())
     }
     
     public func getInt32() -> Int32 {
-        return getUInt32().asSigned()
+        return Int32(bitPattern: getUInt32())
     }
     
     public func getInt64() -> Int64 {
-        return getUInt64().asSigned()
+        return Int64(bitPattern: getUInt64())
     }
     
     public func getUInt8() -> UInt8 {
@@ -161,12 +161,12 @@ public class ByteBuffer {
     }
     
     public func getFloat32() -> Float32 {
-        UnsafePointer<UInt32>(bits).memory = getUInt32()
+        UnsafeMutablePointer<UInt32>(bits).memory = getUInt32()
         return UnsafePointer<Float32>(bits).memory
     }
     
     public func getFloat64() -> Float64 {
-        UnsafePointer<UInt64>(bits).memory = getUInt64()
+        UnsafeMutablePointer<UInt64>(bits).memory = getUInt64()
         return UnsafePointer<Float64>(bits).memory
     }
     
@@ -178,7 +178,7 @@ public class ByteBuffer {
         return decodeCodeUnits(getTerminatedUInt8(terminator), codec: UTF8())
     }
 
-    public func decodeCodeUnits<C : UnicodeCodec>(codeUnits: Array<C.CodeUnit>, var codec: C) -> String {
+    public func decodeCodeUnits<C : UnicodeCodecType>(codeUnits: Array<C.CodeUnit>, var codec: C) -> String {
         var generator = codeUnits.generate()
         var characters = Array<Character>()
         characters.reserveCapacity(codeUnits.count)
@@ -187,7 +187,7 @@ public class ByteBuffer {
         while (!done) {
             switch codec.decode(&generator) {
             case .Result(let scalar):
-                characters += Character(scalar)
+                characters.append(Character(scalar))
                 
             case .EmptyInput:
                 done = true
@@ -253,7 +253,7 @@ public class ByteBuffer {
     public func getArray<T>(count: Int, getter: () -> T) -> Array<T> {
         var array = Array<T>()
         array.reserveCapacity(count)
-        for index in 0..<count { array += getter() }
+        for index in 0..<count { array.append(getter()) }
         return array
     }
     
@@ -271,7 +271,7 @@ public class ByteBuffer {
             if (value == terminator) {
                 done = true
             } else {
-                array += value
+                array.append(value)
             }
         }
         
@@ -287,19 +287,19 @@ public class ByteBuffer {
     }
     
     public func putInt8(value: Int8) {
-        putUInt8(value.asUnsigned())
+        putUInt8(UInt8(bitPattern: value))
     }
     
     public func putInt16(value: Int16) {
-        putUInt16(value.asUnsigned())
+        putUInt16(UInt16(bitPattern: value))
     }
     
     public func putInt32(value: Int32) {
-        putUInt32(value.asUnsigned())
+        putUInt32(UInt32(bitPattern: value))
     }
     
     public func putInt64(value: Int64) {
-        putUInt64(value.asUnsigned())
+        putUInt64(UInt64(bitPattern: value))
     }
     
     public func putUInt8(value: UInt8) {
@@ -319,12 +319,12 @@ public class ByteBuffer {
     }
     
     public func putFloat32(value: Float32) {
-        UnsafePointer<Float32>(bits).memory = value
+        UnsafeMutablePointer<Float32>(bits).memory = value
         putUInt32(UnsafePointer<UInt32>(bits).memory)
     }
     
     public func putFloat64(value: Float64) {
-        UnsafePointer<Float64>(bits).memory = value
+        UnsafeMutablePointer<Float64>(bits).memory = value
         putUInt64(UnsafePointer<UInt64>(bits).memory)
     }
     
@@ -387,14 +387,14 @@ public class ByteBuffer {
         putUInt8(terminator)
     }
     
-    public func putArray<S : Sequence>(values: S, putter: (S.GeneratorType.Element) -> ()) {
+    public func putArray<S : SequenceType>(values: S, putter: (S.Generator.Element) -> ()) {
         for value in values {
             putter(value)
         }
     }
     
     public func putBits<T>(value: T) {
-        UnsafePointer<T>(bits).memory = value
+        UnsafeMutablePointer<T>(bits).memory = value
         
         for index in 0..<sizeof(T) {
             data[position++] = bits[index]
