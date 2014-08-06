@@ -23,88 +23,36 @@
 // THE SOFTWARE.
 //
 
-public protocol ConvertableInteger : IntegerArithmeticType {
-    func toInt() -> Int
-    init(_ v: Int)
+public func hex<T: _SignedIntegerType>(value: T) -> String {
+    return pad(String(value, radix: 16, uppercase: true), "0", sizeof(T) * 2)
 }
 
-extension Int8 : ConvertableInteger {
-    public func toInt() -> Int { return Int(self) }
+public func hex<T: _UnsignedIntegerType>(value: T) -> String {
+    return pad(String(value, radix: 16, uppercase: true), "0", sizeof(T) * 2)
 }
 
-extension UInt8 : ConvertableInteger {
-    public func toInt() -> Int { return Int(Int8(bitPattern: self)) }
+public func binary<T: _SignedIntegerType>(value: T) -> String {
+    return pad(String(value, radix: 2, uppercase: true), "0", sizeof(T) * 8)
 }
 
-extension Int16 : ConvertableInteger {
-    public func toInt() -> Int { return Int(self) }
+public func binary<T: _UnsignedIntegerType>(value: T) -> String {
+    return pad(String(value, radix: 2, uppercase: true), "0", sizeof(T) * 8)
 }
 
-extension UInt16 : ConvertableInteger {
-    public func toInt() -> Int { return Int(Int16(bitPattern: self)) }
+public func octal<T: _SignedIntegerType>(value: T, length: Int = 0) -> String {
+    return pad(String(value, radix: 8, uppercase: true), "0", length)
 }
 
-extension Int32 : ConvertableInteger {
-    public func toInt() -> Int { return Int(self) }
+public func octal<T: _UnsignedIntegerType>(value: T, length: Int = 0) -> String {
+    return pad(String(value, radix: 8, uppercase: true), "0", length)
 }
 
-extension UInt32 : ConvertableInteger {
-    public func toInt() -> Int { return Int(Int32(bitPattern: self)) }
+public func base36<T: _SignedIntegerType>(value: T, length: Int = 0) -> String {
+    return pad(String(value, radix: 36, uppercase: true), "0", length)
 }
 
-extension Int64 : ConvertableInteger {
-    public func toInt() -> Int { return Int(self) }
-}
-
-extension UInt64 : ConvertableInteger {
-    public func toInt() -> Int { return Int(Int64(bitPattern: self)) }
-}
-
-extension Int : ConvertableInteger {
-    public func toInt() -> Int { return self }
-}
-
-extension UInt : ConvertableInteger {
-    public func toInt() -> Int { return Int(bitPattern: self) }
-}
-
-public func hex<T: ConvertableInteger>(value: T) -> String {
-    return pad(format(value, 16), "0", sizeof(T) * 2)
-}
-
-public func binary<T: ConvertableInteger>(value: T) -> String {
-    return pad(format(value, 2), "0", sizeof(T) * 8)
-}
-
-public func octal<T: ConvertableInteger>(value: T, length: Int = 0) -> String {
-    return pad(format(value, 8), "0", length)
-}
-
-public func base36<T: ConvertableInteger>(value: T, length: Int = 0) -> String {
-    return pad(format(value, 36), "0", length)
-}
-
-public func format<T: ConvertableInteger>(value: T, base: Int) -> String {
-    assert(base >= 02, "Base must be from 2 to 36")
-    assert(base <= 36, "Base must be from 2 to 36")
-    let digit = [
-        "0", "1", "2", "3", "4", "5",
-        "6", "7", "8", "9", "A", "B",
-        "C", "D", "E", "F", "G", "H",
-        "I", "J", "K", "L", "M", "N",
-        "O", "P", "Q", "R", "S", "T",
-        "U", "V", "W", "X", "Y", "Z",
-    ]
-    var string = ""
-    var nextValue = value
-    let typedBase = T(base)
-    let typedZero = T(0)
-    do {
-        let index = (nextValue % typedBase).toInt()
-        string = digit[index] + string
-        nextValue /= typedBase
-    } while (nextValue > typedZero)
-    return string
+public func base36<T: _UnsignedIntegerType>(value: T, length: Int = 0) -> String {
+    return pad(String(value, radix: 36, uppercase: true), "0", length)
 }
 
 public func pad(string: String, padChar: Character, length: Int) -> String {
