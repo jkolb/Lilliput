@@ -33,7 +33,7 @@ public typealias ByteCount = Int
 public class BinaryFile {
     public let fileDescriptor: FileDescriptor
     private let closeOnDeinit: Bool
-
+    
     public struct Error {
         public let code: ErrorCode
         public let message: String
@@ -44,8 +44,8 @@ public class BinaryFile {
         }
     }
     
-    public enum Result<T> {
-        case Success(@autoclosure () -> T)
+    public enum OpenResult {
+        case Success(BinaryFile)
         case Failure(Error)
         
         public var error: Error? {
@@ -54,24 +54,24 @@ public class BinaryFile {
                 return nil
             case .Failure(let error):
                 return error
-            }
+                }
         }
         
-        public var value: T! {
+        public var binaryFile: BinaryFile! {
             switch self {
             case .Success(let value):
-                return value()
+                return value
             case .Failure:
                 return nil
-            }
+                }
         }
     }
     
-    public class func openForReading(path: String) -> Result<BinaryFile> {
+    public class func openForReading(path: String) -> OpenResult {
         return openBinaryFile(path, flags: O_RDONLY)
     }
     
-    public class func openForWriting(path: String, create: Bool = true) -> Result<BinaryFile> {
+    public class func openForWriting(path: String, create: Bool = true) -> OpenResult {
         if create {
             return openBinaryFile(path, flags: O_WRONLY | O_CREAT)
         } else {
@@ -79,7 +79,7 @@ public class BinaryFile {
         }
     }
     
-    public class func openForUpdating(path: String, create: Bool = true) -> Result<BinaryFile> {
+    public class func openForUpdating(path: String, create: Bool = true) -> OpenResult {
         if create {
             return openBinaryFile(path, flags: O_RDWR | O_CREAT)
         } else {
@@ -87,7 +87,7 @@ public class BinaryFile {
         }
     }
     
-    public class func openBinaryFile(path: String, flags: CInt) -> Result<BinaryFile> {
+    public class func openBinaryFile(path: String, flags: CInt) -> OpenResult {
         let fileDescriptor = path.withCString { open($0, flags, 0o644) }
         if fileDescriptor < 0 { return .Failure(Error(code: errno)) }
         return .Success(BinaryFile(fileDescriptor: fileDescriptor))
@@ -103,14 +103,37 @@ public class BinaryFile {
         if (closeOnDeinit) { close(fileDescriptor) }
     }
     
-    public func readBuffer(buffer: ByteBuffer) -> Result<ByteCount> {
+    public enum ReadWriteResult {
+        case Success(ByteCount)
+        case Failure(Error)
+        
+        public var error: Error? {
+            switch self {
+            case .Success:
+                return nil
+            case .Failure(let error):
+                return error
+                }
+        }
+        
+        public var byteCount: ByteCount! {
+            switch self {
+            case .Success(let value):
+                return value
+            case .Failure:
+                return nil
+                }
+        }
+    }
+
+    public func readBuffer(buffer: ByteBuffer) -> ReadWriteResult {
         let bytesRead = read(fileDescriptor, buffer.data + buffer.position, UInt(buffer.remaining))
         if bytesRead < 0 { return .Failure(Error(code: errno)) }
         buffer.position += bytesRead
         return .Success(bytesRead)
     }
     
-    public func writeBuffer(buffer: ByteBuffer) -> Result<ByteCount> {
+    public func writeBuffer(buffer: ByteBuffer) -> ReadWriteResult {
         let bytesWritten = write(fileDescriptor, buffer.data + buffer.position, UInt(buffer.remaining))
         if bytesWritten < 0 { return .Failure(Error(code: errno)) }
         buffer.position += bytesWritten
@@ -123,7 +146,30 @@ public class BinaryFile {
         case End
     }
     
-    public func seek(offset: FileOffset, from: SeekFrom = .Start) -> Result<FilePosition> {
+    public enum SeekResult {
+        case Success(FilePosition)
+        case Failure(Error)
+        
+        public var error: Error? {
+            switch self {
+            case .Success:
+                return nil
+            case .Failure(let error):
+                return error
+                }
+        }
+        
+        public var filePosition: FilePosition! {
+            switch self {
+            case .Success(let value):
+                return value
+            case .Failure:
+                return nil
+                }
+        }
+    }
+    
+    public func seek(offset: FileOffset, from: SeekFrom = .Start) -> SeekResult {
         var position: FilePosition
         switch from {
         case .Start:
@@ -137,49 +183,109 @@ public class BinaryFile {
         return .Success(position)
     }
     
-    public func size() -> Result<FileSize> {
+    public enum SizeResult {
+        case Success(FileSize)
+        case Failure(Error)
+        
+        public var error: Error? {
+            switch self {
+            case .Success:
+                return nil
+            case .Failure(let error):
+                return error
+                }
+        }
+        
+        public var fileSize: FileSize! {
+            switch self {
+            case .Success(let value):
+                return value
+            case .Failure:
+                return nil
+                }
+        }
+    }
+
+    public func size() -> SizeResult {
         var status = stat()
         let result = fstat(fileDescriptor, &status)
         if result < 0 { return .Failure(Error(code: errno)) }
         return .Success(status.st_size)
     }
     
-    public func resize(size: FileSize) -> Result<FileSize> {
+    public func resize(size: FileSize) -> SizeResult {
         let result = ftruncate(fileDescriptor, size)
         if result < 0 { return .Failure(Error(code: errno)) }
         return .Success(size)
     }
-
+    
     public enum MapMode {
         case Private
         case ReadOnly
         case ReadWrite
     }
+    
+    public enum MapResult {
+        case Success(ByteBuffer)
+        case Failure(Error)
+        
+        public var error: Error? {
+            switch self {
+            case .Success:
+                return nil
+            case .Failure(let error):
+                return error
+                }
+        }
+        
+        public var byteBuffer: ByteBuffer! {
+            switch self {
+            case .Success(let value):
+                return value
+            case .Failure:
+                return nil
+                }
+        }
+    }
 
-    public func map(order: ByteOrder, mode: MapMode) -> Result<ByteBuffer> {
+    public func map(order: ByteOrder, mode: MapMode) -> MapResult {
         let sizeResult = size()
         if let error = sizeResult.error { return .Failure(error) }
-        return map(order, mode: mode, position: FilePosition(0), size: sizeResult.value)
+        return map(order, mode: mode, position: FilePosition(0), size: sizeResult.fileSize)
     }
     
-    public func map(order: ByteOrder, mode: MapMode, position: FilePosition, size: FileSize) -> Result<ByteBuffer> {
+    public func map(order: ByteOrder, mode: MapMode, position: FilePosition, size: FileSize) -> MapResult {
         var pointer: UnsafeMutablePointer<()>
         switch mode {
         case .Private:
-            pointer = mmap(UnsafeMutablePointer<UInt8>(0), UInt(size), PROT_READ | PROT_WRITE, MAP_PRIVATE, fileDescriptor, position)
+            pointer = mmap(UnsafeMutablePointer<Void>(bitPattern: 0), UInt(size), PROT_READ | PROT_WRITE, MAP_PRIVATE, fileDescriptor, position)
         case .ReadOnly:
-            pointer = mmap(UnsafeMutablePointer<UInt8>(0), UInt(size), PROT_READ, MAP_SHARED, fileDescriptor, position)
+            pointer = mmap(UnsafeMutablePointer<Void>(bitPattern: 0), UInt(size), PROT_READ, MAP_SHARED, fileDescriptor, position)
         case .ReadWrite:
-            pointer = mmap(UnsafeMutablePointer<UInt8>(0), UInt(size), PROT_READ | PROT_WRITE, MAP_SHARED, fileDescriptor, position)
-
+            pointer = mmap(UnsafeMutablePointer<Void>(bitPattern: 0), UInt(size), PROT_READ | PROT_WRITE, MAP_SHARED, fileDescriptor, position)
+            
         }
-        if pointer == UnsafePointer<()>(-1) { return .Failure(Error(code: errno)) }
+        if pointer == UnsafePointer<Void>(bitPattern: -1) { return .Failure(Error(code: errno)) }
         return .Success(ByteBuffer(order: order, data: UnsafeMutablePointer<UInt8>(pointer), capacity: Int(size), freeOnDeinit: false))
     }
     
-    public func unmap(buffer: ByteBuffer) -> Result<Bool> {
+    public enum UnmapResult {
+        case Success
+        case Failure(Error)
+        
+        public var error: Error? {
+            switch self {
+            case .Success:
+                return nil
+            case .Failure(let error):
+                return error
+                }
+        }
+    }
+    
+    public func unmap(buffer: ByteBuffer) -> UnmapResult {
         let result = munmap(buffer.data, UInt(buffer.capacity))
         if result < 0 { return .Failure(Error(code: errno)) }
-        return .Success(true)
+        return .Success
     }
 }
