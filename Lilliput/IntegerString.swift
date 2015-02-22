@@ -56,8 +56,8 @@ public func base36<T: _UnsignedIntegerType>(value: T, length: Int = 0) -> String
 }
 
 public func pad(string: String, padChar: Character, length: Int) -> String {
-    let count = countElements(string)
-    if (count >= length) { return string }
-    let padding = String(count: length - count, repeatedValue: padChar)
+    let stringLength = count(string)
+    if (stringLength >= length) { return string }
+    let padding = String(count: length - stringLength, repeatedValue: padChar)
     return padding + string
 }
