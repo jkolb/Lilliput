@@ -15,7 +15,6 @@
 		E5BDC5E0196F6AC0001ABC11 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */; };
 		E5BDC5E2196F6BD2001ABC11 /* ByteOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5E1196F6BD2001ABC11 /* ByteOrderTests.swift */; };
 		E5BDC5E4196F6BFC001ABC11 /* ByteBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5E3196F6BFC001ABC11 /* ByteBufferTests.swift */; };
-		E5BDC5EC196F9B79001ABC11 /* BinaryFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5EB196F9B79001ABC11 /* BinaryFile.swift */; };
 		E5E67333198D835700AA9930 /* IntegerString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E67332198D835700AA9930 /* IntegerString.swift */; };
 		E5E67334198D838D00AA9930 /* IntegerString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E67332198D835700AA9930 /* IntegerString.swift */; };
 		E5F44F051970D09300F33358 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */; };
@@ -42,7 +41,6 @@
 		E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteOrder.swift; sourceTree = "<group>"; };
 		E5BDC5E1196F6BD2001ABC11 /* ByteOrderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteOrderTests.swift; sourceTree = "<group>"; };
 		E5BDC5E3196F6BFC001ABC11 /* ByteBufferTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBufferTests.swift; sourceTree = "<group>"; };
-		E5BDC5EB196F9B79001ABC11 /* BinaryFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinaryFile.swift; sourceTree = "<group>"; };
 		E5E67332198D835700AA9930 /* IntegerString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegerString.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -89,7 +87,6 @@
 				E5BDC5C6196F698B001ABC11 /* Lilliput.h */,
 				E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */,
 				E5BDC5DD196F6AC0001ABC11 /* ByteBuffer.swift */,
-				E5BDC5EB196F9B79001ABC11 /* BinaryFile.swift */,
 				E5E67332198D835700AA9930 /* IntegerString.swift */,
 				E5BDC5C4196F698B001ABC11 /* Supporting Files */,
 			);
@@ -232,7 +229,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E5BDC5E0196F6AC0001ABC11 /* ByteOrder.swift in Sources */,
-				E5BDC5EC196F9B79001ABC11 /* BinaryFile.swift in Sources */,
 				E5BDC5DF196F6AC0001ABC11 /* ByteBuffer.swift in Sources */,
 				E5E67333198D835700AA9930 /* IntegerString.swift in Sources */,
 			);

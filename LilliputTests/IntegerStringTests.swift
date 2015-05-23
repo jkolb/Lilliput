@@ -27,8 +27,8 @@ import XCTest
 
 class IntegerStringTests: XCTestCase {
     func testHex() {
-        XCTAssertEqual(hex(Int32(0xFFFF)), "0000FFFF", "Failed")
-        XCTAssertEqual(hex(UInt32(0xFFFF)), "0000FFFF", "Failed")
+        XCTAssertEqual(hex(Int32(0xffff)), "0000ffff", "Failed")
+        XCTAssertEqual(hex(UInt32(0xffff)), "0000ffff", "Failed")
     }
     
     func testBinary() {
@@ -43,8 +43,8 @@ class IntegerStringTests: XCTestCase {
     }
     
     func testBase36() {
-        XCTAssertEqual(base36(Int8(0x0F)), "F", "Failed")
-        XCTAssertEqual(base36(UInt8(0xFF)), "73", "Failed")
-        XCTAssertEqual(base36(UInt8(0xFF), length: 4), "0073", "Failed")
+        XCTAssertEqual(base36(Int8(0x0f)), "f", "Failed")
+        XCTAssertEqual(base36(UInt8(0xff)), "73", "Failed")
+        XCTAssertEqual(base36(UInt8(0xff), length: 4), "0073", "Failed")
     }
 }

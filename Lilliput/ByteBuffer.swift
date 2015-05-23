@@ -2,7 +2,7 @@
 // ByteBuffer.swift
 // Lilliput
 //
-// Copyright (c) 2014 Justin Kolb - https://github.com/jkolb/Lilliput
+// Copyright (c) 2015 Justin Kolb - https://github.com/jkolb/Lilliput
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,60 +45,60 @@ public class ByteBuffer {
     public convenience init(order: ByteOrder, capacity: Int) {
         self.init(order: order, data: UnsafeMutablePointer<UInt8>.alloc(capacity), capacity: capacity, freeOnDeinit: true)
     }
-
+    
     deinit {
         bits.dealloc(sizeof(UIntMax))
         if freeOnDeinit { data.dealloc(capacity) }
     }
     
     public var limit: Int {
-    get {
-        return privateLimit
-    }
-    set {
-        if (newValue < 0 || newValue > capacity) {
-            fatalError("Illegal limit")
+        get {
+            return privateLimit
         }
-        privateLimit = newValue
-        
-        if (privatePosition > privateLimit) {
-            privatePosition = privateLimit
+        set {
+            if (newValue < 0 || newValue > capacity) {
+                fatalError("Illegal limit")
+            }
+            privateLimit = newValue
+            
+            if (privatePosition > privateLimit) {
+                privatePosition = privateLimit
+            }
+            
+            if (privateMark > privateLimit) {
+                privateMark = -1
+            }
         }
-        
-        if (privateMark > privateLimit) {
-            privateMark = -1
-        }
-    }
     }
     
     public var position: Int {
-    get {
-        return privatePosition
-    }
-    set {
-        if (newValue < 0 || newValue > limit) {
-            fatalError("Illegal position")
+        get {
+            return privatePosition
         }
-        privatePosition = newValue
-        
-        if (privateMark > privatePosition) {
-            privateMark = -1
+        set {
+            if (newValue < 0 || newValue > limit) {
+                fatalError("Illegal position")
+            }
+            privatePosition = newValue
+            
+            if (privateMark > privatePosition) {
+                privateMark = -1
+            }
         }
-    }
     }
     
     public var hasRemaining: Bool {
-    return remaining > 0
+        return remaining > 0
     }
     
     public var remaining: Int {
-    return limit - position
+        return limit - position
     }
     
     public func mark() {
         privateMark = position
     }
-
+    
     public func reset() {
         if (privateMark == -1) {
             fatalError("Invalid mark")
@@ -127,7 +127,7 @@ public class ByteBuffer {
         position = remaining
         limit = capacity
     }
-
+    
     public func getInt8() -> Int8 {
         return Int8(bitPattern: getUInt8())
     }
@@ -147,7 +147,7 @@ public class ByteBuffer {
     public func getUInt8() -> UInt8 {
         return data[position++]
     }
-
+    
     public func getUInt16() -> UInt16 {
         return order.toNative(getBits())
     }
@@ -177,7 +177,7 @@ public class ByteBuffer {
     public func getTerminatedUTF8(terminator: UInt8 = 0) -> String {
         return decodeCodeUnits(getTerminatedUInt8(terminator), codec: UTF8())
     }
-
+    
     public func decodeCodeUnits<C : UnicodeCodecType>(codeUnits: Array<C.CodeUnit>, var codec: C) -> String {
         var generator = codeUnits.generate()
         var characters = Array<Character>()
@@ -277,7 +277,7 @@ public class ByteBuffer {
         
         return array
     }
-
+    
     public func getBits<T>() -> T {
         for index in 0..<sizeof(T) {
             bits[index] = data[position++]
@@ -331,7 +331,7 @@ public class ByteBuffer {
     public func putUTF8(value: String) {
         putArray(value.utf8) { self.putUInt8($0) }
     }
-
+    
     public func putInt8(values: Array<Int8>) {
         putArray(values) { self.putInt8($0) }
     }

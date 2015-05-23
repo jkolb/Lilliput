@@ -24,35 +24,35 @@
 //
 
 public func hex<T: _SignedIntegerType>(value: T) -> String {
-    return pad(String(value, radix: 16, uppercase: true), "0", sizeof(T) * 2)
+    return pad(String(value, radix: 16), "0", sizeof(T) * 2)
 }
 
 public func hex<T: _UnsignedIntegerType>(value: T) -> String {
-    return pad(String(value, radix: 16, uppercase: true), "0", sizeof(T) * 2)
+    return pad(String(value, radix: 16), "0", sizeof(T) * 2)
 }
 
 public func binary<T: _SignedIntegerType>(value: T) -> String {
-    return pad(String(value, radix: 2, uppercase: true), "0", sizeof(T) * 8)
+    return pad(String(value, radix: 2), "0", sizeof(T) * 8)
 }
 
 public func binary<T: _UnsignedIntegerType>(value: T) -> String {
-    return pad(String(value, radix: 2, uppercase: true), "0", sizeof(T) * 8)
+    return pad(String(value, radix: 2), "0", sizeof(T) * 8)
 }
 
 public func octal<T: _SignedIntegerType>(value: T, length: Int = 0) -> String {
-    return pad(String(value, radix: 8, uppercase: true), "0", length)
+    return pad(String(value, radix: 8), "0", length)
 }
 
 public func octal<T: _UnsignedIntegerType>(value: T, length: Int = 0) -> String {
-    return pad(String(value, radix: 8, uppercase: true), "0", length)
+    return pad(String(value, radix: 8), "0", length)
 }
 
 public func base36<T: _SignedIntegerType>(value: T, length: Int = 0) -> String {
-    return pad(String(value, radix: 36, uppercase: true), "0", length)
+    return pad(String(value, radix: 36), "0", length)
 }
 
 public func base36<T: _UnsignedIntegerType>(value: T, length: Int = 0) -> String {
-    return pad(String(value, radix: 36, uppercase: true), "0", length)
+    return pad(String(value, radix: 36), "0", length)
 }
 
 public func pad(string: String, padChar: Character, length: Int) -> String {
