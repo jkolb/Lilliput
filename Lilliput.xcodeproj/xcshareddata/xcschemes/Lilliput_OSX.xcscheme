@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E5BDC5C0196F698B001ABC11"
                BuildableName = "Lilliput.framework"
-               BlueprintName = "Lilliput"
+               BlueprintName = "Lilliput_OSX"
                ReferencedContainer = "container:Lilliput.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,8 +29,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E5BDC5CB196F698C001ABC11"
-               BuildableName = "LilliputTests.xctest"
-               BlueprintName = "LilliputTests"
+               BuildableName = "Lilliput_OSXTests.xctest"
+               BlueprintName = "Lilliput_OSXTests"
                ReferencedContainer = "container:Lilliput.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,8 +47,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E5BDC5CB196F698C001ABC11"
-               BuildableName = "LilliputTests.xctest"
-               BlueprintName = "LilliputTests"
+               BuildableName = "Lilliput_OSXTests.xctest"
+               BlueprintName = "Lilliput_OSXTests"
                ReferencedContainer = "container:Lilliput.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -58,7 +58,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E5BDC5C0196F698B001ABC11"
             BuildableName = "Lilliput.framework"
-            BlueprintName = "Lilliput"
+            BlueprintName = "Lilliput_OSX"
             ReferencedContainer = "container:Lilliput.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -77,7 +77,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E5BDC5C0196F698B001ABC11"
             BuildableName = "Lilliput.framework"
-            BlueprintName = "Lilliput"
+            BlueprintName = "Lilliput_OSX"
             ReferencedContainer = "container:Lilliput.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -95,7 +95,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E5BDC5C0196F698B001ABC11"
             BuildableName = "Lilliput.framework"
-            BlueprintName = "Lilliput"
+            BlueprintName = "Lilliput_OSX"
             ReferencedContainer = "container:Lilliput.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
