@@ -1,8 +1,12 @@
-Lilliput 1.0.2
+Lilliput 1.0.3
 ==============
 
 ####ChangeLog
 
+######1.0.3
+Add compile configuration protection around tests that won't compile on 32-bit devices.
+
+######1.0.2
 Attempting to allow building for both iOS and OSX using one project file.
 
 ============

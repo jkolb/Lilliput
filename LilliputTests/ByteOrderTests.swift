@@ -49,37 +49,44 @@ class ByteOrderTests: XCTestCase {
         XCTAssertEqual(UInt32(0x000000FF), native.fromNative(UInt32(0x000000FF)), "Test Failed")
         XCTAssertEqual(UInt32(0x0000FF00), native.fromNative(UInt32(0x0000FF00)), "Test Failed")
         XCTAssertEqual(UInt32(0x00FF0000), native.fromNative(UInt32(0x00FF0000)), "Test Failed")
-        XCTAssertEqual(UInt32(0xFF000000), native.fromNative(UInt32(0xFF000000)), "Test Failed")
         XCTAssertEqual(UInt32(0x01020304), native.fromNative(UInt32(0x01020304)), "Test Failed")
-        XCTAssertEqual(UInt32(0xFFFFFFFF), native.fromNative(UInt32(0xFFFFFFFF)), "Test Failed")
         
         XCTAssertNotEqual(UInt32(0x00000001), native.toNative(UInt32(0x01000000)), "Test Failed")
         XCTAssertNotEqual(UInt32(0x00000100), native.toNative(UInt32(0x00010000)), "Test Failed")
         XCTAssertNotEqual(UInt32(0x00010000), native.toNative(UInt32(0x00000100)), "Test Failed")
         XCTAssertNotEqual(UInt32(0x01000000), native.toNative(UInt32(0x00000001)), "Test Failed")
-        XCTAssertNotEqual(UInt32(0x000000FF), native.toNative(UInt32(0xFF000000)), "Test Failed")
         XCTAssertNotEqual(UInt32(0x0000FF00), native.toNative(UInt32(0x00FF0000)), "Test Failed")
         XCTAssertNotEqual(UInt32(0x00FF0000), native.toNative(UInt32(0x0000FF00)), "Test Failed")
-        XCTAssertNotEqual(UInt32(0xFF000000), native.toNative(UInt32(0x000000FF)), "Test Failed")
         XCTAssertNotEqual(UInt32(0x01020304), native.toNative(UInt32(0x04030201)), "Test Failed")
-        
-        XCTAssertEqual(UInt64(0x0000000000000001), native.fromNative(UInt64(0x0000000000000001)), "Test Failed")
-        XCTAssertEqual(UInt64(0x0000000000000100), native.fromNative(UInt64(0x0000000000000100)), "Test Failed")
-        XCTAssertEqual(UInt64(0x0000000000010000), native.fromNative(UInt64(0x0000000000010000)), "Test Failed")
-        XCTAssertEqual(UInt64(0x0000000001000000), native.fromNative(UInt64(0x0000000001000000)), "Test Failed")
-        XCTAssertEqual(UInt64(0x0000000100000000), native.fromNative(UInt64(0x0000000100000000)), "Test Failed")
-        XCTAssertEqual(UInt64(0x0000010000000000), native.fromNative(UInt64(0x0000010000000000)), "Test Failed")
-        XCTAssertEqual(UInt64(0x0001000000000000), native.fromNative(UInt64(0x0001000000000000)), "Test Failed")
-        XCTAssertEqual(UInt64(0x0100000000000000), native.fromNative(UInt64(0x0100000000000000)), "Test Failed")
 
-        XCTAssertEqual(UInt64(0x00000000000000FF), native.fromNative(UInt64(0x00000000000000FF)), "Test Failed")
-        XCTAssertEqual(UInt64(0x000000000000FF00), native.fromNative(UInt64(0x000000000000FF00)), "Test Failed")
-        XCTAssertEqual(UInt64(0x0000000000FF0000), native.fromNative(UInt64(0x0000000000FF0000)), "Test Failed")
-        XCTAssertEqual(UInt64(0x00000000FF000000), native.fromNative(UInt64(0x00000000FF000000)), "Test Failed")
-        XCTAssertEqual(UInt64(0x000000FF00000000), native.fromNative(UInt64(0x000000FF00000000)), "Test Failed")
-        XCTAssertEqual(UInt64(0x0000FF0000000000), native.fromNative(UInt64(0x0000FF0000000000)), "Test Failed")
-        XCTAssertEqual(UInt64(0x00FF000000000000), native.fromNative(UInt64(0x00FF000000000000)), "Test Failed")
-//        XCTAssertEqual(UInt64(0xFF00000000000000), native.fromNative(UInt64(0xFF00000000000000)), "Test Failed")
+        #if !arch(i386)
+            // These won't compile on 32-bit
+            XCTAssertEqual(UInt32(0xFF000000), native.fromNative(UInt32(0xFF000000)), "Test Failed")
+            XCTAssertEqual(UInt32(0xFFFFFFFF), native.fromNative(UInt32(0xFFFFFFFF)), "Test Failed")
+
+            XCTAssertNotEqual(UInt32(0x000000FF), native.toNative(UInt32(0xFF000000)), "Test Failed")
+            XCTAssertNotEqual(UInt32(0xFF000000), native.toNative(UInt32(0x000000FF)), "Test Failed")
+            
+            XCTAssertEqual(UInt64(0x0000000000000001), native.fromNative(UInt64(0x0000000000000001)), "Test Failed")
+            XCTAssertEqual(UInt64(0x0000000000000100), native.fromNative(UInt64(0x0000000000000100)), "Test Failed")
+            XCTAssertEqual(UInt64(0x0000000000010000), native.fromNative(UInt64(0x0000000000010000)), "Test Failed")
+            XCTAssertEqual(UInt64(0x0000000001000000), native.fromNative(UInt64(0x0000000001000000)), "Test Failed")
+            XCTAssertEqual(UInt64(0x0000000100000000), native.fromNative(UInt64(0x0000000100000000)), "Test Failed")
+            XCTAssertEqual(UInt64(0x0000010000000000), native.fromNative(UInt64(0x0000010000000000)), "Test Failed")
+            XCTAssertEqual(UInt64(0x0001000000000000), native.fromNative(UInt64(0x0001000000000000)), "Test Failed")
+            XCTAssertEqual(UInt64(0x0100000000000000), native.fromNative(UInt64(0x0100000000000000)), "Test Failed")
+
+            XCTAssertEqual(UInt64(0x00000000000000FF), native.fromNative(UInt64(0x00000000000000FF)), "Test Failed")
+            XCTAssertEqual(UInt64(0x000000000000FF00), native.fromNative(UInt64(0x000000000000FF00)), "Test Failed")
+            XCTAssertEqual(UInt64(0x0000000000FF0000), native.fromNative(UInt64(0x0000000000FF0000)), "Test Failed")
+            XCTAssertEqual(UInt64(0x00000000FF000000), native.fromNative(UInt64(0x00000000FF000000)), "Test Failed")
+            XCTAssertEqual(UInt64(0x000000FF00000000), native.fromNative(UInt64(0x000000FF00000000)), "Test Failed")
+            XCTAssertEqual(UInt64(0x0000FF0000000000), native.fromNative(UInt64(0x0000FF0000000000)), "Test Failed")
+            XCTAssertEqual(UInt64(0x00FF000000000000), native.fromNative(UInt64(0x00FF000000000000)), "Test Failed")
+            
+            // This won't compile on 64-bit
+//            XCTAssertEqual(UInt64(0xFF00000000000000), native.fromNative(UInt64(0xFF00000000000000)), "Test Failed")
+        #endif
 }
     
     func testForeignOrder() {
@@ -105,27 +112,34 @@ class ByteOrderTests: XCTestCase {
         XCTAssertNotEqual(UInt32(0x000000FF), foreign.fromNative(UInt32(0x000000FF)), "Test Failed")
         XCTAssertNotEqual(UInt32(0x0000FF00), foreign.fromNative(UInt32(0x0000FF00)), "Test Failed")
         XCTAssertNotEqual(UInt32(0x00FF0000), foreign.fromNative(UInt32(0x00FF0000)), "Test Failed")
-        XCTAssertNotEqual(UInt32(0xFF000000), foreign.fromNative(UInt32(0xFF000000)), "Test Failed")
         XCTAssertNotEqual(UInt32(0x01020304), foreign.fromNative(UInt32(0x01020304)), "Test Failed")
         
         XCTAssertEqual(UInt32(0x00000001), foreign.toNative(UInt32(0x01000000)), "Test Failed")
         XCTAssertEqual(UInt32(0x00000100), foreign.toNative(UInt32(0x00010000)), "Test Failed")
         XCTAssertEqual(UInt32(0x00010000), foreign.toNative(UInt32(0x00000100)), "Test Failed")
         XCTAssertEqual(UInt32(0x01000000), foreign.toNative(UInt32(0x00000001)), "Test Failed")
-        XCTAssertEqual(UInt32(0x000000FF), foreign.toNative(UInt32(0xFF000000)), "Test Failed")
         XCTAssertEqual(UInt32(0x0000FF00), foreign.toNative(UInt32(0x00FF0000)), "Test Failed")
         XCTAssertEqual(UInt32(0x00FF0000), foreign.toNative(UInt32(0x0000FF00)), "Test Failed")
-        XCTAssertEqual(UInt32(0xFF000000), foreign.toNative(UInt32(0x000000FF)), "Test Failed")
         XCTAssertEqual(UInt32(0x01020304), foreign.toNative(UInt32(0x04030201)), "Test Failed")
-        XCTAssertEqual(UInt32(0xFFFFFFFF), foreign.toNative(UInt32(0xFFFFFFFF)), "Test Failed")
 
-        XCTAssertNotEqual(UInt64(0x00000000000000FF), foreign.fromNative(UInt64(0x00000000000000FF)), "Test Failed")
-        XCTAssertNotEqual(UInt64(0x000000000000FF00), foreign.fromNative(UInt64(0x000000000000FF00)), "Test Failed")
-        XCTAssertNotEqual(UInt64(0x0000000000FF0000), foreign.fromNative(UInt64(0x0000000000FF0000)), "Test Failed")
-        XCTAssertNotEqual(UInt64(0x00000000FF000000), foreign.fromNative(UInt64(0x00000000FF000000)), "Test Failed")
-        XCTAssertNotEqual(UInt64(0x000000FF00000000), foreign.fromNative(UInt64(0x000000FF00000000)), "Test Failed")
-        XCTAssertNotEqual(UInt64(0x0000FF0000000000), foreign.fromNative(UInt64(0x0000FF0000000000)), "Test Failed")
-        XCTAssertNotEqual(UInt64(0x00FF000000000000), foreign.fromNative(UInt64(0x00FF000000000000)), "Test Failed")
-//        XCTAssertNotEqual(UInt64(0xFF00000000000000), foreign.fromNative(UInt64(0xFF00000000000000)), "Test Failed")
+        #if !arch(i386)
+            // These won't compile on 32-bit
+            XCTAssertEqual(UInt32(0xFF000000), foreign.toNative(UInt32(0x000000FF)), "Test Failed")
+            XCTAssertEqual(UInt32(0x000000FF), foreign.toNative(UInt32(0xFF000000)), "Test Failed")
+            XCTAssertEqual(UInt32(0xFFFFFFFF), foreign.toNative(UInt32(0xFFFFFFFF)), "Test Failed")
+            
+            XCTAssertNotEqual(UInt32(0xFF000000), foreign.fromNative(UInt32(0xFF000000)), "Test Failed")
+            
+            XCTAssertNotEqual(UInt64(0x00000000000000FF), foreign.fromNative(UInt64(0x00000000000000FF)), "Test Failed")
+            XCTAssertNotEqual(UInt64(0x000000000000FF00), foreign.fromNative(UInt64(0x000000000000FF00)), "Test Failed")
+            XCTAssertNotEqual(UInt64(0x0000000000FF0000), foreign.fromNative(UInt64(0x0000000000FF0000)), "Test Failed")
+            XCTAssertNotEqual(UInt64(0x00000000FF000000), foreign.fromNative(UInt64(0x00000000FF000000)), "Test Failed")
+            XCTAssertNotEqual(UInt64(0x000000FF00000000), foreign.fromNative(UInt64(0x000000FF00000000)), "Test Failed")
+            XCTAssertNotEqual(UInt64(0x0000FF0000000000), foreign.fromNative(UInt64(0x0000FF0000000000)), "Test Failed")
+            XCTAssertNotEqual(UInt64(0x00FF000000000000), foreign.fromNative(UInt64(0x00FF000000000000)), "Test Failed")
+            
+            // This won't compile on 64-bit
+//            XCTAssertNotEqual(UInt64(0xFF00000000000000), foreign.fromNative(UInt64(0xFF00000000000000)), "Test Failed")
+        #endif
     }
 }
