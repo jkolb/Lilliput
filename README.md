@@ -1,7 +1,10 @@
-Lilliput 1.0.4
+Lilliput 1.0.5
 ==============
 
 ####ChangeLog
+
+######1.0.5
+Have to check for "arm" also to prevent compile errors on 32-bit devices.
 
 ######1.0.4
 Missed two more tests that will not compile on 32-bit devices.

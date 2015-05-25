@@ -59,7 +59,7 @@ class ByteOrderTests: XCTestCase {
         XCTAssertNotEqual(UInt32(0x00FF0000), native.toNative(UInt32(0x0000FF00)), "Test Failed")
         XCTAssertNotEqual(UInt32(0x01020304), native.toNative(UInt32(0x04030201)), "Test Failed")
 
-        #if !arch(i386)
+        #if !arch(i386) && !arch(arm)
             // These won't compile on 32-bit
             XCTAssertEqual(UInt32(0xFF000000), native.fromNative(UInt32(0xFF000000)), "Test Failed")
             XCTAssertEqual(UInt32(0xFFFFFFFF), native.fromNative(UInt32(0xFFFFFFFF)), "Test Failed")
@@ -122,7 +122,7 @@ class ByteOrderTests: XCTestCase {
         XCTAssertEqual(UInt32(0x00FF0000), foreign.toNative(UInt32(0x0000FF00)), "Test Failed")
         XCTAssertEqual(UInt32(0x01020304), foreign.toNative(UInt32(0x04030201)), "Test Failed")
 
-        #if !arch(i386)
+        #if !arch(i386) && !arch(arm)
             // These won't compile on 32-bit
             XCTAssertEqual(UInt32(0xFF000000), foreign.toNative(UInt32(0x000000FF)), "Test Failed")
             XCTAssertEqual(UInt32(0x000000FF), foreign.toNative(UInt32(0xFF000000)), "Test Failed")
