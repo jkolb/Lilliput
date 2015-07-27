@@ -253,7 +253,7 @@ public class ByteBuffer {
     public func getArray<T>(count: Int, getter: () -> T) -> Array<T> {
         var array = Array<T>()
         array.reserveCapacity(count)
-        for index in 0..<count { array.append(getter()) }
+        for _ in 0..<count { array.append(getter()) }
         return array
     }
     

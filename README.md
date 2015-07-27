@@ -1,7 +1,10 @@
-Lilliput 1.0.5
+Lilliput 1.1.0
 ==============
 
 ####ChangeLog
+
+######1.1.0
+Updated to support Swift 2.
 
 ######1.0.5
 Have to check for "arm" also to prevent compile errors on 32-bit devices.
