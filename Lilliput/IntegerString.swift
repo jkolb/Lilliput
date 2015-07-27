@@ -24,39 +24,39 @@
 //
 
 public func hex<T: _SignedIntegerType>(value: T) -> String {
-    return pad(String(value, radix: 16), "0", sizeof(T) * 2)
+    return pad(String(value, radix: 16), padChar: "0", length: sizeof(T) * 2)
 }
 
-public func hex<T: _UnsignedIntegerType>(value: T) -> String {
-    return pad(String(value, radix: 16), "0", sizeof(T) * 2)
+public func hex<T: UnsignedIntegerType>(value: T) -> String {
+    return pad(String(value, radix: 16), padChar: "0", length: sizeof(T) * 2)
 }
 
 public func binary<T: _SignedIntegerType>(value: T) -> String {
-    return pad(String(value, radix: 2), "0", sizeof(T) * 8)
+    return pad(String(value, radix: 2), padChar: "0", length: sizeof(T) * 8)
 }
 
-public func binary<T: _UnsignedIntegerType>(value: T) -> String {
-    return pad(String(value, radix: 2), "0", sizeof(T) * 8)
+public func binary<T: UnsignedIntegerType>(value: T) -> String {
+    return pad(String(value, radix: 2), padChar: "0", length: sizeof(T) * 8)
 }
 
 public func octal<T: _SignedIntegerType>(value: T, length: Int = 0) -> String {
-    return pad(String(value, radix: 8), "0", length)
+    return pad(String(value, radix: 8), padChar: "0", length: length)
 }
 
-public func octal<T: _UnsignedIntegerType>(value: T, length: Int = 0) -> String {
-    return pad(String(value, radix: 8), "0", length)
+public func octal<T: UnsignedIntegerType>(value: T, length: Int = 0) -> String {
+    return pad(String(value, radix: 8), padChar: "0", length: length)
 }
 
 public func base36<T: _SignedIntegerType>(value: T, length: Int = 0) -> String {
-    return pad(String(value, radix: 36), "0", length)
+    return pad(String(value, radix: 36), padChar: "0", length: length)
 }
 
-public func base36<T: _UnsignedIntegerType>(value: T, length: Int = 0) -> String {
-    return pad(String(value, radix: 36), "0", length)
+public func base36<T: UnsignedIntegerType>(value: T, length: Int = 0) -> String {
+    return pad(String(value, radix: 36), padChar: "0", length: length)
 }
 
 public func pad(string: String, padChar: Character, length: Int) -> String {
-    let stringLength = count(string)
+    let stringLength = string.characters.count
     if (stringLength >= length) { return string }
     let padding = String(count: length - stringLength, repeatedValue: padChar)
     return padding + string
