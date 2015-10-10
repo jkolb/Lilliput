@@ -1,7 +1,13 @@
-Lilliput 1.1.0
+Lilliput 1.1.2
 ==============
 
 ####ChangeLog
+
+######1.1.2
+Forgot to update README.
+
+######1.1.1
+Minor improvements and fixes.
 
 ######1.1.0
 Updated to support Swift 2.
