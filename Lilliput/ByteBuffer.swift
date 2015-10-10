@@ -23,23 +23,59 @@
 // THE SOFTWARE.
 //
 
-public class ByteBuffer {
+public final class ByteBuffer {
+    private static let undefinedMark = -1
     public var order: ByteOrder
     var data: UnsafeMutablePointer<UInt8>
     private let freeOnDeinit: Bool
     public let capacity: Int
-    private let bits = UnsafeMutablePointer<UInt8>.alloc(sizeof(UIntMax))
-    private var privatePosition = 0
-    private var privateLimit = 0
-    private var privateMark = -1
+    private let bits = UnsafeMutablePointer<UInt8>.alloc(strideof(UIntMax))
+    public var position: Int {
+        willSet {
+            // The new position value; must be non-negative and no larger than the current limit
+            precondition(newValue >= 0)
+            precondition(newValue <= limit)
+        }
+        didSet {
+            // If the mark is defined and larger than the new position then it is discarded.
+            if markedPosition > position {
+                discardMark()
+            }
+        }
+    }
+    public var limit: Int {
+        willSet {
+            // The new limit value; must be non-negative and no larger than this buffer's capacity
+            precondition(newValue >= 0)
+            precondition(newValue <= capacity)
+        }
+        didSet {
+            // If the position is larger than the new limit then it is set to the new limit.
+            if position > limit {
+                position = limit
+            }
+            
+            // If the mark is defined and larger than the new limit then it is discarded.
+            if markedPosition > limit {
+                discardMark()
+            }
+        }
+    }
+    private var markedPosition: Int
+    private func discardMark() {
+        markedPosition = ByteBuffer.undefinedMark
+    }
     
     public init(order: ByteOrder, data: UnsafeMutablePointer<UInt8>, capacity: Int, freeOnDeinit: Bool) {
-        assert(capacity >= 0)
+        // The new buffer's position will be zero, its limit will be its capacity, its mark will be undefined.
+        precondition(capacity >= 0)
         self.order = order
         self.data = data
         self.capacity = capacity
         self.freeOnDeinit = freeOnDeinit
+        self.position = 0
         self.limit = capacity
+        self.markedPosition = ByteBuffer.undefinedMark
     }
     
     public convenience init(order: ByteOrder, capacity: Int) {
@@ -47,79 +83,50 @@ public class ByteBuffer {
     }
     
     deinit {
-        bits.dealloc(sizeof(UIntMax))
+        bits.dealloc(strideof(UIntMax))
         if freeOnDeinit { data.dealloc(capacity) }
     }
     
-    public var limit: Int {
-        get {
-            return privateLimit
-        }
-        set {
-            if (newValue < 0 || newValue > capacity) {
-                fatalError("Illegal limit")
-            }
-            privateLimit = newValue
-            
-            if (privatePosition > privateLimit) {
-                privatePosition = privateLimit
-            }
-            
-            if (privateMark > privateLimit) {
-                privateMark = -1
-            }
-        }
-    }
-    
-    public var position: Int {
-        get {
-            return privatePosition
-        }
-        set {
-            if (newValue < 0 || newValue > limit) {
-                fatalError("Illegal position")
-            }
-            privatePosition = newValue
-            
-            if (privateMark > privatePosition) {
-                privateMark = -1
-            }
-        }
-    }
-    
     public var hasRemaining: Bool {
+        // Tells whether there are any elements between the current position and the limit.
         return remaining > 0
     }
     
     public var remaining: Int {
+        // Returns the number of elements between the current position and the limit.
         return limit - position
     }
     
     public func mark() {
-        privateMark = position
+        // Sets this buffer's mark at its position.
+        markedPosition = position
     }
     
     public func reset() {
-        if (privateMark == -1) {
-            fatalError("Invalid mark")
-        }
-        position = privateMark
-    }
-    
-    public func rewind() {
-        position = 0
-        privateMark = -1
+        precondition(markedPosition != ByteBuffer.undefinedMark)
+        // Resets this buffer's position to the previously-marked position.
+        // Invoking this method neither changes nor discards the mark's value.
+        position = markedPosition
     }
     
     public func clear() {
-        rewind()
+        // Clears this buffer. The position is set to zero, the limit is set to the capacity, and the mark is discarded.
+        position = 0
         limit = capacity
+        discardMark()
     }
     
     public func flip() {
-        privateLimit = privatePosition
-        privatePosition = 0
-        privateMark = -1
+        // Flips this buffer. The limit is set to the current position and then the position is set to zero. If the mark is defined then it is discarded.
+        limit = position
+        position = 0
+        discardMark()
+    }
+    
+    public func rewind() {
+        // Rewinds this buffer. The position is set to zero and the mark is discarded.
+        position = 0
+        discardMark()
     }
     
     public func compact() {
@@ -178,9 +185,9 @@ public class ByteBuffer {
         return decodeCodeUnits(getTerminatedUInt8(terminator), codec: UTF8())
     }
     
-    public func decodeCodeUnits<C : UnicodeCodecType>(codeUnits: Array<C.CodeUnit>, var codec: C) -> String {
+    public func decodeCodeUnits<C : UnicodeCodecType>(codeUnits: [C.CodeUnit], var codec: C) -> String {
         var generator = codeUnits.generate()
-        var characters = Array<Character>()
+        var characters = [Character]()
         characters.reserveCapacity(codeUnits.count)
         var done = false
         
@@ -197,72 +204,68 @@ public class ByteBuffer {
             }
         }
         
-        var string = String()
-        string.reserveCapacity(characters.count)
-        string.extend(characters)
-        
-        return string
+        return String(characters)
     }
     
-    public func getInt8(count: Int) -> Array<Int8> {
+    public func getInt8(count: Int) -> [Int8] {
         return getArray(count, defaultValue: 0) { self.getInt8() }
     }
     
-    public func getInt16(count: Int) -> Array<Int16> {
+    public func getInt16(count: Int) -> [Int16] {
         return getArray(count, defaultValue: 0) { self.getInt16() }
     }
     
-    public func getInt32(count: Int) -> Array<Int32> {
+    public func getInt32(count: Int) -> [Int32] {
         return getArray(count, defaultValue: 0) { self.getInt32() }
     }
     
-    public func getInt64(count: Int) -> Array<Int64> {
+    public func getInt64(count: Int) -> [Int64] {
         return getArray(count, defaultValue: 0) { self.getInt64() }
     }
     
-    public func getUInt8(count: Int) -> Array<UInt8> {
+    public func getUInt8(count: Int) -> [UInt8] {
         return getArray(count, defaultValue: 0) { self.getUInt8() }
     }
     
-    public func getUInt16(count: Int) -> Array<UInt16> {
+    public func getUInt16(count: Int) -> [UInt16] {
         return getArray(count, defaultValue: 0) { self.getUInt16() }
     }
     
-    public func getUInt32(count: Int) -> Array<UInt32> {
+    public func getUInt32(count: Int) -> [UInt32] {
         return getArray(count, defaultValue: 0) { self.getUInt32() }
     }
     
-    public func getUInt64(count: Int) -> Array<UInt64> {
+    public func getUInt64(count: Int) -> [UInt64] {
         return getArray(count, defaultValue: 0) { self.getUInt64() }
     }
     
-    public func getFloat32(count: Int) -> Array<Float32> {
+    public func getFloat32(count: Int) -> [Float32] {
         return getArray(count, defaultValue: 0.0) { self.getFloat32() }
     }
     
-    public func getFloat64(count: Int) -> Array<Float64> {
+    public func getFloat64(count: Int) -> [Float64] {
         return getArray(count, defaultValue: 0.0) { self.getFloat64() }
     }
     
-    public func getArray<T>(count: Int, defaultValue: T, getter: () -> T) -> Array<T> {
-        var array = Array<T>(count: count, repeatedValue: defaultValue)
+    public func getArray<T>(count: Int, defaultValue: T, getter: () -> T) -> [T] {
+        var array = [T](count: count, repeatedValue: defaultValue)
         for index in 0..<count { array[index] = getter() }
         return array
     }
     
-    public func getArray<T>(count: Int, getter: () -> T) -> Array<T> {
-        var array = Array<T>()
+    public func getArray<T>(count: Int, getter: () -> T) -> [T] {
+        var array = [T]()
         array.reserveCapacity(count)
         for _ in 0..<count { array.append(getter()) }
         return array
     }
     
-    public func getTerminatedUInt8(terminator: UInt8) -> Array<UInt8> {
+    public func getTerminatedUInt8(terminator: UInt8) -> [UInt8] {
         return getArray(terminator) { self.getUInt8() }
     }
     
-    public func getArray<T : Equatable>(terminator: T, getter: () -> T) -> Array<T> {
-        var array = Array<T>()
+    public func getArray<T : Equatable>(terminator: T, @noescape getter: () -> T) -> [T] {
+        var array = [T]()
         var done = true
         
         while (!done) {
@@ -278,8 +281,8 @@ public class ByteBuffer {
         return array
     }
     
-    public func getBits<T>() -> T {
-        for index in 0..<sizeof(T) {
+    public func getBits<T : Bufferable>() -> T {
+        for index in 0..<strideof(T) {
             bits[index] = data[position++]
         }
         
@@ -332,27 +335,27 @@ public class ByteBuffer {
         putArray(value.utf8) { self.putUInt8($0) }
     }
     
-    public func putInt8(values: Array<Int8>) {
+    public func putInt8(values: [Int8]) {
         putArray(values) { self.putInt8($0) }
     }
     
-    public func putInt16(values: Array<Int16>) {
+    public func putInt16(values: [Int16]) {
         putArray(values) { self.putInt16($0) }
     }
     
-    public func putInt32(values: Array<Int32>) {
+    public func putInt32(values: [Int32]) {
         putArray(values) { self.putInt32($0) }
     }
     
-    public func putInt64(values: Array<Int64>) {
+    public func putInt64(values: [Int64]) {
         putArray(values) { self.putInt64($0) }
     }
     
-    public func putUInt8(source: Array<UInt8>) {
+    public func putUInt8(source: [UInt8]) {
         putUInt8(source, offset: 0, length: source.count)
     }
     
-    public func putUInt8(source: Array<UInt8>, offset: Int, length: Int) {
+    public func putUInt8(source: [UInt8], offset: Int, length: Int) {
         if (length > remaining) {
             fatalError("Buffer overflow")
         }
@@ -362,23 +365,23 @@ public class ByteBuffer {
         position += length
     }
     
-    public func putUInt16(values: Array<UInt16>) {
+    public func putUInt16(values: [UInt16]) {
         putArray(values) { self.putUInt16($0) }
     }
     
-    public func putUInt32(values: Array<UInt32>) {
+    public func putUInt32(values: [UInt32]) {
         putArray(values) { self.putUInt32($0) }
     }
     
-    public func putUInt64(values: Array<UInt64>) {
+    public func putUInt64(values: [UInt64]) {
         putArray(values) { self.putUInt64($0) }
     }
     
-    public func putFloat32(values: Array<Float32>) {
+    public func putFloat32(values: [Float32]) {
         putArray(values) { self.putFloat32($0) }
     }
     
-    public func putFloat64(values: Array<Float64>) {
+    public func putFloat64(values: [Float64]) {
         putArray(values) { self.putFloat64($0) }
     }
     
@@ -387,16 +390,16 @@ public class ByteBuffer {
         putUInt8(terminator)
     }
     
-    public func putArray<S : SequenceType>(values: S, putter: (S.Generator.Element) -> ()) {
+    public func putArray<S : SequenceType>(values: S, @noescape putter: (S.Generator.Element) -> ()) {
         for value in values {
             putter(value)
         }
     }
     
-    public func putBits<T>(value: T) {
+    public func putBits<T : Bufferable>(value: T) {
         UnsafeMutablePointer<T>(bits).memory = value
         
-        for index in 0..<sizeof(T) {
+        for index in 0..<strideof(T) {
             data[position++] = bits[index]
         }
     }
@@ -414,3 +417,16 @@ public class ByteBuffer {
         buffer.position += count
     }
 }
+
+public protocol Bufferable { }
+
+extension Float32 : Bufferable { }
+extension Float64 : Bufferable { }
+extension Int8 : Bufferable { }
+extension Int16 : Bufferable { }
+extension Int32 : Bufferable { }
+extension Int64 : Bufferable { }
+extension UInt8 : Bufferable { }
+extension UInt16 : Bufferable { }
+extension UInt32 : Bufferable { }
+extension UInt64 : Bufferable { }

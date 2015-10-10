@@ -24,19 +24,19 @@
 //
 
 public func hex<T: _SignedIntegerType>(value: T) -> String {
-    return pad(String(value, radix: 16), padChar: "0", length: sizeof(T) * 2)
+    return pad(String(value, radix: 16), padChar: "0", length: strideof(T) * 2)
 }
 
 public func hex<T: UnsignedIntegerType>(value: T) -> String {
-    return pad(String(value, radix: 16), padChar: "0", length: sizeof(T) * 2)
+    return pad(String(value, radix: 16), padChar: "0", length: strideof(T) * 2)
 }
 
 public func binary<T: _SignedIntegerType>(value: T) -> String {
-    return pad(String(value, radix: 2), padChar: "0", length: sizeof(T) * 8)
+    return pad(String(value, radix: 2), padChar: "0", length: strideof(T) * 8)
 }
 
 public func binary<T: UnsignedIntegerType>(value: T) -> String {
-    return pad(String(value, radix: 2), padChar: "0", length: sizeof(T) * 8)
+    return pad(String(value, radix: 2), padChar: "0", length: strideof(T) * 8)
 }
 
 public func octal<T: _SignedIntegerType>(value: T, length: Int = 0) -> String {
