@@ -1,7 +1,10 @@
-Lilliput 1.1.2
+Lilliput 1.1.3
 ==============
 
 ####ChangeLog
+
+######1.1.3
+Provide accessor for direct access to the buffer's memory.
 
 ######1.1.2
 Forgot to update README.

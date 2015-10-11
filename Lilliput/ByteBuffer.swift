@@ -26,7 +26,10 @@
 public final class ByteBuffer {
     private static let undefinedMark = -1
     public var order: ByteOrder
-    var data: UnsafeMutablePointer<UInt8>
+    private var bytes: UnsafeMutablePointer<UInt8>
+    public var contents: UnsafeMutablePointer<Void> {
+        return UnsafeMutablePointer<Void>(bytes)
+    }
     private let freeOnDeinit: Bool
     public let capacity: Int
     private let bits = UnsafeMutablePointer<UInt8>.alloc(strideof(UIntMax))
@@ -66,11 +69,11 @@ public final class ByteBuffer {
         markedPosition = ByteBuffer.undefinedMark
     }
     
-    public init(order: ByteOrder, data: UnsafeMutablePointer<UInt8>, capacity: Int, freeOnDeinit: Bool) {
+    public init(order: ByteOrder, data: UnsafeMutablePointer<Void>, capacity: Int, freeOnDeinit: Bool) {
         // The new buffer's position will be zero, its limit will be its capacity, its mark will be undefined.
         precondition(capacity >= 0)
         self.order = order
-        self.data = data
+        self.bytes = UnsafeMutablePointer<UInt8>(data)
         self.capacity = capacity
         self.freeOnDeinit = freeOnDeinit
         self.position = 0
@@ -84,7 +87,7 @@ public final class ByteBuffer {
     
     deinit {
         bits.dealloc(strideof(UIntMax))
-        if freeOnDeinit { data.dealloc(capacity) }
+        if freeOnDeinit { bytes.dealloc(capacity) }
     }
     
     public var hasRemaining: Bool {
@@ -130,7 +133,7 @@ public final class ByteBuffer {
     }
     
     public func compact() {
-        data.moveInitializeFrom(data+position, count: remaining)
+        bytes.moveInitializeFrom(bytes+position, count: remaining)
         position = remaining
         limit = capacity
     }
@@ -152,7 +155,7 @@ public final class ByteBuffer {
     }
     
     public func getUInt8() -> UInt8 {
-        return data[position++]
+        return bytes[position++]
     }
     
     public func getUInt16() -> UInt16 {
@@ -283,7 +286,7 @@ public final class ByteBuffer {
     
     public func getBits<T : Bufferable>() -> T {
         for index in 0..<strideof(T) {
-            bits[index] = data[position++]
+            bits[index] = bytes[position++]
         }
         
         return UnsafePointer<T>(bits).memory
@@ -306,7 +309,7 @@ public final class ByteBuffer {
     }
     
     public func putUInt8(value: UInt8) {
-        data[position++] = value
+        bytes[position++] = value
     }
     
     public func putUInt16(value: UInt16) {
@@ -360,7 +363,7 @@ public final class ByteBuffer {
             fatalError("Buffer overflow")
         }
         
-        let destination = data + position
+        let destination = bytes + position
         destination.initializeFrom(source[offset..<offset+length])
         position += length
     }
@@ -400,19 +403,19 @@ public final class ByteBuffer {
         UnsafeMutablePointer<T>(bits).memory = value
         
         for index in 0..<strideof(T) {
-            data[position++] = bits[index]
+            bytes[position++] = bits[index]
         }
     }
     
     public subscript(subRange: Range<Int>) -> ByteBuffer {
         let length = subRange.endIndex - subRange.startIndex
-        return ByteBuffer(order: order, data: data + subRange.startIndex, capacity: length, freeOnDeinit: false)
+        return ByteBuffer(order: order, data: bytes + subRange.startIndex, capacity: length, freeOnDeinit: false)
     }
     
     public func putBuffer(buffer: ByteBuffer) {
         let count = buffer.remaining
-        let offset = data + position
-        offset.initializeFrom(buffer.data + buffer.position, count: count)
+        let offset = bytes + position
+        offset.initializeFrom(buffer.bytes + buffer.position, count: count)
         position += count
         buffer.position += count
     }
