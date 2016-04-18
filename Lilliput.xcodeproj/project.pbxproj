@@ -7,28 +7,46 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0941F9751972330700F81920 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DD196F6AC0001ABC11 /* ByteBuffer.swift */; };
 		E52F46051B12876A004F7444 /* Lilliput.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E52F45FA1B128769004F7444 /* Lilliput.framework */; };
 		E52F46171B128997004F7444 /* Lilliput.h in Headers */ = {isa = PBXBuildFile; fileRef = E5BDC5C6196F698B001ABC11 /* Lilliput.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E52F461B1B129033004F7444 /* ByteOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5E1196F6BD2001ABC11 /* ByteOrderTests.swift */; };
 		E52F461C1B129033004F7444 /* ByteBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5E3196F6BFC001ABC11 /* ByteBufferTests.swift */; };
-		E52F461D1B129033004F7444 /* IntegerStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A2C2198CC1F700F90BAC /* IntegerStringTests.swift */; };
-		E52F461E1B12903D004F7444 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */; };
-		E52F461F1B12903D004F7444 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DD196F6AC0001ABC11 /* ByteBuffer.swift */; };
-		E52F46201B12903D004F7444 /* IntegerString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E67332198D835700AA9930 /* IntegerString.swift */; };
-		E52F46211B12903D004F7444 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */; };
-		E52F46221B12903D004F7444 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DD196F6AC0001ABC11 /* ByteBuffer.swift */; };
-		E52F46231B12903D004F7444 /* IntegerString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E67332198D835700AA9930 /* IntegerString.swift */; };
-		E565A2C3198CC1F700F90BAC /* IntegerStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A2C2198CC1F700F90BAC /* IntegerStringTests.swift */; };
+		E52FFC731CC44B2400B17607 /* Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC721CC44B2400B17607 /* Buffer.swift */; };
+		E52FFC751CC44B7A00B17607 /* BufferFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC741CC44B7A00B17607 /* BufferFactory.swift */; };
+		E52FFC791CC4515400B17607 /* POSIXBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC781CC4515400B17607 /* POSIXBuffer.swift */; };
+		E52FFC7B1CC4517300B17607 /* POSIXBufferFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC7A1CC4517300B17607 /* POSIXBufferFactory.swift */; };
+		E52FFC7D1CC4519800B17607 /* ByteSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC7C1CC4519800B17607 /* ByteSize.swift */; };
+		E52FFC841CC474CF00B17607 /* ReadableByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC831CC474CF00B17607 /* ReadableByteChannel.swift */; };
+		E52FFC861CC487BE00B17607 /* POSIXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC851CC487BE00B17607 /* POSIXError.swift */; };
+		E52FFC881CC48A2300B17607 /* WritableByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC871CC48A2300B17607 /* WritableByteChannel.swift */; };
+		E52FFC8A1CC48ADB00B17607 /* ByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC891CC48ADB00B17607 /* ByteChannel.swift */; };
+		E52FFC8C1CC48D0E00B17607 /* SeekableByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC8B1CC48D0E00B17607 /* SeekableByteChannel.swift */; };
+		E52FFC8E1CC48FA500B17607 /* POSIXFileChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC8D1CC48FA500B17607 /* POSIXFileChannel.swift */; };
+		E52FFC921CC49F4200B17607 /* FileOpenOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC911CC49F4200B17607 /* FileOpenOption.swift */; };
+		E52FFC941CC4A11200B17607 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC931CC4A11200B17607 /* FileManager.swift */; };
+		E52FFC961CC4A17E00B17607 /* POSIXFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC951CC4A17E00B17607 /* POSIXFileManager.swift */; };
+		E52FFCA01CC4A63800B17607 /* Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC721CC44B2400B17607 /* Buffer.swift */; };
+		E52FFCA11CC4A63800B17607 /* BufferFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC741CC44B7A00B17607 /* BufferFactory.swift */; };
+		E52FFCA21CC4A63800B17607 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DD196F6AC0001ABC11 /* ByteBuffer.swift */; };
+		E52FFCA31CC4A63800B17607 /* ByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC891CC48ADB00B17607 /* ByteChannel.swift */; };
+		E52FFCA41CC4A63800B17607 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */; };
+		E52FFCA51CC4A63800B17607 /* ByteSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC7C1CC4519800B17607 /* ByteSize.swift */; };
+		E52FFCA61CC4A63800B17607 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC931CC4A11200B17607 /* FileManager.swift */; };
+		E52FFCA71CC4A63800B17607 /* FileOpenOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC911CC49F4200B17607 /* FileOpenOption.swift */; };
+		E52FFCA81CC4A63800B17607 /* POSIXBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC781CC4515400B17607 /* POSIXBuffer.swift */; };
+		E52FFCA91CC4A63800B17607 /* POSIXBufferFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC7A1CC4517300B17607 /* POSIXBufferFactory.swift */; };
+		E52FFCAA1CC4A63800B17607 /* POSIXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC851CC487BE00B17607 /* POSIXError.swift */; };
+		E52FFCAB1CC4A63800B17607 /* POSIXFileChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC8D1CC48FA500B17607 /* POSIXFileChannel.swift */; };
+		E52FFCAC1CC4A63800B17607 /* POSIXFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC951CC4A17E00B17607 /* POSIXFileManager.swift */; };
+		E52FFCAD1CC4A63800B17607 /* ReadableByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC831CC474CF00B17607 /* ReadableByteChannel.swift */; };
+		E52FFCAE1CC4A63800B17607 /* SeekableByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC8B1CC48D0E00B17607 /* SeekableByteChannel.swift */; };
+		E52FFCAF1CC4A63800B17607 /* WritableByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FFC871CC48A2300B17607 /* WritableByteChannel.swift */; };
 		E5BDC5C7196F698B001ABC11 /* Lilliput.h in Headers */ = {isa = PBXBuildFile; fileRef = E5BDC5C6196F698B001ABC11 /* Lilliput.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E5BDC5CD196F698C001ABC11 /* Lilliput.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5BDC5C1196F698B001ABC11 /* Lilliput.framework */; };
 		E5BDC5DF196F6AC0001ABC11 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DD196F6AC0001ABC11 /* ByteBuffer.swift */; };
 		E5BDC5E0196F6AC0001ABC11 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */; };
 		E5BDC5E2196F6BD2001ABC11 /* ByteOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5E1196F6BD2001ABC11 /* ByteOrderTests.swift */; };
 		E5BDC5E4196F6BFC001ABC11 /* ByteBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5E3196F6BFC001ABC11 /* ByteBufferTests.swift */; };
-		E5E67333198D835700AA9930 /* IntegerString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E67332198D835700AA9930 /* IntegerString.swift */; };
-		E5E67334198D838D00AA9930 /* IntegerString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E67332198D835700AA9930 /* IntegerString.swift */; };
-		E5F44F051970D09300F33358 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,7 +72,20 @@
 		E52F46141B128809004F7444 /* Info_iOSTests.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info_iOSTests.plist; sourceTree = "<group>"; };
 		E52F46151B128809004F7444 /* Info_OSXTests.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info_OSXTests.plist; sourceTree = "<group>"; };
 		E52F46191B128A35004F7444 /* Info_iOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info_iOS.plist; sourceTree = "<group>"; };
-		E565A2C2198CC1F700F90BAC /* IntegerStringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegerStringTests.swift; sourceTree = "<group>"; };
+		E52FFC721CC44B2400B17607 /* Buffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buffer.swift; sourceTree = "<group>"; };
+		E52FFC741CC44B7A00B17607 /* BufferFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BufferFactory.swift; sourceTree = "<group>"; };
+		E52FFC781CC4515400B17607 /* POSIXBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POSIXBuffer.swift; sourceTree = "<group>"; };
+		E52FFC7A1CC4517300B17607 /* POSIXBufferFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POSIXBufferFactory.swift; sourceTree = "<group>"; };
+		E52FFC7C1CC4519800B17607 /* ByteSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteSize.swift; sourceTree = "<group>"; };
+		E52FFC831CC474CF00B17607 /* ReadableByteChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadableByteChannel.swift; sourceTree = "<group>"; };
+		E52FFC851CC487BE00B17607 /* POSIXError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POSIXError.swift; sourceTree = "<group>"; };
+		E52FFC871CC48A2300B17607 /* WritableByteChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WritableByteChannel.swift; sourceTree = "<group>"; };
+		E52FFC891CC48ADB00B17607 /* ByteChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteChannel.swift; sourceTree = "<group>"; };
+		E52FFC8B1CC48D0E00B17607 /* SeekableByteChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeekableByteChannel.swift; sourceTree = "<group>"; };
+		E52FFC8D1CC48FA500B17607 /* POSIXFileChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POSIXFileChannel.swift; sourceTree = "<group>"; };
+		E52FFC911CC49F4200B17607 /* FileOpenOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOpenOption.swift; sourceTree = "<group>"; };
+		E52FFC931CC4A11200B17607 /* FileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
+		E52FFC951CC4A17E00B17607 /* POSIXFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POSIXFileManager.swift; sourceTree = "<group>"; };
 		E5BDC5C1196F698B001ABC11 /* Lilliput.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Lilliput.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5BDC5C5196F698B001ABC11 /* Info_OSX.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info_OSX.plist; sourceTree = "<group>"; };
 		E5BDC5C6196F698B001ABC11 /* Lilliput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Lilliput.h; sourceTree = "<group>"; };
@@ -63,7 +94,6 @@
 		E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteOrder.swift; sourceTree = "<group>"; };
 		E5BDC5E1196F6BD2001ABC11 /* ByteOrderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteOrderTests.swift; sourceTree = "<group>"; };
 		E5BDC5E3196F6BFC001ABC11 /* ByteBufferTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBufferTests.swift; sourceTree = "<group>"; };
-		E5E67332198D835700AA9930 /* IntegerString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegerString.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,9 +154,22 @@
 			isa = PBXGroup;
 			children = (
 				E5BDC5C6196F698B001ABC11 /* Lilliput.h */,
-				E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */,
+				E52FFC721CC44B2400B17607 /* Buffer.swift */,
+				E52FFC741CC44B7A00B17607 /* BufferFactory.swift */,
 				E5BDC5DD196F6AC0001ABC11 /* ByteBuffer.swift */,
-				E5E67332198D835700AA9930 /* IntegerString.swift */,
+				E52FFC891CC48ADB00B17607 /* ByteChannel.swift */,
+				E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */,
+				E52FFC7C1CC4519800B17607 /* ByteSize.swift */,
+				E52FFC931CC4A11200B17607 /* FileManager.swift */,
+				E52FFC911CC49F4200B17607 /* FileOpenOption.swift */,
+				E52FFC781CC4515400B17607 /* POSIXBuffer.swift */,
+				E52FFC7A1CC4517300B17607 /* POSIXBufferFactory.swift */,
+				E52FFC851CC487BE00B17607 /* POSIXError.swift */,
+				E52FFC8D1CC48FA500B17607 /* POSIXFileChannel.swift */,
+				E52FFC951CC4A17E00B17607 /* POSIXFileManager.swift */,
+				E52FFC831CC474CF00B17607 /* ReadableByteChannel.swift */,
+				E52FFC8B1CC48D0E00B17607 /* SeekableByteChannel.swift */,
+				E52FFC871CC48A2300B17607 /* WritableByteChannel.swift */,
 				E5BDC5C4196F698B001ABC11 /* Supporting Files */,
 			);
 			path = Lilliput;
@@ -144,9 +187,8 @@
 		E5BDC5D0196F698C001ABC11 /* LilliputTests */ = {
 			isa = PBXGroup;
 			children = (
-				E5BDC5E1196F6BD2001ABC11 /* ByteOrderTests.swift */,
 				E5BDC5E3196F6BFC001ABC11 /* ByteBufferTests.swift */,
-				E565A2C2198CC1F700F90BAC /* IntegerStringTests.swift */,
+				E5BDC5E1196F6BD2001ABC11 /* ByteOrderTests.swift */,
 				E5BDC5D1196F698C001ABC11 /* Supporting Files */,
 			);
 			path = LilliputTests;
@@ -336,9 +378,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E52F46201B12903D004F7444 /* IntegerString.swift in Sources */,
-				E52F461E1B12903D004F7444 /* ByteOrder.swift in Sources */,
-				E52F461F1B12903D004F7444 /* ByteBuffer.swift in Sources */,
+				E52FFCA11CC4A63800B17607 /* BufferFactory.swift in Sources */,
+				E52FFCA31CC4A63800B17607 /* ByteChannel.swift in Sources */,
+				E52FFCA91CC4A63800B17607 /* POSIXBufferFactory.swift in Sources */,
+				E52FFCAE1CC4A63800B17607 /* SeekableByteChannel.swift in Sources */,
+				E52FFCA71CC4A63800B17607 /* FileOpenOption.swift in Sources */,
+				E52FFCA21CC4A63800B17607 /* ByteBuffer.swift in Sources */,
+				E52FFCAD1CC4A63800B17607 /* ReadableByteChannel.swift in Sources */,
+				E52FFCAC1CC4A63800B17607 /* POSIXFileManager.swift in Sources */,
+				E52FFCAB1CC4A63800B17607 /* POSIXFileChannel.swift in Sources */,
+				E52FFCA61CC4A63800B17607 /* FileManager.swift in Sources */,
+				E52FFCA41CC4A63800B17607 /* ByteOrder.swift in Sources */,
+				E52FFCAF1CC4A63800B17607 /* WritableByteChannel.swift in Sources */,
+				E52FFCAA1CC4A63800B17607 /* POSIXError.swift in Sources */,
+				E52FFCA51CC4A63800B17607 /* ByteSize.swift in Sources */,
+				E52FFCA01CC4A63800B17607 /* Buffer.swift in Sources */,
+				E52FFCA81CC4A63800B17607 /* POSIXBuffer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,10 +402,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E52F461B1B129033004F7444 /* ByteOrderTests.swift in Sources */,
-				E52F461D1B129033004F7444 /* IntegerStringTests.swift in Sources */,
-				E52F46211B12903D004F7444 /* ByteOrder.swift in Sources */,
-				E52F46231B12903D004F7444 /* IntegerString.swift in Sources */,
-				E52F46221B12903D004F7444 /* ByteBuffer.swift in Sources */,
 				E52F461C1B129033004F7444 /* ByteBufferTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -359,9 +410,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E52FFC941CC4A11200B17607 /* FileManager.swift in Sources */,
+				E52FFC881CC48A2300B17607 /* WritableByteChannel.swift in Sources */,
+				E52FFC7B1CC4517300B17607 /* POSIXBufferFactory.swift in Sources */,
+				E52FFC791CC4515400B17607 /* POSIXBuffer.swift in Sources */,
+				E52FFC751CC44B7A00B17607 /* BufferFactory.swift in Sources */,
+				E52FFC8E1CC48FA500B17607 /* POSIXFileChannel.swift in Sources */,
+				E52FFC7D1CC4519800B17607 /* ByteSize.swift in Sources */,
 				E5BDC5E0196F6AC0001ABC11 /* ByteOrder.swift in Sources */,
+				E52FFC841CC474CF00B17607 /* ReadableByteChannel.swift in Sources */,
+				E52FFC921CC49F4200B17607 /* FileOpenOption.swift in Sources */,
+				E52FFC731CC44B2400B17607 /* Buffer.swift in Sources */,
 				E5BDC5DF196F6AC0001ABC11 /* ByteBuffer.swift in Sources */,
-				E5E67333198D835700AA9930 /* IntegerString.swift in Sources */,
+				E52FFC8C1CC48D0E00B17607 /* SeekableByteChannel.swift in Sources */,
+				E52FFC861CC487BE00B17607 /* POSIXError.swift in Sources */,
+				E52FFC8A1CC48ADB00B17607 /* ByteChannel.swift in Sources */,
+				E52FFC961CC4A17E00B17607 /* POSIXFileManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,10 +433,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E5F44F051970D09300F33358 /* ByteOrder.swift in Sources */,
-				0941F9751972330700F81920 /* ByteBuffer.swift in Sources */,
-				E565A2C3198CC1F700F90BAC /* IntegerStringTests.swift in Sources */,
-				E5E67334198D838D00AA9930 /* IntegerString.swift in Sources */,
 				E5BDC5E2196F6BD2001ABC11 /* ByteOrderTests.swift in Sources */,
 				E5BDC5E4196F6BFC001ABC11 /* ByteBufferTests.swift in Sources */,
 			);
@@ -410,7 +470,7 @@
 				);
 				INFOPLIST_FILE = Lilliput/Info_iOS.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.franticapparatus.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(PROJECT_NAME)";
@@ -432,7 +492,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = Lilliput/Info_iOS.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.franticapparatus.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(PROJECT_NAME)";

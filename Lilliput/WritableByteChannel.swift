@@ -22,7 +22,15 @@
  SOFTWARE.
  */
 
-@import Foundation;
+public protocol WritableByteChannel : class {
+    @warn_unused_result
+    func write(buffer: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int
+}
 
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+extension WritableByteChannel {
+    func write<Order: ByteOrder>(buffer: ByteBuffer<Order>) throws -> Int {
+        let bytesWritten = try write(buffer.remainingData, numberOfBytes: buffer.remaining)
+        buffer.position += bytesWritten
+        return bytesWritten
+    }
+}

@@ -22,7 +22,10 @@
  SOFTWARE.
  */
 
-@import Foundation;
-
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+public final class POSIXBufferFactory : BufferFactory {
+    public init() {}
+    
+    public func bufferWithSize(size: ByteSize) -> Buffer {
+        return POSIXBuffer(size: size)
+    }
+}

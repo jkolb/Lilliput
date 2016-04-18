@@ -22,7 +22,7 @@
  SOFTWARE.
  */
 
-@import Foundation;
-
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+public protocol FileManager : class {
+    @warn_unused_result
+    func open(path: String, options: FileOpenOption) throws -> SeekableByteChannel
+}

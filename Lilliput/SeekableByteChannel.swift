@@ -22,7 +22,14 @@
  SOFTWARE.
  */
 
-@import Foundation;
-
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+public protocol SeekableByteChannel : ByteChannel {
+    @warn_unused_result
+    func position() throws -> Int64
+    
+    func seek(position: Int64) throws -> Int64
+    
+    @warn_unused_result
+    func size() throws -> Int64
+    
+    func truncate(size: Int64) throws
+}

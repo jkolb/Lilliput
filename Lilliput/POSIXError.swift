@@ -22,7 +22,15 @@
  SOFTWARE.
  */
 
-@import Foundation;
-
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+public struct POSIXError : ErrorType, CustomStringConvertible {
+    public let code: errno_t
+    
+    public init(code: errno_t) {
+        self.code = code
+    }
+    
+    public var description: String {
+        let message = String.fromCString(strerror(code)) ?? ""
+        return "errno: \(code) - \(message)"
+    }
+}

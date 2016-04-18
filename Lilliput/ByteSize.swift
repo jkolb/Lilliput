@@ -22,7 +22,28 @@
  SOFTWARE.
  */
 
-@import Foundation;
+public struct ByteSize : IntegerLiteralConvertible {
+    public let numberOfBytes: Int
+    
+    public init(_ numberOfBytes: Int) {
+        self.numberOfBytes = numberOfBytes
+    }
+    
+    public init(integerLiteral value: Int) {
+        self.numberOfBytes = value
+    }
 
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+    @warn_unused_result
+    public func align(byteCount: Int) -> ByteSize {
+        let baseAlignmentFactor = numberOfBytes / byteCount
+        let requiresAdditionalFactor = (numberOfBytes % byteCount) > 0
+        let alignmentFactor: Int
+        if requiresAdditionalFactor {
+            alignmentFactor = baseAlignmentFactor + 1
+        }
+        else {
+            alignmentFactor = baseAlignmentFactor
+        }
+        return ByteSize(alignmentFactor * byteCount)
+    }
+}

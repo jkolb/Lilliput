@@ -22,7 +22,16 @@
  SOFTWARE.
  */
 
-@import Foundation;
+public protocol ReadableByteChannel : class {
+    @warn_unused_result
+    func read(buffer: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int
+}
 
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+extension ReadableByteChannel {
+    @warn_unused_result
+    func read<Order: ByteOrder>(buffer: ByteBuffer<Order>) throws -> Int {
+        let bytesRead = try read(buffer.remainingData, numberOfBytes: buffer.remaining)
+        buffer.position += bytesRead
+        return bytesRead
+    }
+}
