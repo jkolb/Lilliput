@@ -29,11 +29,11 @@
 #endif
 
 public class POSIXFileManager : FileManager {
-    public func open(path: String, options: FileOpenOption) throws -> SeekableByteChannel {
+    public func open(path: FilePath, options: FileOpenOption) throws -> SeekableByteChannel {
         #if os(Linux)
-            let fileDescriptor = Glibc.open(path, openFlags(options))
+            let fileDescriptor = Glibc.open(path.string, openFlags(options))
         #else
-            let fileDescriptor = Darwin.open(path, openFlags(options))
+            let fileDescriptor = Darwin.open(path.string, openFlags(options))
         #endif
         
         if fileDescriptor < 0 {
@@ -73,5 +73,17 @@ public class POSIXFileManager : FileManager {
         }
         
         return openFlags
+    }
+    
+    public func remove(path: FilePath) throws {
+        #if os(Linux)
+            let result = Glibc.remove(path.string)
+        #else
+            let result = Darwin.remove(path.string)
+        #endif
+        
+        if result < 0 {
+            throw POSIXError(code: errno)
+        }
     }
 }

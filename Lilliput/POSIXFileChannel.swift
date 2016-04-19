@@ -75,37 +75,41 @@ public class POSIXFileChannel : SeekableByteChannel {
         return numberOfBytesWritten
     }
 
-    public func position() throws -> Int64 {
-        return try seek(0)
-    }
-    
-    public func seek(position: Int64) throws -> Int64 {
-        precondition(position >= 0)
-        let updatedPosition = lseek(fileDescriptor, position, SEEK_SET)
+    public func position() throws -> FilePosition {
+        let bytesFromStart = lseek(fileDescriptor, 0, SEEK_CUR)
         
-        if updatedPosition < 0 {
+        if bytesFromStart < 0 {
             throw POSIXError(code: errno)
         }
         
-        return updatedPosition
+        return FilePosition(bytesFromStart)
     }
     
-    public func size() throws -> Int64 {
-        let currentPosition = try position()
-        let endPosition = lseek(fileDescriptor, 0, SEEK_END)
+    public func seek(position: FilePosition) throws -> FilePosition {
+        let bytesFromStart = lseek(fileDescriptor, position.bytesFromStart, SEEK_SET)
         
-        if endPosition < 0 {
+        if bytesFromStart < 0 {
+            throw POSIXError(code: errno)
+        }
+        
+        return FilePosition(bytesFromStart)
+    }
+    
+    public func end() throws -> FilePosition {
+        let currentPosition = try position()
+        let bytesFromStart = lseek(fileDescriptor, 0, SEEK_END)
+        
+        if bytesFromStart < 0 {
             throw POSIXError(code: errno)
         }
         
         try seek(currentPosition)
         
-        return endPosition
+        return FilePosition(bytesFromStart)
     }
     
-    public func truncate(size: Int64) throws {
-        precondition(size >= 0)
-        let result = ftruncate(fileDescriptor, size)
+    public func truncate(end: FilePosition) throws {
+        let result = ftruncate(fileDescriptor, end.bytesFromStart)
         
         if result < 0 {
             throw POSIXError(code: errno)

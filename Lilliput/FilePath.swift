@@ -22,14 +22,22 @@
  SOFTWARE.
  */
 
-public protocol SeekableByteChannel : ByteChannel {
-    @warn_unused_result
-    func position() throws -> FilePosition
+public struct FilePath : CustomStringConvertible {
+    private let components: String
     
-    func seek(position: FilePosition) throws -> FilePosition
+    public init?(string: String) {
+        if string.isEmpty {
+            return nil
+        }
+        
+        self.components = string
+    }
+
+    public var string: String {
+        return components
+    }
     
-    @warn_unused_result
-    func end() throws -> FilePosition
-    
-    func truncate(position: FilePosition) throws
+    public var description: String {
+        return string
+    }
 }

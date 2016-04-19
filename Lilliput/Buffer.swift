@@ -24,5 +24,5 @@
 
 public protocol Buffer : class {
     var data: UnsafeMutablePointer<Void> { get }
-    var size: ByteSize { get }
+    var size: Int { get }
 }

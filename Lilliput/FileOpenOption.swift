@@ -29,10 +29,10 @@ public struct FileOpenOption : OptionSetType {
         self.rawValue = rawValue
     }
     
-    public static let Append = FileOpenOption(rawValue: 1<<0)
-    public static let Create = FileOpenOption(rawValue: 1<<1)
-    public static let CreateNew = FileOpenOption(rawValue: 1<<2)
-    public static let Read = FileOpenOption(rawValue: 1<<3)
-    public static let Truncate = FileOpenOption(rawValue: 1<<4)
-    public static let Write = FileOpenOption(rawValue: 1<<5)
+    public static let Append = FileOpenOption(rawValue: 1 << 0)
+    public static let Create = FileOpenOption(rawValue: 1 << 1)
+    public static let CreateNew = FileOpenOption(rawValue: 1 << 2)
+    public static let Read = FileOpenOption(rawValue: 1 << 3)
+    public static let Truncate = FileOpenOption(rawValue: 1 << 4)
+    public static let Write = FileOpenOption(rawValue: 1 << 5)
 }

@@ -27,11 +27,11 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
     public var data: UnsafeMutablePointer<Void> {
         return buffer.data
     }
-    public var size: ByteSize {
+    public var size: Int {
         return buffer.size
     }
     public var capacity: Int {
-        return buffer.size.numberOfBytes
+        return buffer.size
     }
     public var position: Int {
         willSet {
@@ -73,7 +73,7 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
         // The new buffer's position will be zero, its limit will be its capacity, its mark will be undefined.
         self.buffer = buffer
         self.position = 0
-        self.limit = buffer.size.numberOfBytes
+        self.limit = buffer.size
         self.markedPosition = -1
     }
     

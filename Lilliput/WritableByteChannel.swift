@@ -28,6 +28,12 @@ public protocol WritableByteChannel : class {
 }
 
 extension WritableByteChannel {
+    @warn_unused_result
+    func write(buffer: Buffer) throws -> Int {
+        return try write(buffer.data, numberOfBytes: buffer.size)
+    }
+    
+    @warn_unused_result
     func write<Order: ByteOrder>(buffer: ByteBuffer<Order>) throws -> Int {
         let bytesWritten = try write(buffer.remainingData, numberOfBytes: buffer.remaining)
         buffer.position += bytesWritten

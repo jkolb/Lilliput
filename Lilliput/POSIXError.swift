@@ -30,7 +30,11 @@ public struct POSIXError : ErrorType, CustomStringConvertible {
     }
     
     public var description: String {
-        let message = String.fromCString(strerror(code)) ?? ""
-        return "errno: \(code) - \(message)"
+        if let message = String.fromCString(strerror(code)) {
+            return "errno: \(code): \(message)"
+        }
+        else {
+            return "errno: \(code)"
+        }
     }
 }

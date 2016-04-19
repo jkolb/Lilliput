@@ -29,6 +29,11 @@ public protocol ReadableByteChannel : class {
 
 extension ReadableByteChannel {
     @warn_unused_result
+    func read(buffer: Buffer) throws -> Int {
+        return try read(buffer.data, numberOfBytes: buffer.size)
+    }
+    
+    @warn_unused_result
     func read<Order: ByteOrder>(buffer: ByteBuffer<Order>) throws -> Int {
         let bytesRead = try read(buffer.remainingData, numberOfBytes: buffer.remaining)
         buffer.position += bytesRead

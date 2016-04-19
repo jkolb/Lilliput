@@ -24,5 +24,7 @@
 
 public protocol FileManager : class {
     @warn_unused_result
-    func open(path: String, options: FileOpenOption) throws -> SeekableByteChannel
+    func open(path: FilePath, options: FileOpenOption) throws -> SeekableByteChannel
+    
+    func remove(path: FilePath) throws
 }

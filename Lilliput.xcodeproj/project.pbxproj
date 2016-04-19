@@ -47,6 +47,10 @@
 		E5BDC5E0196F6AC0001ABC11 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */; };
 		E5BDC5E2196F6BD2001ABC11 /* ByteOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5E1196F6BD2001ABC11 /* ByteOrderTests.swift */; };
 		E5BDC5E4196F6BFC001ABC11 /* ByteBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BDC5E3196F6BFC001ABC11 /* ByteBufferTests.swift */; };
+		E5ED653F1CC5DB8900A554A2 /* FilePosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5ED653E1CC5DB8900A554A2 /* FilePosition.swift */; };
+		E5ED65401CC5DC9700A554A2 /* FilePosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5ED653E1CC5DB8900A554A2 /* FilePosition.swift */; };
+		E5ED65421CC5E72800A554A2 /* FilePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5ED65411CC5E72800A554A2 /* FilePath.swift */; };
+		E5ED65431CC5E83800A554A2 /* FilePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5ED65411CC5E72800A554A2 /* FilePath.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +98,8 @@
 		E5BDC5DE196F6AC0001ABC11 /* ByteOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteOrder.swift; sourceTree = "<group>"; };
 		E5BDC5E1196F6BD2001ABC11 /* ByteOrderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteOrderTests.swift; sourceTree = "<group>"; };
 		E5BDC5E3196F6BFC001ABC11 /* ByteBufferTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBufferTests.swift; sourceTree = "<group>"; };
+		E5ED653E1CC5DB8900A554A2 /* FilePosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilePosition.swift; sourceTree = "<group>"; };
+		E5ED65411CC5E72800A554A2 /* FilePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilePath.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +168,8 @@
 				E52FFC7C1CC4519800B17607 /* ByteSize.swift */,
 				E52FFC931CC4A11200B17607 /* FileManager.swift */,
 				E52FFC911CC49F4200B17607 /* FileOpenOption.swift */,
+				E5ED65411CC5E72800A554A2 /* FilePath.swift */,
+				E5ED653E1CC5DB8900A554A2 /* FilePosition.swift */,
 				E52FFC781CC4515400B17607 /* POSIXBuffer.swift */,
 				E52FFC7A1CC4517300B17607 /* POSIXBufferFactory.swift */,
 				E52FFC851CC487BE00B17607 /* POSIXError.swift */,
@@ -386,12 +394,14 @@
 				E52FFCA21CC4A63800B17607 /* ByteBuffer.swift in Sources */,
 				E52FFCAD1CC4A63800B17607 /* ReadableByteChannel.swift in Sources */,
 				E52FFCAC1CC4A63800B17607 /* POSIXFileManager.swift in Sources */,
+				E5ED65431CC5E83800A554A2 /* FilePath.swift in Sources */,
 				E52FFCAB1CC4A63800B17607 /* POSIXFileChannel.swift in Sources */,
 				E52FFCA61CC4A63800B17607 /* FileManager.swift in Sources */,
 				E52FFCA41CC4A63800B17607 /* ByteOrder.swift in Sources */,
 				E52FFCAF1CC4A63800B17607 /* WritableByteChannel.swift in Sources */,
 				E52FFCAA1CC4A63800B17607 /* POSIXError.swift in Sources */,
 				E52FFCA51CC4A63800B17607 /* ByteSize.swift in Sources */,
+				E5ED65401CC5DC9700A554A2 /* FilePosition.swift in Sources */,
 				E52FFCA01CC4A63800B17607 /* Buffer.swift in Sources */,
 				E52FFCA81CC4A63800B17607 /* POSIXBuffer.swift in Sources */,
 			);
@@ -418,12 +428,14 @@
 				E52FFC8E1CC48FA500B17607 /* POSIXFileChannel.swift in Sources */,
 				E52FFC7D1CC4519800B17607 /* ByteSize.swift in Sources */,
 				E5BDC5E0196F6AC0001ABC11 /* ByteOrder.swift in Sources */,
+				E5ED65421CC5E72800A554A2 /* FilePath.swift in Sources */,
 				E52FFC841CC474CF00B17607 /* ReadableByteChannel.swift in Sources */,
 				E52FFC921CC49F4200B17607 /* FileOpenOption.swift in Sources */,
 				E52FFC731CC44B2400B17607 /* Buffer.swift in Sources */,
 				E5BDC5DF196F6AC0001ABC11 /* ByteBuffer.swift in Sources */,
 				E52FFC8C1CC48D0E00B17607 /* SeekableByteChannel.swift in Sources */,
 				E52FFC861CC487BE00B17607 /* POSIXError.swift in Sources */,
+				E5ED653F1CC5DB8900A554A2 /* FilePosition.swift in Sources */,
 				E52FFC8A1CC48ADB00B17607 /* ByteChannel.swift in Sources */,
 				E52FFC961CC4A17E00B17607 /* POSIXFileManager.swift in Sources */,
 			);

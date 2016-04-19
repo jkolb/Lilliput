@@ -22,14 +22,40 @@
  SOFTWARE.
  */
 
-public protocol SeekableByteChannel : ByteChannel {
-    @warn_unused_result
-    func position() throws -> FilePosition
+public struct FilePosition : IntegerLiteralConvertible, CustomStringConvertible, Comparable, Hashable {
+    public let bytesFromStart: Int64
     
-    func seek(position: FilePosition) throws -> FilePosition
+    public init(_ bytesFromStart: Int64) {
+        precondition(bytesFromStart >= 0)
+        self.bytesFromStart = bytesFromStart
+    }
     
-    @warn_unused_result
-    func end() throws -> FilePosition
+    public init(integerLiteral value: Int64) {
+        precondition(value >= 0)
+        self.bytesFromStart = value
+    }
     
-    func truncate(position: FilePosition) throws
+    public var description: String {
+        return bytesFromStart.description
+    }
+    
+    public var hashValue: Int {
+        return bytesFromStart.hashValue
+    }
+}
+
+public func ==(lhs: FilePosition, rhs: FilePosition) -> Bool {
+    return lhs.bytesFromStart == rhs.bytesFromStart
+}
+
+public func <(lhs: FilePosition, rhs: FilePosition) -> Bool {
+    return lhs.bytesFromStart < rhs.bytesFromStart
+}
+
+public func +(lhs: FilePosition, rhs: Int) -> FilePosition {
+    return FilePosition(lhs.bytesFromStart + rhs)
+}
+
+public func -(lhs: FilePosition, rhs: Int) -> FilePosition {
+    return FilePosition(lhs.bytesFromStart - rhs)
 }

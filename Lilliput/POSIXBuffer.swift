@@ -30,11 +30,11 @@
 
 public final class POSIXBuffer : Buffer {
     public let data: UnsafeMutablePointer<Void>
-    public let size: ByteSize
+    public let size: Int
     
     public init(size: ByteSize) {
         self.data = malloc(size.numberOfBytes)
-        self.size = size
+        self.size = size.numberOfBytes
     }
     
     deinit {

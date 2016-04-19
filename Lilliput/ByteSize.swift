@@ -22,19 +22,22 @@
  SOFTWARE.
  */
 
-public struct ByteSize : IntegerLiteralConvertible {
+public struct ByteSize : IntegerLiteralConvertible, CustomStringConvertible, Comparable {
     public let numberOfBytes: Int
     
     public init(_ numberOfBytes: Int) {
+        precondition(numberOfBytes >= 0)
         self.numberOfBytes = numberOfBytes
     }
     
     public init(integerLiteral value: Int) {
+        precondition(value >= 0)
         self.numberOfBytes = value
     }
 
     @warn_unused_result
     public func align(byteCount: Int) -> ByteSize {
+        precondition(byteCount > 0)
         let baseAlignmentFactor = numberOfBytes / byteCount
         let requiresAdditionalFactor = (numberOfBytes % byteCount) > 0
         let alignmentFactor: Int
@@ -46,4 +49,16 @@ public struct ByteSize : IntegerLiteralConvertible {
         }
         return ByteSize(alignmentFactor * byteCount)
     }
+    
+    public var description: String {
+        return numberOfBytes.description
+    }
+}
+
+public func ==(lhs: ByteSize, rhs: ByteSize) -> Bool {
+    return lhs.numberOfBytes == rhs.numberOfBytes
+}
+
+public func <(lhs: ByteSize, rhs: ByteSize) -> Bool {
+    return lhs.numberOfBytes < rhs.numberOfBytes
 }
