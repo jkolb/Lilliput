@@ -348,10 +348,9 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
     
     public func putUInt8(source: [UInt8], offset: Int, length: Int) {
         precondition(length <= remaining)
-        let bytes = UnsafeMutablePointer<UInt8>(buffer.data)
-        let destination = bytes.advancedBy(position)
-        destination.initializeFrom(source[offset..<offset+length])
+        let destination = UnsafeMutablePointer<UInt8>(remainingData)
         position += length
+        destination.initializeFrom(source[offset..<offset+length])
     }
     
     public func putUTF8(value: String) {
@@ -367,10 +366,10 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
         precondition(source.remaining <= remaining)
         let count = source.remaining
         
-        let sourceBytes = UnsafeMutablePointer<UInt8>(source.buffer.data).advancedBy(source.position)
+        let sourceBytes = UnsafeMutablePointer<UInt8>(source.remainingData)
         source.position += count
         
-        let destinationBytes = UnsafeMutablePointer<UInt8>(buffer.data).advancedBy(position)
+        let destinationBytes = UnsafeMutablePointer<UInt8>(remainingData)
         position += count
         
         destinationBytes.initializeFrom(sourceBytes, count: count)

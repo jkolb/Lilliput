@@ -24,18 +24,30 @@
 
 public protocol ReadableByteChannel : class {
     @warn_unused_result
-    func read(buffer: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int
+    func readData(data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int
 }
 
 extension ReadableByteChannel {
     @warn_unused_result
-    func read(buffer: Buffer) throws -> Int {
-        return try read(buffer.data, numberOfBytes: buffer.size)
+    public func readBuffer(buffer: Buffer) throws -> Int {
+        return try readBuffer(buffer, numberOfBytes: buffer.size)
     }
     
     @warn_unused_result
-    func read<Order: ByteOrder>(buffer: ByteBuffer<Order>) throws -> Int {
-        let bytesRead = try read(buffer.remainingData, numberOfBytes: buffer.remaining)
+    public func readBuffer(buffer: Buffer, numberOfBytes: Int) throws -> Int {
+        precondition(numberOfBytes <= buffer.size)
+        return try readData(buffer.data, numberOfBytes: numberOfBytes)
+    }
+    
+    @warn_unused_result
+    public func readByteBuffer<Order: ByteOrder>(buffer: ByteBuffer<Order>) throws -> Int {
+        return try readByteBuffer(buffer, numberOfBytes: buffer.remaining)
+    }
+    
+    @warn_unused_result
+    public func readByteBuffer<Order: ByteOrder>(buffer: ByteBuffer<Order>, numberOfBytes: Int) throws -> Int {
+        precondition(numberOfBytes <= buffer.remaining)
+        let bytesRead = try readData(buffer.remainingData, numberOfBytes: numberOfBytes)
         buffer.position += bytesRead
         return bytesRead
     }

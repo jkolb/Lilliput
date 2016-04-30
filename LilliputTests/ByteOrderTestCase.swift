@@ -26,7 +26,7 @@
 import Lilliput
 import XCTest
 
-class ByteOrderTests: XCTestCase {
+class ByteOrderTestCase: XCTestCase {
     func testBigEndian() {
         XCTAssertEqual(UInt16(bigEndian: 0x0001), BigEndian.swapUInt16(0x0001))
         XCTAssertEqual(UInt16(bigEndian: 0x0100), BigEndian.swapUInt16(0x0100))

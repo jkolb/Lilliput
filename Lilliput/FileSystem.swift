@@ -22,16 +22,25 @@
  SOFTWARE.
  */
 
-public protocol BufferFactory : class {
-    @warn_unused_result
-    func bufferWithSize(size: ByteSize) -> Buffer
+public protocol FileSystem : class {
+    var pathSeparator: String { get }
+    var currentDirectory: String { get }
+    var parentDirectory: String { get }
+    var defaultRootDir: FilePath { get }
     
     @warn_unused_result
-    func bufferWithSize<Order : ByteOrder>(size: ByteSize, order: Order.Type) -> ByteBuffer<Order>
-}
-
-extension BufferFactory {
-    public func bufferWithSize<Order : ByteOrder>(size: ByteSize, order: Order.Type) -> ByteBuffer<Order> {
-        return ByteBuffer<Order>(buffer: bufferWithSize(size))
-    }
+    func openPath(path: FilePath, options: FileOpenOption) throws -> SeekableByteChannel
+    
+    func createDirectoryPath(path: FilePath) throws -> Bool
+    
+    func deletePath(path: FilePath) throws
+    
+    @warn_unused_result
+    func absolutePath(components: String...) -> FilePath
+    
+    @warn_unused_result
+    func parsePath(string: String) -> FilePath
+    
+    @warn_unused_result
+    func formatPath(path: FilePath) -> String
 }

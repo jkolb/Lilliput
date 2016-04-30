@@ -22,6 +22,12 @@
  SOFTWARE.
  */
 
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
+
 public struct POSIXError : ErrorType, CustomStringConvertible {
     public let code: errno_t
     

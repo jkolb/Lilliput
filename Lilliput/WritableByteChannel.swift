@@ -24,18 +24,30 @@
 
 public protocol WritableByteChannel : class {
     @warn_unused_result
-    func write(buffer: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int
+    func writeData(data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int
 }
 
 extension WritableByteChannel {
     @warn_unused_result
-    func write(buffer: Buffer) throws -> Int {
-        return try write(buffer.data, numberOfBytes: buffer.size)
+    public func writeBuffer(buffer: Buffer) throws -> Int {
+        return try writeBuffer(buffer, numberOfBytes: buffer.size)
     }
     
     @warn_unused_result
-    func write<Order: ByteOrder>(buffer: ByteBuffer<Order>) throws -> Int {
-        let bytesWritten = try write(buffer.remainingData, numberOfBytes: buffer.remaining)
+    public func writeBuffer(buffer: Buffer, numberOfBytes: Int) throws -> Int {
+        precondition(numberOfBytes <= buffer.size)
+        return try writeData(buffer.data, numberOfBytes: numberOfBytes)
+    }
+    
+    @warn_unused_result
+    public func writeByteBuffer<Order: ByteOrder>(buffer: ByteBuffer<Order>) throws -> Int {
+        return try writeByteBuffer(buffer, numberOfBytes: buffer.remaining)
+    }
+    
+    @warn_unused_result
+    public func writeByteBuffer<Order: ByteOrder>(buffer: ByteBuffer<Order>, numberOfBytes: Int) throws -> Int {
+        precondition(numberOfBytes <= buffer.remaining)
+        let bytesWritten = try writeData(buffer.remainingData, numberOfBytes: numberOfBytes)
         buffer.position += bytesWritten
         return bytesWritten
     }

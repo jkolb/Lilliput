@@ -22,9 +22,14 @@
  SOFTWARE.
  */
 
-public protocol FileManager : class {
+public protocol Memory : class {
     @warn_unused_result
-    func open(path: FilePath, options: FileOpenOption) throws -> SeekableByteChannel
-    
-    func remove(path: FilePath) throws
+    func bufferWithSize(size: ByteSize) -> Buffer
+}
+
+extension Memory {
+    @warn_unused_result
+    public func bufferWithSize<Order : ByteOrder>(size: ByteSize, order: Order.Type) -> ByteBuffer<Order> {
+        return ByteBuffer<Order>(buffer: bufferWithSize(size))
+    }
 }

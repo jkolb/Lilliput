@@ -26,11 +26,11 @@
 import Lilliput
 import XCTest
 
-class ByteBufferTests: XCTestCase {
-    let bufferFactory: BufferFactory = POSIXBufferFactory()
+class ByteBufferTestCase: XCTestCase {
+    let memory: Memory = POSIXMemory()
     
     func testPut() {
-        let byteBuffer = bufferFactory.bufferWithSize(4, order: BigEndian.self)
+        let byteBuffer = memory.bufferWithSize(4, order: BigEndian.self)
         byteBuffer.putUInt8([1, 2, 3, 4])
         byteBuffer.flip()
         XCTAssertEqual(UInt8(1), byteBuffer.getUInt8(), "Fail")
@@ -40,38 +40,38 @@ class ByteBufferTests: XCTestCase {
     }
     
     func testGetUInt16() {
-        let bigEndian = bufferFactory.bufferWithSize(2, order: BigEndian.self)
+        let bigEndian = memory.bufferWithSize(2, order: BigEndian.self)
         bigEndian.putUInt8([0x00, 0xFF])
         bigEndian.flip()
         XCTAssertEqual(UInt16(0x00FF), bigEndian.getUInt16(), "Fail")
         
-        let littleEndian = bufferFactory.bufferWithSize(2, order: LittleEndian.self)
+        let littleEndian = memory.bufferWithSize(2, order: LittleEndian.self)
         littleEndian.putUInt8([0x00, 0xFF])
         littleEndian.flip()
         XCTAssertEqual(UInt16(0xFF00), littleEndian.getUInt16(), "Fail")
     }
     
     func testGetUInt32() {
-        let bigEndian = bufferFactory.bufferWithSize(4, order: BigEndian.self)
+        let bigEndian = memory.bufferWithSize(4, order: BigEndian.self)
         bigEndian.putUInt8([0x00, 0x00, 0x00, 0xFF])
         bigEndian.flip()
         XCTAssertEqual(UInt32(0x000000FF), bigEndian.getUInt32(), "Fail")
         
-        let littleEndian = bufferFactory.bufferWithSize(4, order: LittleEndian.self)
+        let littleEndian = memory.bufferWithSize(4, order: LittleEndian.self)
         littleEndian.putUInt8([0x00, 0x00, 0x00, 0xFF])
         littleEndian.flip()
         XCTAssertEqual(UInt32(0xFF000000), littleEndian.getUInt32(), "Fail")
     }
     
     func testGetUInt64() {
-        let bigEndian = bufferFactory.bufferWithSize(8, order: BigEndian.self)
+        let bigEndian = memory.bufferWithSize(8, order: BigEndian.self)
         bigEndian.putUInt8([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF])
         bigEndian.flip()
         XCTAssertEqual(UInt64(0x00000000000000FF), bigEndian.getUInt64(), "Fail")
         
         #if !arch(i386) && !arch(arm)
             // This won't compile on 32-bit
-            let littleEndian = bufferFactory.bufferWithSize(8, order: LittleEndian.self)
+            let littleEndian = memory.bufferWithSize(8, order: LittleEndian.self)
             littleEndian.putUInt8([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00])
             littleEndian.flip()
             XCTAssertEqual(UInt64(0x00FF000000000000), littleEndian.getUInt64(), "Fail")
@@ -79,12 +79,12 @@ class ByteBufferTests: XCTestCase {
     }
     
     func testGetFloat32() {
-        let bigEndian = bufferFactory.bufferWithSize(4, order: BigEndian.self)
+        let bigEndian = memory.bufferWithSize(4, order: BigEndian.self)
         bigEndian.putUInt8([0x3F, 0x80, 0x00, 0x00])
         bigEndian.flip()
         XCTAssertEqual(Float32(1.0), bigEndian.getFloat32(), "Fail")
         
-        let littleEndian = bufferFactory.bufferWithSize(4, order: LittleEndian.self)
+        let littleEndian = memory.bufferWithSize(4, order: LittleEndian.self)
         littleEndian.putUInt8([0x00, 0x00, 0x80, 0x3F])
         littleEndian.flip()
         XCTAssertEqual(Float32(1.0), littleEndian.getFloat32(), "Fail")

@@ -28,13 +28,22 @@
     import Darwin
 #endif
 
-public class POSIXFileManager : FileManager {
-    public func open(path: FilePath, options: FileOpenOption) throws -> SeekableByteChannel {
-        #if os(Linux)
-            let fileDescriptor = Glibc.open(path.string, openFlags(options))
-        #else
-            let fileDescriptor = Darwin.open(path.string, openFlags(options))
-        #endif
+public class POSIXFileSystem : FileSystem {
+    public var pathSeparator: String {
+        return "/"
+    }
+    
+    public var currentDirectory: String {
+        return "."
+    }
+    
+    public var parentDirectory: String {
+        return ".."
+    }
+
+    public func openPath(path: FilePath, options: FileOpenOption) throws -> SeekableByteChannel {
+        let pathString = formatPath(path)
+        let fileDescriptor = open(pathString, openFlags(options))
         
         if fileDescriptor < 0 {
             throw POSIXError(code: errno)
@@ -61,11 +70,11 @@ public class POSIXFileManager : FileManager {
             openFlags |= O_APPEND
         }
         
-        if options.contains(.Create) {
-            openFlags |= O_CREAT
-        }
-        else if options.contains(.CreateNew) {
+        if options.contains(.CreateNew) {
             openFlags |= (O_CREAT | O_EXCL)
+        }
+        else if options.contains(.Create) {
+            openFlags |= O_CREAT
         }
         
         if options.contains(.Truncate) {
@@ -75,15 +84,49 @@ public class POSIXFileManager : FileManager {
         return openFlags
     }
     
-    public func remove(path: FilePath) throws {
-        #if os(Linux)
-            let result = Glibc.remove(path.string)
-        #else
-            let result = Darwin.remove(path.string)
-        #endif
+    public func createDirectoryPath(path: FilePath) throws -> Bool {
+        let pathString = formatPath(path)
+        let result = mkdir(pathString, 0o777)
+        
+        if result < 0 {
+            if errno == EEXIST {
+                return false
+            }
+            else {
+                throw POSIXError(code: errno)
+            }
+        }
+        
+        return true
+    }
+
+    public func deletePath(path: FilePath) throws {
+        let pathString = formatPath(path)
+        let result = remove(pathString)
         
         if result < 0 {
             throw POSIXError(code: errno)
+        }
+    }
+
+    public var defaultRootDir: FilePath {
+        return FilePath("")
+    }
+    
+    public func absolutePath(components: String...) -> FilePath {
+        return FilePath(root: defaultRootDir, components: components)
+    }
+
+    public func parsePath(string: String) -> FilePath {
+        return FilePath(components: string.componentsSeparatedByString(pathSeparator))
+    }
+    
+    public func formatPath(path: FilePath) -> String {
+        if path == defaultRootDir {
+            return pathSeparator
+        }
+        else {
+            return path.components.joinWithSeparator(pathSeparator)
         }
     }
 }

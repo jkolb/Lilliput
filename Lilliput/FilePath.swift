@@ -22,22 +22,30 @@
  SOFTWARE.
  */
 
-public struct FilePath : CustomStringConvertible {
-    private let components: String
+public struct FilePath : CustomStringConvertible, Equatable, Hashable {
+    public let components: [String]
     
-    public init?(string: String) {
-        if string.isEmpty {
-            return nil
-        }
-        
-        self.components = string
+    public init(root: FilePath, components: [String]) {
+        self.init(components: root.components + components)
     }
-
-    public var string: String {
-        return components
+    
+    public init(_ component: String...) {
+        self.init(components: component)
+    }
+    
+    public init(components: [String]) {
+        self.components = components
     }
     
     public var description: String {
-        return string
+        return components.description
     }
+    
+    public var hashValue: Int {
+        return components.joinWithSeparator(":").hashValue
+    }
+}
+
+public func ==(lhs: FilePath, rhs: FilePath) -> Bool {
+    return lhs.components == rhs.components
 }

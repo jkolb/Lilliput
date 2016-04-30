@@ -22,7 +22,7 @@
  SOFTWARE.
  */
 
-public final class POSIXBufferFactory : BufferFactory {
+public final class POSIXMemory : Memory {
     public init() {}
     
     public func bufferWithSize(size: ByteSize) -> Buffer {

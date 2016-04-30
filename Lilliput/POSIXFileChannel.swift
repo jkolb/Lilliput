@@ -43,14 +43,9 @@ public class POSIXFileChannel : SeekableByteChannel {
         }
     }
 
-    public func read(buffer: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int {
+    public func readData(data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int {
         precondition(numberOfBytes >= 0)
-
-        #if os(Linux)
-            let numberOfBytesRead = Glibc.read(fileDescriptor, buffer, numberOfBytes)
-        #else
-            let numberOfBytesRead = Darwin.read(fileDescriptor, buffer, numberOfBytes)
-        #endif
+        let numberOfBytesRead = read(fileDescriptor, data, numberOfBytes)
         
         if numberOfBytesRead < 0 {
             throw POSIXError(code: errno)
@@ -59,14 +54,9 @@ public class POSIXFileChannel : SeekableByteChannel {
         return numberOfBytesRead
     }
 
-    public func write(buffer: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int {
+    public func writeData(data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int {
         precondition(numberOfBytes >= 0)
-        
-        #if os(Linux)
-            let numberOfBytesWritten = Glibc.write(fileDescriptor, buffer, numberOfBytes)
-        #else
-            let numberOfBytesWritten = Darwin.write(fileDescriptor, buffer, numberOfBytes)
-        #endif
+        let numberOfBytesWritten = write(fileDescriptor, data, numberOfBytes)
         
         if numberOfBytesWritten < 0 {
             throw POSIXError(code: errno)
