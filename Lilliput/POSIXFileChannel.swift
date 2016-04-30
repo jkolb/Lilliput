@@ -28,7 +28,7 @@
     import Darwin
 #endif
 
-public class POSIXFileChannel : SeekableByteChannel {
+public final class POSIXFileChannel : SeekableByteChannel {
     private let fileDescriptor: CInt
     private let closeOnDeinit: Bool
     

@@ -28,7 +28,9 @@
     import Darwin
 #endif
 
-public class POSIXFileSystem : FileSystem {
+public final class POSIXFileSystem : FileSystem {
+    public init() {}
+    
     public var pathSeparator: String {
         return "/"
     }
