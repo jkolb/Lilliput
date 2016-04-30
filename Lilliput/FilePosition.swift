@@ -22,7 +22,40 @@
  SOFTWARE.
  */
 
-@import Foundation;
+public struct FilePosition : IntegerLiteralConvertible, CustomStringConvertible, Comparable, Hashable {
+    public let bytesFromStart: Int64
+    
+    public init(_ bytesFromStart: Int64) {
+        precondition(bytesFromStart >= 0)
+        self.bytesFromStart = bytesFromStart
+    }
+    
+    public init(integerLiteral value: Int64) {
+        precondition(value >= 0)
+        self.bytesFromStart = value
+    }
+    
+    public var description: String {
+        return bytesFromStart.description
+    }
+    
+    public var hashValue: Int {
+        return bytesFromStart.hashValue
+    }
+}
 
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+public func ==(lhs: FilePosition, rhs: FilePosition) -> Bool {
+    return lhs.bytesFromStart == rhs.bytesFromStart
+}
+
+public func <(lhs: FilePosition, rhs: FilePosition) -> Bool {
+    return lhs.bytesFromStart < rhs.bytesFromStart
+}
+
+public func +(lhs: FilePosition, rhs: Int) -> FilePosition {
+    return FilePosition(lhs.bytesFromStart + rhs)
+}
+
+public func -(lhs: FilePosition, rhs: Int) -> FilePosition {
+    return FilePosition(lhs.bytesFromStart - rhs)
+}

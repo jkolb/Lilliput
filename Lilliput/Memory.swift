@@ -22,7 +22,14 @@
  SOFTWARE.
  */
 
-@import Foundation;
+public protocol Memory : class {
+    @warn_unused_result
+    func bufferWithSize(size: ByteSize) -> Buffer
+}
 
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+extension Memory {
+    @warn_unused_result
+    public func bufferWithSize<Order : ByteOrder>(size: ByteSize, order: Order.Type) -> ByteBuffer<Order> {
+        return ByteBuffer<Order>(buffer: bufferWithSize(size))
+    }
+}

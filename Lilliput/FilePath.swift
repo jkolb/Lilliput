@@ -22,7 +22,30 @@
  SOFTWARE.
  */
 
-@import Foundation;
+public struct FilePath : CustomStringConvertible, Equatable, Hashable {
+    public let components: [String]
+    
+    public init(root: FilePath, components: [String]) {
+        self.init(components: root.components + components)
+    }
+    
+    public init(_ component: String...) {
+        self.init(components: component)
+    }
+    
+    public init(components: [String]) {
+        self.components = components
+    }
+    
+    public var description: String {
+        return components.description
+    }
+    
+    public var hashValue: Int {
+        return components.joinWithSeparator(":").hashValue
+    }
+}
 
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+public func ==(lhs: FilePath, rhs: FilePath) -> Bool {
+    return lhs.components == rhs.components
+}

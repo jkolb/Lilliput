@@ -22,7 +22,25 @@
  SOFTWARE.
  */
 
-@import Foundation;
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
 
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+public struct POSIXError : ErrorType, CustomStringConvertible {
+    public let code: errno_t
+    
+    public init(code: errno_t) {
+        self.code = code
+    }
+    
+    public var description: String {
+        if let message = String.fromCString(strerror(code)) {
+            return "errno: \(code): \(message)"
+        }
+        else {
+            return "errno: \(code)"
+        }
+    }
+}
