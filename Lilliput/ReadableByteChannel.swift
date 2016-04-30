@@ -22,41 +22,33 @@
  SOFTWARE.
  */
 
-public protocol ByteOrder {
+public protocol ReadableByteChannel : class {
     @warn_unused_result
-    static func swapUInt16(value: UInt16) -> UInt16
-    
-    @warn_unused_result
-    static func swapUInt32(value: UInt32) -> UInt32
-    
-    @warn_unused_result
-    static func swapUInt64(value: UInt64) -> UInt64
+    func readData(data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int
 }
 
-public final class LittleEndian : ByteOrder {
-    public static func swapUInt16(value: UInt16) -> UInt16 {
-        return value.littleEndian
+extension ReadableByteChannel {
+    @warn_unused_result
+    public func readBuffer(buffer: Buffer) throws -> Int {
+        return try readBuffer(buffer, numberOfBytes: buffer.size)
     }
     
-    public static func swapUInt32(value: UInt32) -> UInt32 {
-        return value.littleEndian
+    @warn_unused_result
+    public func readBuffer(buffer: Buffer, numberOfBytes: Int) throws -> Int {
+        precondition(numberOfBytes <= buffer.size)
+        return try readData(buffer.data, numberOfBytes: numberOfBytes)
     }
     
-    public static func swapUInt64(value: UInt64) -> UInt64 {
-        return value.littleEndian
-    }
-}
-
-public final class BigEndian : ByteOrder {
-    public static func swapUInt16(value: UInt16) -> UInt16 {
-        return value.bigEndian
+    @warn_unused_result
+    public func readByteBuffer<Order: ByteOrder>(buffer: ByteBuffer<Order>) throws -> Int {
+        return try readByteBuffer(buffer, numberOfBytes: buffer.remaining)
     }
     
-    public static func swapUInt32(value: UInt32) -> UInt32 {
-        return value.bigEndian
-    }
-    
-    public static func swapUInt64(value: UInt64) -> UInt64 {
-        return value.bigEndian
+    @warn_unused_result
+    public func readByteBuffer<Order: ByteOrder>(buffer: ByteBuffer<Order>, numberOfBytes: Int) throws -> Int {
+        precondition(numberOfBytes <= buffer.remaining)
+        let bytesRead = try readData(buffer.remainingData, numberOfBytes: numberOfBytes)
+        buffer.position += bytesRead
+        return bytesRead
     }
 }

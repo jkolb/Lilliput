@@ -22,41 +22,33 @@
  SOFTWARE.
  */
 
-public protocol ByteOrder {
+public protocol WritableByteChannel : class {
     @warn_unused_result
-    static func swapUInt16(value: UInt16) -> UInt16
-    
-    @warn_unused_result
-    static func swapUInt32(value: UInt32) -> UInt32
-    
-    @warn_unused_result
-    static func swapUInt64(value: UInt64) -> UInt64
+    func writeData(data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int
 }
 
-public final class LittleEndian : ByteOrder {
-    public static func swapUInt16(value: UInt16) -> UInt16 {
-        return value.littleEndian
+extension WritableByteChannel {
+    @warn_unused_result
+    public func writeBuffer(buffer: Buffer) throws -> Int {
+        return try writeBuffer(buffer, numberOfBytes: buffer.size)
     }
     
-    public static func swapUInt32(value: UInt32) -> UInt32 {
-        return value.littleEndian
+    @warn_unused_result
+    public func writeBuffer(buffer: Buffer, numberOfBytes: Int) throws -> Int {
+        precondition(numberOfBytes <= buffer.size)
+        return try writeData(buffer.data, numberOfBytes: numberOfBytes)
     }
     
-    public static func swapUInt64(value: UInt64) -> UInt64 {
-        return value.littleEndian
-    }
-}
-
-public final class BigEndian : ByteOrder {
-    public static func swapUInt16(value: UInt16) -> UInt16 {
-        return value.bigEndian
+    @warn_unused_result
+    public func writeByteBuffer<Order: ByteOrder>(buffer: ByteBuffer<Order>) throws -> Int {
+        return try writeByteBuffer(buffer, numberOfBytes: buffer.remaining)
     }
     
-    public static func swapUInt32(value: UInt32) -> UInt32 {
-        return value.bigEndian
-    }
-    
-    public static func swapUInt64(value: UInt64) -> UInt64 {
-        return value.bigEndian
+    @warn_unused_result
+    public func writeByteBuffer<Order: ByteOrder>(buffer: ByteBuffer<Order>, numberOfBytes: Int) throws -> Int {
+        precondition(numberOfBytes <= buffer.remaining)
+        let bytesWritten = try writeData(buffer.remainingData, numberOfBytes: numberOfBytes)
+        buffer.position += bytesWritten
+        return bytesWritten
     }
 }

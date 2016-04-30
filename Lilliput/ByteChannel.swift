@@ -22,7 +22,5 @@
  SOFTWARE.
  */
 
-@import Foundation;
-
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+public protocol ByteChannel : ReadableByteChannel, WritableByteChannel {
+}

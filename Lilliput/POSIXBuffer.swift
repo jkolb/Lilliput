@@ -22,7 +22,22 @@
  SOFTWARE.
  */
 
-@import Foundation;
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
 
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+public final class POSIXBuffer : Buffer {
+    public let data: UnsafeMutablePointer<Void>
+    public let size: Int
+    
+    public init(size: ByteSize) {
+        self.data = malloc(size.numberOfBytes)
+        self.size = size.numberOfBytes
+    }
+    
+    deinit {
+        free(data)
+    }
+}

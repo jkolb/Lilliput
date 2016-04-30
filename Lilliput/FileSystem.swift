@@ -22,7 +22,25 @@
  SOFTWARE.
  */
 
-@import Foundation;
-
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+public protocol FileSystem : class {
+    var pathSeparator: String { get }
+    var currentDirectory: String { get }
+    var parentDirectory: String { get }
+    var defaultRootDir: FilePath { get }
+    
+    @warn_unused_result
+    func openPath(path: FilePath, options: FileOpenOption) throws -> SeekableByteChannel
+    
+    func createDirectoryPath(path: FilePath) throws -> Bool
+    
+    func deletePath(path: FilePath) throws
+    
+    @warn_unused_result
+    func absolutePath(components: String...) -> FilePath
+    
+    @warn_unused_result
+    func parsePath(string: String) -> FilePath
+    
+    @warn_unused_result
+    func formatPath(path: FilePath) -> String
+}

@@ -22,7 +22,7 @@
  SOFTWARE.
  */
 
-@import Foundation;
-
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+public protocol Buffer : class {
+    var data: UnsafeMutablePointer<Void> { get }
+    var size: Int { get }
+}
