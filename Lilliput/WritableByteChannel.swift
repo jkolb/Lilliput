@@ -23,29 +23,24 @@
  */
 
 public protocol WritableByteChannel : class {
-    @warn_unused_result
-    func writeData(data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int
+    func writeData(_ data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int
 }
 
 extension WritableByteChannel {
-    @warn_unused_result
-    public func writeBuffer(buffer: Buffer) throws -> Int {
+    public func writeBuffer(_ buffer: Buffer) throws -> Int {
         return try writeBuffer(buffer, numberOfBytes: buffer.size)
     }
     
-    @warn_unused_result
-    public func writeBuffer(buffer: Buffer, numberOfBytes: Int) throws -> Int {
+    public func writeBuffer(_ buffer: Buffer, numberOfBytes: Int) throws -> Int {
         precondition(numberOfBytes <= buffer.size)
         return try writeData(buffer.data, numberOfBytes: numberOfBytes)
     }
     
-    @warn_unused_result
-    public func writeByteBuffer<Order: ByteOrder>(buffer: ByteBuffer<Order>) throws -> Int {
+    public func writeByteBuffer<Order: ByteOrder>(_ buffer: ByteBuffer<Order>) throws -> Int {
         return try writeByteBuffer(buffer, numberOfBytes: buffer.remaining)
     }
     
-    @warn_unused_result
-    public func writeByteBuffer<Order: ByteOrder>(buffer: ByteBuffer<Order>, numberOfBytes: Int) throws -> Int {
+    public func writeByteBuffer<Order: ByteOrder>(_ buffer: ByteBuffer<Order>, numberOfBytes: Int) throws -> Int {
         precondition(numberOfBytes <= buffer.remaining)
         let bytesWritten = try writeData(buffer.remainingData, numberOfBytes: numberOfBytes)
         buffer.position += bytesWritten

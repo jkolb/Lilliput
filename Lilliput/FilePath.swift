@@ -42,7 +42,7 @@ public struct FilePath : CustomStringConvertible, Equatable, Hashable {
     }
     
     public var hashValue: Int {
-        return components.joinWithSeparator(":").hashValue
+        return components.joined(separator: ":").hashValue
     }
 }
 

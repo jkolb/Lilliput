@@ -22,7 +22,7 @@
  SOFTWARE.
  */
 
-public struct FileOpenOption : OptionSetType {
+public struct FileOpenOption : OptionSet {
     public let rawValue: UInt16
     
     public init(rawValue: UInt16) {

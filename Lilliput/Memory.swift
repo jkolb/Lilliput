@@ -23,13 +23,11 @@
  */
 
 public protocol Memory : class {
-    @warn_unused_result
-    func bufferWithSize(size: ByteSize) -> Buffer
+    func bufferWithSize(_ size: ByteSize) -> Buffer
 }
 
 extension Memory {
-    @warn_unused_result
-    public func bufferWithSize<Order : ByteOrder>(size: ByteSize, order: Order.Type) -> ByteBuffer<Order> {
+    public func bufferWithSize<Order : ByteOrder>(_ size: ByteSize, order: Order.Type) -> ByteBuffer<Order> {
         return ByteBuffer<Order>(buffer: bufferWithSize(size))
     }
 }

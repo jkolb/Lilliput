@@ -43,7 +43,7 @@ public final class POSIXFileChannel : SeekableByteChannel {
         }
     }
 
-    public func readData(data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int {
+    public func readData(_ data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int {
         precondition(numberOfBytes >= 0)
         let numberOfBytesRead = read(fileDescriptor, data, numberOfBytes)
         
@@ -54,7 +54,7 @@ public final class POSIXFileChannel : SeekableByteChannel {
         return numberOfBytesRead
     }
 
-    public func writeData(data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int {
+    public func writeData(_ data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int {
         precondition(numberOfBytes >= 0)
         let numberOfBytesWritten = write(fileDescriptor, data, numberOfBytes)
         
@@ -75,7 +75,7 @@ public final class POSIXFileChannel : SeekableByteChannel {
         return FilePosition(bytesFromStart)
     }
     
-    public func seek(position: FilePosition) throws -> FilePosition {
+    @discardableResult public func seek(_ position: FilePosition) throws -> FilePosition {
         let bytesFromStart = lseek(fileDescriptor, position.bytesFromStart, SEEK_SET)
         
         if bytesFromStart < 0 {
@@ -98,7 +98,7 @@ public final class POSIXFileChannel : SeekableByteChannel {
         return FilePosition(bytesFromStart)
     }
     
-    public func truncate(end: FilePosition) throws {
+    public func truncate(_ end: FilePosition) throws {
         let result = ftruncate(fileDescriptor, end.bytesFromStart)
         
         if result < 0 {

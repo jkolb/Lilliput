@@ -28,7 +28,7 @@
     import Darwin
 #endif
 
-public struct POSIXError : ErrorType, CustomStringConvertible {
+public struct POSIXError : ErrorProtocol, CustomStringConvertible {
     public let code: errno_t
     
     public init(code: errno_t) {
@@ -36,7 +36,7 @@ public struct POSIXError : ErrorType, CustomStringConvertible {
     }
     
     public var description: String {
-        if let message = String.fromCString(strerror(code)) {
+        if let message = String(validatingUTF8: strerror(code)) {
             return "errno: \(code): \(message)"
         }
         else {

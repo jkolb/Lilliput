@@ -43,7 +43,7 @@ public final class POSIXFileSystem : FileSystem {
         return ".."
     }
 
-    public func openPath(path: FilePath, options: FileOpenOption) throws -> SeekableByteChannel {
+    public func openPath(_ path: FilePath, options: FileOpenOption) throws -> SeekableByteChannel {
         let pathString = formatPath(path)
         let fileDescriptor = open(pathString, openFlags(options))
         
@@ -54,8 +54,7 @@ public final class POSIXFileSystem : FileSystem {
         return POSIXFileChannel(fileDescriptor: fileDescriptor)
     }
     
-    @warn_unused_result
-    public func openFlags(options: FileOpenOption) -> CInt {
+    public func openFlags(_ options: FileOpenOption) -> CInt {
         var openFlags: CInt = 0
         
         if options.contains(.Read) && options.contains(.Write) {
@@ -86,7 +85,7 @@ public final class POSIXFileSystem : FileSystem {
         return openFlags
     }
     
-    public func createDirectoryPath(path: FilePath) throws -> Bool {
+    public func createDirectoryPath(_ path: FilePath) throws -> Bool {
         let pathString = formatPath(path)
         let result = mkdir(pathString, 0o777)
         
@@ -102,7 +101,7 @@ public final class POSIXFileSystem : FileSystem {
         return true
     }
 
-    public func deletePath(path: FilePath) throws {
+    public func deletePath(_ path: FilePath) throws {
         let pathString = formatPath(path)
         let result = remove(pathString)
         
@@ -115,20 +114,20 @@ public final class POSIXFileSystem : FileSystem {
         return FilePath("")
     }
     
-    public func absolutePath(components: String...) -> FilePath {
+    public func absolutePath(_ components: String...) -> FilePath {
         return FilePath(root: defaultRootDir, components: components)
     }
 
-    public func parsePath(string: String) -> FilePath {
-        return FilePath(components: string.componentsSeparatedByString(pathSeparator))
+    public func parsePath(_ string: String) -> FilePath {
+        return FilePath(components: string.components(separatedBy: pathSeparator))
     }
     
-    public func formatPath(path: FilePath) -> String {
+    public func formatPath(_ path: FilePath) -> String {
         if path == defaultRootDir {
             return pathSeparator
         }
         else {
-            return path.components.joinWithSeparator(pathSeparator)
+            return path.components.joined(separator: pathSeparator)
         }
     }
 }

@@ -25,7 +25,7 @@
 public final class POSIXMemory : Memory {
     public init() {}
     
-    public func bufferWithSize(size: ByteSize) -> Buffer {
+    public func bufferWithSize(_ size: ByteSize) -> Buffer {
         return POSIXBuffer(size: size)
     }
 }

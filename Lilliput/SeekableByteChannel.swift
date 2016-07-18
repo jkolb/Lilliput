@@ -23,13 +23,11 @@
  */
 
 public protocol SeekableByteChannel : ByteChannel {
-    @warn_unused_result
     func position() throws -> FilePosition
     
-    func seek(position: FilePosition) throws -> FilePosition
+    func seek(_ position: FilePosition) throws -> FilePosition
     
-    @warn_unused_result
     func end() throws -> FilePosition
     
-    func truncate(position: FilePosition) throws
+    func truncate(_ position: FilePosition) throws
 }

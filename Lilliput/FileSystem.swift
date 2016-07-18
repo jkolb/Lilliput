@@ -28,19 +28,15 @@ public protocol FileSystem : class {
     var parentDirectory: String { get }
     var defaultRootDir: FilePath { get }
     
-    @warn_unused_result
-    func openPath(path: FilePath, options: FileOpenOption) throws -> SeekableByteChannel
+    func openPath(_ path: FilePath, options: FileOpenOption) throws -> SeekableByteChannel
     
-    func createDirectoryPath(path: FilePath) throws -> Bool
+    func createDirectoryPath(_ path: FilePath) throws -> Bool
     
-    func deletePath(path: FilePath) throws
+    func deletePath(_ path: FilePath) throws
     
-    @warn_unused_result
-    func absolutePath(components: String...) -> FilePath
+    func absolutePath(_ components: String...) -> FilePath
     
-    @warn_unused_result
-    func parsePath(string: String) -> FilePath
+    func parsePath(_ string: String) -> FilePath
     
-    @warn_unused_result
-    func formatPath(path: FilePath) -> String
+    func formatPath(_ path: FilePath) -> String
 }

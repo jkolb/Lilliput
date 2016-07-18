@@ -35,8 +35,7 @@ public struct ByteSize : IntegerLiteralConvertible, CustomStringConvertible, Com
         self.numberOfBytes = value
     }
 
-    @warn_unused_result
-    public func align(byteCount: Int) -> ByteSize {
+    public func align(_ byteCount: Int) -> ByteSize {
         precondition(byteCount > 0)
         let baseAlignmentFactor = numberOfBytes / byteCount
         let requiresAdditionalFactor = (numberOfBytes % byteCount) > 0
