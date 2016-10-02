@@ -190,76 +190,120 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
         return unsafeBitCast(getUInt64(), to: Float64.self)
     }
     
-    public func getInt8(_ count: Int) -> [Int8] {
+    public func getInt8(count: Int) -> [Int8] {
         var array = [Int8](repeating: 0, count: count)
         for index in 0..<count { array[index] = getInt8() }
         return array
     }
     
-    public func getInt16(_ count: Int) -> [Int16] {
+    public func getInt16(count: Int) -> [Int16] {
         var array = [Int16](repeating: 0, count: count)
         for index in 0..<count { array[index] = getInt16() }
         return array
     }
     
-    public func getInt32(_ count: Int) -> [Int32] {
+    public func getInt32(count: Int) -> [Int32] {
         var array = [Int32](repeating: 0, count: count)
         for index in 0..<count { array[index] = getInt32() }
         return array
     }
     
-    public func getInt64(_ count: Int) -> [Int64] {
+    public func getInt64(count: Int) -> [Int64] {
         var array = [Int64](repeating: 0, count: count)
         for index in 0..<count { array[index] = getInt64() }
         return array
     }
     
-    public func getUInt8(_ count: Int) -> [UInt8] {
+    public func getUInt8(count: Int) -> [UInt8] {
         var array = [UInt8](repeating: 0, count: count)
         for index in 0..<count { array[index] = getUInt8() }
         return array
     }
     
-    public func getUInt16(_ count: Int) -> [UInt16] {
+    public func getUInt16(count: Int) -> [UInt16] {
         var array = [UInt16](repeating: 0, count: count)
         for index in 0..<count { array[index] = getUInt16() }
         return array
     }
     
-    public func getUInt32(_ count: Int) -> [UInt32] {
+    public func getUInt32(count: Int) -> [UInt32] {
         var array = [UInt32](repeating: 0, count: count)
         for index in 0..<count { array[index] = getUInt32() }
         return array
     }
     
-    public func getUInt64(_ count: Int) -> [UInt64] {
+    public func getUInt64(count: Int) -> [UInt64] {
         var array = [UInt64](repeating: 0, count: count)
         for index in 0..<count { array[index] = getUInt64() }
         return array
     }
     
-    public func getFloat32(_ count: Int) -> [Float32] {
+    public func getFloat32(count: Int) -> [Float32] {
         var array = [Float32](repeating: 0, count: count)
         for index in 0..<count { array[index] = getFloat32() }
         return array
     }
     
-    public func getFloat64(_ count: Int) -> [Float64] {
+    public func getFloat64(count: Int) -> [Float64] {
         var array = [Float64](repeating: 0, count: count)
         for index in 0..<count { array[index] = getFloat64() }
         return array
     }
-    
-    public func getUTF8(_ length: Int) -> String {
-        return decodeCodeUnits(getUInt8(length), codec: UTF8())
+
+    public func getInt8At(_ position: Int) -> Int8 {
+        return Int8(bitPattern: getUInt8At(position))
     }
     
-    public func getUTF8(_ terminator: UTF8.CodeUnit = 0) -> String {
-        return decodeCodeUnits(getUTF8(terminator), codec: UTF8())
+    public func getInt16At(_ position: Int) -> Int16 {
+        return Int16(bitPattern: getUInt16At(position))
     }
     
-    public func getUTF16(_ length: Int) -> String {
-        return decodeCodeUnits(getUInt16(length), codec: UTF16())
+    public func getInt32At(_ position: Int) -> Int32 {
+        return Int32(bitPattern: getUInt32At(position))
+    }
+    
+    public func getInt64At(_ position: Int) -> Int64 {
+        return Int64(bitPattern: getUInt64At(position))
+    }
+    
+    public func getUInt8At(_ position: Int) -> UInt8 {
+        let value: UInt8 = getValueAt(position)
+        return value
+    }
+    
+    public func getUInt16At(_ position: Int) -> UInt16 {
+        let value: UInt16 = getValueAt(position)
+        return Order.swapUInt16(value)
+    }
+    
+    public func getUInt32At(_ position: Int) -> UInt32 {
+        let value: UInt32 = getValueAt(position)
+        return Order.swapUInt32(value)
+    }
+    
+    public func getUInt64At(_ position: Int) -> UInt64 {
+        let value: UInt64 = getValueAt(position)
+        return Order.swapUInt64(value)
+    }
+    
+    public func getFloat32At(_ position: Int) -> Float32 {
+        return unsafeBitCast(getUInt32At(position), to: Float32.self)
+    }
+    
+    public func getFloat64At(_ position: Int) -> Float64 {
+        return unsafeBitCast(getUInt64At(position), to: Float64.self)
+    }
+
+    public func getUTF8(length: Int) -> String {
+        return decodeCodeUnits(getUInt8(count: length), codec: UTF8())
+    }
+    
+    public func getUTF8(terminator: UTF8.CodeUnit = 0) -> String {
+        return decodeCodeUnits(getUTF8(terminator: terminator), codec: UTF8())
+    }
+    
+    public func getUTF16(length: Int) -> String {
+        return decodeCodeUnits(getUInt16(count: length), codec: UTF16())
     }
     
     public func decodeCodeUnits<C : UnicodeCodec>(_ codeUnits: [C.CodeUnit], codec: C) -> String {
@@ -285,7 +329,7 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
         return String(characters)
     }
     
-    public func getUTF8(_ terminator: UTF8.CodeUnit) -> [UTF8.CodeUnit] {
+    public func getUTF8(terminator: UTF8.CodeUnit) -> [UTF8.CodeUnit] {
         var array = Array<UTF8.CodeUnit>()
         var done = true
         
@@ -391,7 +435,7 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
         
         source.withUnsafeBytes { (srcPtr: UnsafePointer<UInt8>) -> Void in
             withUnsafeMutableBytes { (dstPtr: UnsafeMutablePointer<UInt8>) -> Void in
-                dstPtr.initialize(from: srcPtr, count: count)
+                dstPtr.advanced(by: position).initialize(from: srcPtr.advanced(by: source.position), count: count)
             }
         }
         
