@@ -22,40 +22,35 @@
  SOFTWARE.
  */
 
-public struct FilePosition : IntegerLiteralConvertible, CustomStringConvertible, Comparable, Hashable {
-    public let bytesFromStart: Int64
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
+
+public final class POSIXBuffer : Buffer {
+    private let pointer: UnsafeMutableRawPointer
+    public let count: Int
     
-    public init(_ bytesFromStart: Int64) {
-        precondition(bytesFromStart >= 0)
-        self.bytesFromStart = bytesFromStart
+    public convenience init(size: ByteSize) {
+        self.init(pointer: malloc(size.numberOfBytes), count: size.numberOfBytes)
     }
     
-    public init(integerLiteral value: Int64) {
-        precondition(value >= 0)
-        self.bytesFromStart = value
+    private init(pointer: UnsafeMutableRawPointer, count: Int) {
+        precondition(count >= 0)
+        self.pointer = pointer
+        self.count = count
     }
     
-    public var description: String {
-        return bytesFromStart.description
+    public func withUnsafeBytes<ResultType, ContentType>(_ body: (UnsafePointer<ContentType>) throws -> ResultType) rethrows -> ResultType {
+        return try body(pointer.assumingMemoryBound(to: ContentType.self))
     }
     
-    public var hashValue: Int {
-        return bytesFromStart.hashValue
+    public func withUnsafeMutableBytes<ResultType, ContentType>(_ body: (UnsafeMutablePointer<ContentType>) throws -> ResultType) rethrows -> ResultType {
+        return try body(pointer.assumingMemoryBound(to: ContentType.self))
     }
-}
 
-public func ==(lhs: FilePosition, rhs: FilePosition) -> Bool {
-    return lhs.bytesFromStart == rhs.bytesFromStart
-}
-
-public func <(lhs: FilePosition, rhs: FilePosition) -> Bool {
-    return lhs.bytesFromStart < rhs.bytesFromStart
-}
-
-public func +(lhs: FilePosition, rhs: Int) -> FilePosition {
-    return FilePosition(lhs.bytesFromStart + rhs)
-}
-
-public func -(lhs: FilePosition, rhs: Int) -> FilePosition {
-    return FilePosition(lhs.bytesFromStart - rhs)
+    deinit {
+        free(pointer)
+    }
 }

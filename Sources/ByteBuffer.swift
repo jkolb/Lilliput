@@ -23,16 +23,20 @@
  */
 
 public final class ByteBuffer<Order : ByteOrder> : Buffer {
-    private let buffer: Buffer
-    public var data: UnsafeMutablePointer<Void> {
-        return buffer.data
+    private var buffer: Buffer
+    
+    public var count: Int {
+        return buffer.count
     }
-    public var size: Int {
-        return buffer.size
+    
+    public func withUnsafeBytes<ResultType, ContentType>(_ body: (UnsafePointer<ContentType>) throws -> ResultType) rethrows -> ResultType {
+        return try buffer.withUnsafeBytes(body)
     }
-    public var capacity: Int {
-        return buffer.size
+    
+    public func withUnsafeMutableBytes<ResultType, ContentType>(_ body: (UnsafeMutablePointer<ContentType>) throws -> ResultType) rethrows -> ResultType {
+        return try buffer.withUnsafeMutableBytes(body)
     }
+    
     public var position: Int {
         willSet {
             // The new position value; must be non-negative and no larger than the current limit
@@ -50,7 +54,7 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
         willSet {
             // The new limit value; must be non-negative and no larger than this buffer's capacity
             precondition(newValue >= 0)
-            precondition(newValue <= capacity)
+            precondition(newValue <= count)
         }
         didSet {
             // If the position is larger than the new limit then it is set to the new limit.
@@ -73,17 +77,13 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
         // The new buffer's position will be zero, its limit will be its capacity, its mark will be undefined.
         self.buffer = buffer
         self.position = 0
-        self.limit = buffer.size
+        self.limit = buffer.count
         self.markedPosition = -1
     }
     
     public var hasRemaining: Bool {
         // Tells whether there are any elements between the current position and the limit.
         return remaining > 0
-    }
-    
-    public var remainingData: UnsafeMutablePointer<Void> {
-        return buffer.data.advanced(by: position)
     }
     
     public var remaining: Int {
@@ -106,7 +106,7 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
     public func clear() {
         // Clears this buffer. The position is set to zero, the limit is set to the capacity, and the mark is discarded.
         position = 0
-        limit = capacity
+        limit = count
         discardMark()
     }
     
@@ -124,12 +124,24 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
     }
     
     public func compact() {
-        let bytes = UnsafeMutablePointer<UInt8>(buffer.data)
-        bytes.moveInitializeFrom(bytes.advanced(by: position), count: remaining)
+        withUnsafeMutableBytes { (pointer: UnsafeMutablePointer<UInt8>) -> Void in
+            pointer.moveInitialize(from: pointer.advanced(by: position), count: remaining)
+        }
         position = remaining
-        limit = capacity
+        limit = count
     }
     
+    private func getValueAt<T>(_ position: Int) -> T {
+        precondition(position >= 0 && position <= count - MemoryLayout<T>.size)
+        
+        let value: T = withUnsafeBytes { (bytes: UnsafePointer<UInt8>) in
+            return bytes.advanced(by: position).withMemoryRebound(to: T.self, capacity: 1, { (pointer) -> T in
+                return pointer.pointee
+            })
+        }
+        return value
+    }
+
     public func getInt8() -> Int8 {
         return Int8(bitPattern: getUInt8())
     }
@@ -147,30 +159,26 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
     }
     
     public func getUInt8() -> UInt8 {
-        let bytes = UnsafePointer<UInt8>(buffer.data)
-        let value = bytes[position]
-        position += sizeof(UInt8.self)
+        let value: UInt8 = getValueAt(position)
+        position += MemoryLayout<UInt8>.size
         return value
     }
     
     public func getUInt16() -> UInt16 {
-        let bytes = UnsafePointer<UInt16>(buffer.data)
-        let value = bytes[position]
-        position += sizeof(UInt16.self)
+        let value: UInt16 = getValueAt(position)
+        position += MemoryLayout<UInt16>.size
         return Order.swapUInt16(value)
     }
     
     public func getUInt32() -> UInt32 {
-        let bytes = UnsafePointer<UInt32>(buffer.data)
-        let value = bytes[position]
-        position += sizeof(UInt32.self)
+        let value: UInt32 = getValueAt(position)
+        position += MemoryLayout<UInt32>.size
         return Order.swapUInt32(value)
     }
     
     public func getUInt64() -> UInt64 {
-        let bytes = UnsafePointer<UInt64>(buffer.data)
-        let value = bytes[position]
-        position += sizeof(UInt64.self)
+        let value: UInt64 = getValueAt(position)
+        position += MemoryLayout<UInt64>.size
         return Order.swapUInt64(value)
     }
     
@@ -294,6 +302,16 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
         return array
     }
     
+    private func putValue<T>(_ value: T, at position: Int) {
+        precondition(position >= 0 && position <= count - MemoryLayout<T>.size)
+    
+        withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) -> Void in
+            bytes.advanced(by: position).withMemoryRebound(to: T.self, capacity: 1, { (pointer) -> Void in
+                pointer.pointee = value
+            })
+        }
+    }
+
     public func putInt8(_ value: Int8) {
         putUInt8(UInt8(bitPattern: value))
     }
@@ -311,27 +329,23 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
     }
     
     public func putUInt8(_ value: UInt8) {
-        let bytes = UnsafeMutablePointer<UInt8>(buffer.data)
-        bytes[position] = value
-        position += sizeof(UInt8.self)
+        putValue(value, at: position)
+        position += MemoryLayout<UInt8>.size
     }
     
     public func putUInt16(_ value: UInt16) {
-        let bytes = UnsafeMutablePointer<UInt16>(buffer.data)
-        bytes[position] = Order.swapUInt16(value)
-        position += sizeof(UInt16.self)
+        putValue(Order.swapUInt16(value), at: position)
+        position += MemoryLayout<UInt16>.size
     }
     
     public func putUInt32(_ value: UInt32) {
-        let bytes = UnsafeMutablePointer<UInt32>(buffer.data)
-        bytes[position] = Order.swapUInt32(value)
-        position += sizeof(UInt32.self)
+        putValue(Order.swapUInt32(value), at: position)
+        position += MemoryLayout<UInt32>.size
     }
     
     public func putUInt64(_ value: UInt64) {
-        let bytes = UnsafeMutablePointer<UInt64>(buffer.data)
-        bytes[position] = Order.swapUInt64(value)
-        position += sizeof(UInt64.self)
+        putValue(Order.swapUInt64(value), at: position)
+        position += MemoryLayout<UInt64>.size
     }
     
     public func putFloat32(_ value: Float32) {
@@ -347,10 +361,16 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
     }
     
     public func putUInt8(_ source: [UInt8], offset: Int, length: Int) {
+        precondition(offset + length <= source.count)
         precondition(length <= remaining)
-        let destination = UnsafeMutablePointer<UInt8>(remainingData)
+        
+        source.withUnsafeBufferPointer { (srcPtr) -> Void in
+            withUnsafeMutableBytes { (dstPtr: UnsafeMutablePointer<UInt8>) -> Void in
+                dstPtr.initialize(from: srcPtr.baseAddress!, count: length)
+            }
+        }
+        
         position += length
-        destination.initializeFrom(source[offset..<offset+length])
     }
     
     public func putUTF8(_ value: String) {
@@ -363,15 +383,19 @@ public final class ByteBuffer<Order : ByteOrder> : Buffer {
     }
     
     public func putBuffer(_ source: ByteBuffer<Order>) {
-        precondition(source.remaining <= remaining)
-        let count = source.remaining
+        let count = min(source.remaining, remaining)
         
-        let sourceBytes = UnsafeMutablePointer<UInt8>(source.remainingData)
+        if count == 0 {
+            return
+        }
+        
+        source.withUnsafeBytes { (srcPtr: UnsafePointer<UInt8>) -> Void in
+            withUnsafeMutableBytes { (dstPtr: UnsafeMutablePointer<UInt8>) -> Void in
+                dstPtr.initialize(from: srcPtr, count: count)
+            }
+        }
+        
         source.position += count
-        
-        let destinationBytes = UnsafeMutablePointer<UInt8>(remainingData)
         position += count
-        
-        destinationBytes.initializeFrom(sourceBytes, count: count)
     }
 }

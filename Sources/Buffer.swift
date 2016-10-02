@@ -22,25 +22,8 @@
  SOFTWARE.
  */
 
-#if os(Linux)
-    import Glibc
-#else
-    import Darwin
-#endif
-
-public struct POSIXError : ErrorProtocol, CustomStringConvertible {
-    public let code: errno_t
-    
-    public init(code: errno_t) {
-        self.code = code
-    }
-    
-    public var description: String {
-        if let message = String(validatingUTF8: strerror(code)) {
-            return "errno: \(code): \(message)"
-        }
-        else {
-            return "errno: \(code)"
-        }
-    }
+public protocol Buffer {
+    var count: Int { get }
+    func withUnsafeBytes<ResultType, ContentType>(_ body: (UnsafePointer<ContentType>) throws -> ResultType) rethrows -> ResultType
+    mutating func withUnsafeMutableBytes<ResultType, ContentType>(_ body: (UnsafeMutablePointer<ContentType>) throws -> ResultType) rethrows -> ResultType
 }

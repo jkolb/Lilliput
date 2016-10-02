@@ -22,7 +22,7 @@
  SOFTWARE.
  */
 
-public protocol Buffer : class {
-    var data: UnsafeMutablePointer<Void> { get }
-    var size: Int { get }
+import Foundation
+
+extension Data : Buffer {
 }

@@ -22,7 +22,12 @@
  SOFTWARE.
  */
 
-@import Foundation;
+import Foundation
 
-FOUNDATION_EXPORT double LilliputVersionNumber;
-FOUNDATION_EXPORT const unsigned char LilliputVersionString[];
+public final class FoundationMemory : Memory {
+    public init() {}
+    
+    public func bufferWithSize(_ size: ByteSize) -> Buffer {
+        return Data(count: size.numberOfBytes)
+    }
+}

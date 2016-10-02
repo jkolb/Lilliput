@@ -1,8 +1,13 @@
-#Lilliput 2.0.0
+#Lilliput 3.0.0
 
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 ##ChangeLog
+
+######3.0.0
+* Updated to Swift 3.
+* Support for Swift Package Manager.
+* Foundation Data now conforms to Buffer protocol.
 
 ######2.0.0
 * Added back in support for reading and writing files based on a generic protocols so that it should be easy to port to any operating system. Currently supports POSIX on Linux and OS X.

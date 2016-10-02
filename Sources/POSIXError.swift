@@ -22,28 +22,25 @@
  SOFTWARE.
  */
 
-public protocol WritableByteChannel : class {
-    func writeData(_ data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int
-}
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
 
-extension WritableByteChannel {
-    public func writeBuffer(_ buffer: Buffer) throws -> Int {
-        return try writeBuffer(buffer, numberOfBytes: buffer.size)
+public struct POSIXError : Error, CustomStringConvertible {
+    public let code: errno_t
+    
+    public init(code: errno_t) {
+        self.code = code
     }
     
-    public func writeBuffer(_ buffer: Buffer, numberOfBytes: Int) throws -> Int {
-        precondition(numberOfBytes <= buffer.size)
-        return try writeData(buffer.data, numberOfBytes: numberOfBytes)
-    }
-    
-    public func writeByteBuffer<Order: ByteOrder>(_ buffer: ByteBuffer<Order>) throws -> Int {
-        return try writeByteBuffer(buffer, numberOfBytes: buffer.remaining)
-    }
-    
-    public func writeByteBuffer<Order: ByteOrder>(_ buffer: ByteBuffer<Order>, numberOfBytes: Int) throws -> Int {
-        precondition(numberOfBytes <= buffer.remaining)
-        let bytesWritten = try writeData(buffer.remainingData, numberOfBytes: numberOfBytes)
-        buffer.position += bytesWritten
-        return bytesWritten
+    public var description: String {
+        if let message = String(validatingUTF8: strerror(code)) {
+            return "errno: \(code): \(message)"
+        }
+        else {
+            return "errno: \(code)"
+        }
     }
 }

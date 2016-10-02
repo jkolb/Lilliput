@@ -23,17 +23,25 @@
  */
 
 public protocol ReadableByteChannel : class {
-    func readData(_ data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int
+    func readData(_ data: UnsafeMutableRawPointer, numberOfBytes: Int) throws -> Int
 }
 
 extension ReadableByteChannel {
+    public func readBytes(_ bytes: UnsafeMutablePointer<UInt8>, numberOfBytes: Int) throws -> Int {
+        return try readData(bytes, numberOfBytes: numberOfBytes)
+    }
+    
     public func readBuffer(_ buffer: Buffer) throws -> Int {
-        return try readBuffer(buffer, numberOfBytes: buffer.size)
+        return try readBuffer(buffer, numberOfBytes: buffer.count)
     }
     
     public func readBuffer(_ buffer: Buffer, numberOfBytes: Int) throws -> Int {
-        precondition(numberOfBytes <= buffer.size)
-        return try readData(buffer.data, numberOfBytes: numberOfBytes)
+        precondition(numberOfBytes <= buffer.count)
+        var mutableBuffer = buffer
+        
+        return try mutableBuffer.withUnsafeMutableBytes { (pointer: UnsafeMutablePointer<UInt8>) -> Int in
+            return try readBytes(pointer, numberOfBytes: numberOfBytes)
+        }
     }
     
     public func readByteBuffer<Order: ByteOrder>(_ buffer: ByteBuffer<Order>) throws -> Int {
@@ -42,8 +50,13 @@ extension ReadableByteChannel {
     
     public func readByteBuffer<Order: ByteOrder>(_ buffer: ByteBuffer<Order>, numberOfBytes: Int) throws -> Int {
         precondition(numberOfBytes <= buffer.remaining)
-        let bytesRead = try readData(buffer.remainingData, numberOfBytes: numberOfBytes)
+        
+        let bytesRead = try buffer.withUnsafeMutableBytes { (pointer: UnsafeMutablePointer<UInt8>) -> Int in
+            try readBytes(pointer.advanced(by: buffer.position), numberOfBytes: numberOfBytes)
+        }
+        
         buffer.position += bytesRead
+        
         return bytesRead
     }
 }

@@ -22,42 +22,40 @@
  SOFTWARE.
  */
 
-public struct ByteSize : IntegerLiteralConvertible, CustomStringConvertible, Comparable {
-    public let numberOfBytes: Int
+public struct FilePosition : ExpressibleByIntegerLiteral, CustomStringConvertible, Comparable, Hashable {
+    public let bytesFromStart: Int64
     
-    public init(_ numberOfBytes: Int) {
-        precondition(numberOfBytes >= 0)
-        self.numberOfBytes = numberOfBytes
+    public init(_ bytesFromStart: Int64) {
+        precondition(bytesFromStart >= 0)
+        self.bytesFromStart = bytesFromStart
     }
     
-    public init(integerLiteral value: Int) {
+    public init(integerLiteral value: Int64) {
         precondition(value >= 0)
-        self.numberOfBytes = value
-    }
-
-    public func align(_ byteCount: Int) -> ByteSize {
-        precondition(byteCount > 0)
-        let baseAlignmentFactor = numberOfBytes / byteCount
-        let requiresAdditionalFactor = (numberOfBytes % byteCount) > 0
-        let alignmentFactor: Int
-        if requiresAdditionalFactor {
-            alignmentFactor = baseAlignmentFactor + 1
-        }
-        else {
-            alignmentFactor = baseAlignmentFactor
-        }
-        return ByteSize(alignmentFactor * byteCount)
+        self.bytesFromStart = value
     }
     
     public var description: String {
-        return numberOfBytes.description
+        return bytesFromStart.description
+    }
+    
+    public var hashValue: Int {
+        return bytesFromStart.hashValue
     }
 }
 
-public func ==(lhs: ByteSize, rhs: ByteSize) -> Bool {
-    return lhs.numberOfBytes == rhs.numberOfBytes
+public func ==(lhs: FilePosition, rhs: FilePosition) -> Bool {
+    return lhs.bytesFromStart == rhs.bytesFromStart
 }
 
-public func <(lhs: ByteSize, rhs: ByteSize) -> Bool {
-    return lhs.numberOfBytes < rhs.numberOfBytes
+public func <(lhs: FilePosition, rhs: FilePosition) -> Bool {
+    return lhs.bytesFromStart < rhs.bytesFromStart
+}
+
+public func +(lhs: FilePosition, rhs: Int) -> FilePosition {
+    return FilePosition(lhs.bytesFromStart + rhs)
+}
+
+public func -(lhs: FilePosition, rhs: Int) -> FilePosition {
+    return FilePosition(lhs.bytesFromStart - rhs)
 }

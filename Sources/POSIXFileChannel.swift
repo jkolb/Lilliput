@@ -43,7 +43,7 @@ public final class POSIXFileChannel : SeekableByteChannel {
         }
     }
 
-    public func readData(_ data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int {
+    public func readData(_ data: UnsafeMutableRawPointer, numberOfBytes: Int) throws -> Int {
         precondition(numberOfBytes >= 0)
         let numberOfBytesRead = read(fileDescriptor, data, numberOfBytes)
         
@@ -54,7 +54,7 @@ public final class POSIXFileChannel : SeekableByteChannel {
         return numberOfBytesRead
     }
 
-    public func writeData(_ data: UnsafeMutablePointer<Void>, numberOfBytes: Int) throws -> Int {
+    public func writeData(_ data: UnsafeRawPointer, numberOfBytes: Int) throws -> Int {
         precondition(numberOfBytes >= 0)
         let numberOfBytesWritten = write(fileDescriptor, data, numberOfBytes)
         
