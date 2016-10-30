@@ -4,6 +4,16 @@
 
 ##ChangeLog
 
+######4.0.0
+* Got rid of ByteSize, FilePosition, and FilePath abstractions.
+* Renamed ByteBuffer to UnsafeOrderedBuffer.
+* Renamed Buffer to UnsafeBuffer.
+* No longer attempt to work with Foundation, the API is awkward and it currently has bugs.
+* Fixed permission issue with creating files using POSIXFileSystem.
+* Removed the limit and mark functionality from UnsafeOrderedBuffer.
+* Fix missing shared scheme required for Carthage support.
+* Rebuilt project file using Xcode 8.1 version of SwiftPM.
+
 ######3.0.0
 * Updated to Swift 3.
 * Support for Swift Package Manager.

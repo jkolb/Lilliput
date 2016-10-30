@@ -23,37 +23,37 @@
  */
 
 public protocol ByteOrder {
-    static func swapUInt16(_ value: UInt16) -> UInt16
+    @inline(__always) static func swapUInt16(_ value: UInt16) -> UInt16
     
-    static func swapUInt32(_ value: UInt32) -> UInt32
+    @inline(__always) static func swapUInt32(_ value: UInt32) -> UInt32
     
-    static func swapUInt64(_ value: UInt64) -> UInt64
+    @inline(__always) static func swapUInt64(_ value: UInt64) -> UInt64
 }
 
 public final class LittleEndian : ByteOrder {
-    public static func swapUInt16(_ value: UInt16) -> UInt16 {
+    @inline(__always) public static func swapUInt16(_ value: UInt16) -> UInt16 {
         return value.littleEndian
     }
     
-    public static func swapUInt32(_ value: UInt32) -> UInt32 {
+    @inline(__always) public static func swapUInt32(_ value: UInt32) -> UInt32 {
         return value.littleEndian
     }
     
-    public static func swapUInt64(_ value: UInt64) -> UInt64 {
+    @inline(__always) public static func swapUInt64(_ value: UInt64) -> UInt64 {
         return value.littleEndian
     }
 }
 
 public final class BigEndian : ByteOrder {
-    public static func swapUInt16(_ value: UInt16) -> UInt16 {
+    @inline(__always) public static func swapUInt16(_ value: UInt16) -> UInt16 {
         return value.bigEndian
     }
     
-    public static func swapUInt32(_ value: UInt32) -> UInt32 {
+    @inline(__always) public static func swapUInt32(_ value: UInt32) -> UInt32 {
         return value.bigEndian
     }
     
-    public static func swapUInt64(_ value: UInt64) -> UInt64 {
+    @inline(__always) public static func swapUInt64(_ value: UInt64) -> UInt64 {
         return value.bigEndian
     }
 }

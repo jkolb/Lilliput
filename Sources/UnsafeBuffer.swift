@@ -22,7 +22,15 @@
  SOFTWARE.
  */
 
-import Foundation
+public protocol UnsafeBuffer : class {
+    var bytes: UnsafeMutableRawPointer { get }
+    var count: Int { get }
+}
 
-extension Data : Buffer {
+extension UnsafeBuffer {
+    public func copyTo(_ memory: Memory) -> UnsafeBuffer {
+        let copy = memory.bufferWithSize(count)
+        copy.bytes.copyBytes(from: bytes, count: count)
+        return copy
+    }
 }

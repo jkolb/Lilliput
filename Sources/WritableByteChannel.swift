@@ -23,39 +23,24 @@
  */
 
 public protocol WritableByteChannel : class {
-    func writeData(_ data: UnsafeRawPointer, numberOfBytes: Int) throws -> Int
+    func writeBytes(_ bytes: UnsafeMutableRawPointer, count: Int) throws -> Int
 }
 
 extension WritableByteChannel {
-    public func writeBytes(_ bytes: UnsafePointer<UInt8>, numberOfBytes: Int) throws -> Int {
-        return try writeData(bytes, numberOfBytes: numberOfBytes)
+    public func writeBuffer(_ buffer: UnsafeBuffer, count: Int) throws -> Int {
+        precondition(count <= buffer.count)
+        return try writeBytes(buffer.bytes, count: count)
     }
     
-    public func writeBuffer(_ buffer: Buffer) throws -> Int {
-        return try writeBuffer(buffer, numberOfBytes: buffer.count)
+    public func writeBuffer<Order : ByteOrder>(_ buffer: UnsafeOrderedBuffer<Order>, count: Int) throws -> Int {
+        precondition(count <= buffer.remainingCount)
+        let writeCount = try writeBytes(buffer.remainingBytes, count: count)
+        buffer.position += writeCount
+        return writeCount
     }
     
-    public func writeBuffer(_ buffer: Buffer, numberOfBytes: Int) throws -> Int {
-        precondition(numberOfBytes <= buffer.count)
-        
-        return try buffer.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) -> Int in
-            try writeData(UnsafeRawPointer(pointer), numberOfBytes: numberOfBytes)
-        }
-    }
-    
-    public func writeByteBuffer<Order: ByteOrder>(_ buffer: ByteBuffer<Order>) throws -> Int {
-        return try writeByteBuffer(buffer, numberOfBytes: buffer.remaining)
-    }
-    
-    public func writeByteBuffer<Order: ByteOrder>(_ buffer: ByteBuffer<Order>, numberOfBytes: Int) throws -> Int {
-        precondition(numberOfBytes <= buffer.remaining)
-        
-        let bytesWritten = try buffer.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) -> Int in
-            try writeBytes(pointer.advanced(by: buffer.position), numberOfBytes: numberOfBytes)
-        }
-        
-        buffer.position += bytesWritten
-        
-        return bytesWritten
+    public func writeBuffer<Order : ByteOrder>(_ buffer: UnsafeOrderedBuffer<Order>) throws {
+        let _ = try writeBuffer(buffer, count: buffer.remainingCount)
+        precondition(buffer.remainingCount == 0)
     }
 }

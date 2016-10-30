@@ -7,193 +7,160 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E5F052F31DA1A0350061A18D /* FoundationBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F052F21DA1A0350061A18D /* FoundationBuffer.swift */; };
-		E5F052F51DA1A06F0061A18D /* FoundationMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F052F41DA1A06F0061A18D /* FoundationMemory.swift */; };
-		E5F052F81DA1B3830061A18D /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = E5F052F71DA1B3830061A18D /* README.md */; };
-		_LinkFileRef_Lilliput_via_LilliputTests /* Lilliput.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Lilliput" /* Lilliput.framework */; };
-		__src_cc_ref_Sources/Buffer.swift /* Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/Buffer.swift /* Buffer.swift */; };
-		__src_cc_ref_Sources/ByteBuffer.swift /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/ByteBuffer.swift /* ByteBuffer.swift */; };
-		__src_cc_ref_Sources/ByteChannel.swift /* ByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/ByteChannel.swift /* ByteChannel.swift */; };
-		__src_cc_ref_Sources/ByteOrder.swift /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/ByteOrder.swift /* ByteOrder.swift */; };
-		__src_cc_ref_Sources/ByteSize.swift /* ByteSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/ByteSize.swift /* ByteSize.swift */; };
-		__src_cc_ref_Sources/FileOpenOption.swift /* FileOpenOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/FileOpenOption.swift /* FileOpenOption.swift */; };
-		__src_cc_ref_Sources/FilePath.swift /* FilePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/FilePath.swift /* FilePath.swift */; };
-		__src_cc_ref_Sources/FilePosition.swift /* FilePosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/FilePosition.swift /* FilePosition.swift */; };
-		__src_cc_ref_Sources/FileSystem.swift /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/FileSystem.swift /* FileSystem.swift */; };
-		__src_cc_ref_Sources/Memory.swift /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/Memory.swift /* Memory.swift */; };
-		__src_cc_ref_Sources/POSIXBuffer.swift /* POSIXBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/POSIXBuffer.swift /* POSIXBuffer.swift */; };
-		__src_cc_ref_Sources/POSIXError.swift /* POSIXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/POSIXError.swift /* POSIXError.swift */; };
-		__src_cc_ref_Sources/POSIXFileChannel.swift /* POSIXFileChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/POSIXFileChannel.swift /* POSIXFileChannel.swift */; };
-		__src_cc_ref_Sources/POSIXFileSystem.swift /* POSIXFileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/POSIXFileSystem.swift /* POSIXFileSystem.swift */; };
-		__src_cc_ref_Sources/POSIXMemory.swift /* POSIXMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/POSIXMemory.swift /* POSIXMemory.swift */; };
-		__src_cc_ref_Sources/ReadableByteChannel.swift /* ReadableByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/ReadableByteChannel.swift /* ReadableByteChannel.swift */; };
-		__src_cc_ref_Sources/SeekableByteChannel.swift /* SeekableByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/SeekableByteChannel.swift /* SeekableByteChannel.swift */; };
-		__src_cc_ref_Sources/WritableByteChannel.swift /* WritableByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/WritableByteChannel.swift /* WritableByteChannel.swift */; };
-		__src_cc_ref_Tests/LilliputTests/ByteBufferTestCase.swift /* ByteBufferTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Tests/LilliputTests/ByteBufferTestCase.swift /* ByteBufferTestCase.swift */; };
-		__src_cc_ref_Tests/LilliputTests/ByteOrderTestCase.swift /* ByteOrderTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Tests/LilliputTests/ByteOrderTestCase.swift /* ByteOrderTestCase.swift */; };
+		OBJ_36 /* ByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* ByteChannel.swift */; };
+		OBJ_37 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* ByteOrder.swift */; };
+		OBJ_38 /* FileOpenOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* FileOpenOption.swift */; };
+		OBJ_39 /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* FileSystem.swift */; };
+		OBJ_40 /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* Memory.swift */; };
+		OBJ_41 /* POSIXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* POSIXError.swift */; };
+		OBJ_42 /* POSIXFileChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* POSIXFileChannel.swift */; };
+		OBJ_43 /* POSIXFileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* POSIXFileSystem.swift */; };
+		OBJ_44 /* POSIXMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* POSIXMemory.swift */; };
+		OBJ_45 /* POSIXUnsafeBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* POSIXUnsafeBuffer.swift */; };
+		OBJ_46 /* ReadableByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* ReadableByteChannel.swift */; };
+		OBJ_47 /* SeekableByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* SeekableByteChannel.swift */; };
+		OBJ_48 /* UnsafeBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* UnsafeBuffer.swift */; };
+		OBJ_49 /* UnsafeOrderedBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_22 /* UnsafeOrderedBuffer.swift */; };
+		OBJ_50 /* WritableByteChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* WritableByteChannel.swift */; };
+		OBJ_57 /* UnsafeOrderedBufferTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* UnsafeOrderedBufferTestCase.swift */; };
+		OBJ_58 /* ByteOrderTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_27 /* ByteOrderTestCase.swift */; };
+		OBJ_60 /* Lilliput.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* Lilliput.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		E5F052F11DA199290061A18D /* PBXContainerItemProxy */ = {
+		E5AD18DB1DC69C8B00800AF4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = __RootObject_ /* Project object */;
+			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = "______Target_Lilliput";
+			remoteGlobalIDString = OBJ_31;
 			remoteInfo = Lilliput;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		E5F052F21DA1A0350061A18D /* FoundationBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationBuffer.swift; sourceTree = "<group>"; };
-		E5F052F41DA1A06F0061A18D /* FoundationMemory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationMemory.swift; sourceTree = "<group>"; };
-		E5F052F61DA1B3830061A18D /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		E5F052F71DA1B3830061A18D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		__PBXFileRef_Lilliput.xcodeproj/Configs/Project.xcconfig /* Lilliput.xcodeproj/Configs/Project.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Lilliput.xcodeproj/Configs/Project.xcconfig; sourceTree = "<group>"; };
-		__PBXFileRef_Package.swift /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/Buffer.swift /* Buffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buffer.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/ByteBuffer.swift /* ByteBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteBuffer.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/ByteChannel.swift /* ByteChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteChannel.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/ByteOrder.swift /* ByteOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteOrder.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/ByteSize.swift /* ByteSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteSize.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/FileOpenOption.swift /* FileOpenOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOpenOption.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/FilePath.swift /* FilePath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePath.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/FilePosition.swift /* FilePosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePosition.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/FileSystem.swift /* FileSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/Memory.swift /* Memory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memory.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/POSIXBuffer.swift /* POSIXBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POSIXBuffer.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/POSIXError.swift /* POSIXError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POSIXError.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/POSIXFileChannel.swift /* POSIXFileChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POSIXFileChannel.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/POSIXFileSystem.swift /* POSIXFileSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POSIXFileSystem.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/POSIXMemory.swift /* POSIXMemory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POSIXMemory.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/ReadableByteChannel.swift /* ReadableByteChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadableByteChannel.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/SeekableByteChannel.swift /* SeekableByteChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeekableByteChannel.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Sources/WritableByteChannel.swift /* WritableByteChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritableByteChannel.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Tests/LilliputTests/ByteBufferTestCase.swift /* ByteBufferTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteBufferTestCase.swift; sourceTree = "<group>"; };
-		__PBXFileRef_Tests/LilliputTests/ByteOrderTestCase.swift /* ByteOrderTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteOrderTestCase.swift; sourceTree = "<group>"; };
-		"_____Product_Lilliput" /* Lilliput.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Lilliput.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		"_____Product_LilliputTests" /* LilliputTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = LilliputTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5AD18DD1DC69E0A00800AF4 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		E5AD18DE1DC69E0A00800AF4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		OBJ_10 /* ByteOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteOrder.swift; sourceTree = "<group>"; };
+		OBJ_11 /* FileOpenOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOpenOption.swift; sourceTree = "<group>"; };
+		OBJ_12 /* FileSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
+		OBJ_13 /* Memory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memory.swift; sourceTree = "<group>"; };
+		OBJ_14 /* POSIXError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POSIXError.swift; sourceTree = "<group>"; };
+		OBJ_15 /* POSIXFileChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POSIXFileChannel.swift; sourceTree = "<group>"; };
+		OBJ_16 /* POSIXFileSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POSIXFileSystem.swift; sourceTree = "<group>"; };
+		OBJ_17 /* POSIXMemory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POSIXMemory.swift; sourceTree = "<group>"; };
+		OBJ_18 /* POSIXUnsafeBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POSIXUnsafeBuffer.swift; sourceTree = "<group>"; };
+		OBJ_19 /* ReadableByteChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadableByteChannel.swift; sourceTree = "<group>"; };
+		OBJ_20 /* SeekableByteChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeekableByteChannel.swift; sourceTree = "<group>"; };
+		OBJ_21 /* UnsafeBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsafeBuffer.swift; sourceTree = "<group>"; };
+		OBJ_22 /* UnsafeOrderedBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsafeOrderedBuffer.swift; sourceTree = "<group>"; };
+		OBJ_23 /* WritableByteChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritableByteChannel.swift; sourceTree = "<group>"; };
+		OBJ_26 /* UnsafeOrderedBufferTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsafeOrderedBufferTestCase.swift; sourceTree = "<group>"; };
+		OBJ_27 /* ByteOrderTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteOrderTestCase.swift; sourceTree = "<group>"; };
+		OBJ_29 /* Lilliput.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Lilliput.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		OBJ_30 /* LilliputTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = LilliputTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		OBJ_9 /* ByteChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteChannel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		"___LinkPhase_Lilliput" /* Frameworks */ = {
+		OBJ_51 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		"___LinkPhase_LilliputTests" /* Frameworks */ = {
+		OBJ_59 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				_LinkFileRef_Lilliput_via_LilliputTests /* Lilliput.framework in Frameworks */,
+				OBJ_60 /* Lilliput.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		TestProducts_ /* Tests */ = {
+		OBJ_24 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				"_____Product_LilliputTests" /* LilliputTests.xctest */,
+				OBJ_25 /* LilliputTests */,
 			);
-			name = Tests;
+			path = Tests;
 			sourceTree = "<group>";
 		};
-		"___RootGroup_" = {
+		OBJ_25 /* LilliputTests */ = {
 			isa = PBXGroup;
 			children = (
-				E5F052F61DA1B3830061A18D /* LICENSE */,
-				E5F052F71DA1B3830061A18D /* README.md */,
-				__PBXFileRef_Package.swift /* Package.swift */,
-				"_____Configs_" /* Configs */,
-				"_____Sources_" /* Sources */,
-				"_______Tests_" /* Tests */,
-				"____Products_" /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		"____Products_" /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				TestProducts_ /* Tests */,
-				"_____Product_Lilliput" /* Lilliput.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		"_____Configs_" /* Configs */ = {
-			isa = PBXGroup;
-			children = (
-				__PBXFileRef_Lilliput.xcodeproj/Configs/Project.xcconfig /* Lilliput.xcodeproj/Configs/Project.xcconfig */,
-			);
-			name = Configs;
-			sourceTree = "<group>";
-		};
-		"_____Sources_" /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				"_______Group_Lilliput" /* Lilliput */,
-			);
-			name = Sources;
-			sourceTree = "<group>";
-		};
-		"_______Group_Lilliput" /* Lilliput */ = {
-			isa = PBXGroup;
-			children = (
-				__PBXFileRef_Sources/Buffer.swift /* Buffer.swift */,
-				__PBXFileRef_Sources/ByteBuffer.swift /* ByteBuffer.swift */,
-				__PBXFileRef_Sources/ByteChannel.swift /* ByteChannel.swift */,
-				__PBXFileRef_Sources/ByteOrder.swift /* ByteOrder.swift */,
-				__PBXFileRef_Sources/ByteSize.swift /* ByteSize.swift */,
-				__PBXFileRef_Sources/FileOpenOption.swift /* FileOpenOption.swift */,
-				__PBXFileRef_Sources/FilePath.swift /* FilePath.swift */,
-				__PBXFileRef_Sources/FilePosition.swift /* FilePosition.swift */,
-				__PBXFileRef_Sources/FileSystem.swift /* FileSystem.swift */,
-				__PBXFileRef_Sources/Memory.swift /* Memory.swift */,
-				__PBXFileRef_Sources/POSIXBuffer.swift /* POSIXBuffer.swift */,
-				__PBXFileRef_Sources/POSIXError.swift /* POSIXError.swift */,
-				__PBXFileRef_Sources/POSIXFileChannel.swift /* POSIXFileChannel.swift */,
-				__PBXFileRef_Sources/POSIXFileSystem.swift /* POSIXFileSystem.swift */,
-				__PBXFileRef_Sources/POSIXMemory.swift /* POSIXMemory.swift */,
-				__PBXFileRef_Sources/ReadableByteChannel.swift /* ReadableByteChannel.swift */,
-				__PBXFileRef_Sources/SeekableByteChannel.swift /* SeekableByteChannel.swift */,
-				__PBXFileRef_Sources/WritableByteChannel.swift /* WritableByteChannel.swift */,
-				E5F052F21DA1A0350061A18D /* FoundationBuffer.swift */,
-				E5F052F41DA1A06F0061A18D /* FoundationMemory.swift */,
-			);
-			name = Lilliput;
-			path = Sources;
-			sourceTree = "<group>";
-		};
-		"_______Group_LilliputTests" /* LilliputTests */ = {
-			isa = PBXGroup;
-			children = (
-				__PBXFileRef_Tests/LilliputTests/ByteBufferTestCase.swift /* ByteBufferTestCase.swift */,
-				__PBXFileRef_Tests/LilliputTests/ByteOrderTestCase.swift /* ByteOrderTestCase.swift */,
+				OBJ_26 /* UnsafeOrderedBufferTestCase.swift */,
+				OBJ_27 /* ByteOrderTestCase.swift */,
 			);
 			name = LilliputTests;
 			path = Tests/LilliputTests;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
-		"_______Tests_" /* Tests */ = {
+		OBJ_28 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				"_______Group_LilliputTests" /* LilliputTests */,
+				OBJ_29 /* Lilliput.framework */,
+				OBJ_30 /* LilliputTests.xctest */,
 			);
-			name = Tests;
+			name = Products;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		OBJ_5 /*  */ = {
+			isa = PBXGroup;
+			children = (
+				E5AD18DD1DC69E0A00800AF4 /* LICENSE */,
+				E5AD18DE1DC69E0A00800AF4 /* README.md */,
+				OBJ_6 /* Package.swift */,
+				OBJ_7 /* Sources */,
+				OBJ_24 /* Tests */,
+				OBJ_28 /* Products */,
+			);
+			name = "";
 			sourceTree = "<group>";
+		};
+		OBJ_7 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_8 /* Lilliput */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		OBJ_8 /* Lilliput */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_9 /* ByteChannel.swift */,
+				OBJ_10 /* ByteOrder.swift */,
+				OBJ_11 /* FileOpenOption.swift */,
+				OBJ_12 /* FileSystem.swift */,
+				OBJ_13 /* Memory.swift */,
+				OBJ_14 /* POSIXError.swift */,
+				OBJ_15 /* POSIXFileChannel.swift */,
+				OBJ_16 /* POSIXFileSystem.swift */,
+				OBJ_17 /* POSIXMemory.swift */,
+				OBJ_18 /* POSIXUnsafeBuffer.swift */,
+				OBJ_19 /* ReadableByteChannel.swift */,
+				OBJ_20 /* SeekableByteChannel.swift */,
+				OBJ_21 /* UnsafeBuffer.swift */,
+				OBJ_22 /* UnsafeOrderedBuffer.swift */,
+				OBJ_23 /* WritableByteChannel.swift */,
+			);
+			name = Lilliput;
+			path = Sources;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		"______Target_Lilliput" /* Lilliput */ = {
+		OBJ_31 /* Lilliput */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = "_______Confs_Lilliput" /* Build configuration list for PBXNativeTarget "Lilliput" */;
+			buildConfigurationList = OBJ_32 /* Build configuration list for PBXNativeTarget "Lilliput" */;
 			buildPhases = (
-				CompilePhase_Lilliput /* Sources */,
-				"___LinkPhase_Lilliput" /* Frameworks */,
+				OBJ_35 /* Sources */,
+				OBJ_51 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -201,106 +168,120 @@
 			);
 			name = Lilliput;
 			productName = Lilliput;
-			productReference = "_____Product_Lilliput" /* Lilliput.framework */;
+			productReference = OBJ_29 /* Lilliput.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		"______Target_LilliputTests" /* LilliputTests */ = {
+		OBJ_52 /* LilliputTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = "_______Confs_LilliputTests" /* Build configuration list for PBXNativeTarget "LilliputTests" */;
+			buildConfigurationList = OBJ_53 /* Build configuration list for PBXNativeTarget "LilliputTests" */;
 			buildPhases = (
-				CompilePhase_LilliputTests /* Sources */,
-				"___LinkPhase_LilliputTests" /* Frameworks */,
+				OBJ_56 /* Sources */,
+				OBJ_59 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				__Dependency_Lilliput /* PBXTargetDependency */,
+				OBJ_61 /* PBXTargetDependency */,
 			);
 			name = LilliputTests;
 			productName = LilliputTests;
-			productReference = "_____Product_LilliputTests" /* LilliputTests.xctest */;
+			productReference = OBJ_30 /* LilliputTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		__RootObject_ /* Project object */ = {
+		OBJ_1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 9999;
 			};
-			buildConfigurationList = "___RootConfs_" /* Build configuration list for PBXProject "Lilliput" */;
+			buildConfigurationList = OBJ_2 /* Build configuration list for PBXProject "Lilliput" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = "___RootGroup_";
-			productRefGroup = "____Products_" /* Products */;
+			mainGroup = OBJ_5 /*  */;
+			productRefGroup = OBJ_28 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				"______Target_Lilliput" /* Lilliput */,
-				"______Target_LilliputTests" /* LilliputTests */,
+				OBJ_31 /* Lilliput */,
+				OBJ_52 /* LilliputTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		CompilePhase_Lilliput /* Sources */ = {
+		OBJ_35 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				__src_cc_ref_Sources/Buffer.swift /* Buffer.swift in Sources */,
-				__src_cc_ref_Sources/ByteBuffer.swift /* ByteBuffer.swift in Sources */,
-				__src_cc_ref_Sources/ByteChannel.swift /* ByteChannel.swift in Sources */,
-				E5F052F81DA1B3830061A18D /* README.md in Sources */,
-				E5F052F31DA1A0350061A18D /* FoundationBuffer.swift in Sources */,
-				__src_cc_ref_Sources/ByteOrder.swift /* ByteOrder.swift in Sources */,
-				E5F052F51DA1A06F0061A18D /* FoundationMemory.swift in Sources */,
-				__src_cc_ref_Sources/ByteSize.swift /* ByteSize.swift in Sources */,
-				__src_cc_ref_Sources/FileOpenOption.swift /* FileOpenOption.swift in Sources */,
-				__src_cc_ref_Sources/FilePath.swift /* FilePath.swift in Sources */,
-				__src_cc_ref_Sources/FilePosition.swift /* FilePosition.swift in Sources */,
-				__src_cc_ref_Sources/FileSystem.swift /* FileSystem.swift in Sources */,
-				__src_cc_ref_Sources/Memory.swift /* Memory.swift in Sources */,
-				__src_cc_ref_Sources/POSIXBuffer.swift /* POSIXBuffer.swift in Sources */,
-				__src_cc_ref_Sources/POSIXError.swift /* POSIXError.swift in Sources */,
-				__src_cc_ref_Sources/POSIXFileChannel.swift /* POSIXFileChannel.swift in Sources */,
-				__src_cc_ref_Sources/POSIXFileSystem.swift /* POSIXFileSystem.swift in Sources */,
-				__src_cc_ref_Sources/POSIXMemory.swift /* POSIXMemory.swift in Sources */,
-				__src_cc_ref_Sources/ReadableByteChannel.swift /* ReadableByteChannel.swift in Sources */,
-				__src_cc_ref_Sources/SeekableByteChannel.swift /* SeekableByteChannel.swift in Sources */,
-				__src_cc_ref_Sources/WritableByteChannel.swift /* WritableByteChannel.swift in Sources */,
+				OBJ_36 /* ByteChannel.swift in Sources */,
+				OBJ_37 /* ByteOrder.swift in Sources */,
+				OBJ_38 /* FileOpenOption.swift in Sources */,
+				OBJ_39 /* FileSystem.swift in Sources */,
+				OBJ_40 /* Memory.swift in Sources */,
+				OBJ_41 /* POSIXError.swift in Sources */,
+				OBJ_42 /* POSIXFileChannel.swift in Sources */,
+				OBJ_43 /* POSIXFileSystem.swift in Sources */,
+				OBJ_44 /* POSIXMemory.swift in Sources */,
+				OBJ_45 /* POSIXUnsafeBuffer.swift in Sources */,
+				OBJ_46 /* ReadableByteChannel.swift in Sources */,
+				OBJ_47 /* SeekableByteChannel.swift in Sources */,
+				OBJ_48 /* UnsafeBuffer.swift in Sources */,
+				OBJ_49 /* UnsafeOrderedBuffer.swift in Sources */,
+				OBJ_50 /* WritableByteChannel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CompilePhase_LilliputTests /* Sources */ = {
+		OBJ_56 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				__src_cc_ref_Tests/LilliputTests/ByteBufferTestCase.swift /* ByteBufferTestCase.swift in Sources */,
-				__src_cc_ref_Tests/LilliputTests/ByteOrderTestCase.swift /* ByteOrderTestCase.swift in Sources */,
+				OBJ_57 /* UnsafeOrderedBufferTestCase.swift in Sources */,
+				OBJ_58 /* ByteOrderTestCase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		__Dependency_Lilliput /* PBXTargetDependency */ = {
+		OBJ_61 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = "______Target_Lilliput" /* Lilliput */;
-			targetProxy = E5F052F11DA199290061A18D /* PBXContainerItemProxy */;
+			target = OBJ_31 /* Lilliput */;
+			targetProxy = E5AD18DB1DC69C8B00800AF4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		_ReleaseConf_Lilliput /* Release */ = {
+		OBJ_3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_NS_ASSERTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-DXcode";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				USE_HEADERMAP = NO;
+			};
+			name = Debug;
+		};
+		OBJ_33 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PLATFORM_DIR)/Developer/Library/Frameworks";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Lilliput.xcodeproj/Lilliput_Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -308,28 +289,19 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Lilliput;
 				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SWIFT_PACKAGE;
 				SWIFT_VERSION = 3.0;
+				TARGET_NAME = Lilliput;
 			};
-			name = Release;
+			name = Debug;
 		};
-		_ReleaseConf_LilliputTests /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(PLATFORM_DIR)/Developer/Library/Frameworks";
-				INFOPLIST_FILE = Lilliput.xcodeproj/LilliputTests_Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "$(inherited)";
-				SWIFT_VERSION = 3.0;
-			};
-			name = Release;
-		};
-		"___DebugConf_Lilliput" /* Debug */ = {
+		OBJ_34 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PLATFORM_DIR)/Developer/Library/Frameworks";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Lilliput.xcodeproj/Lilliput_Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -337,70 +309,95 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Lilliput;
 				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SWIFT_PACKAGE;
 				SWIFT_VERSION = 3.0;
+				TARGET_NAME = Lilliput;
 			};
-			name = Debug;
+			name = Release;
 		};
-		"___DebugConf_LilliputTests" /* Debug */ = {
+		OBJ_4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_OPTIMIZATION_LEVEL = s;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_SWIFT_FLAGS = "-DXcode";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				USE_HEADERMAP = NO;
+			};
+			name = Release;
+		};
+		OBJ_54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PLATFORM_DIR)/Developer/Library/Frameworks";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Lilliput.xcodeproj/LilliputTests_Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SWIFT_PACKAGE;
 				SWIFT_VERSION = 3.0;
+				TARGET_NAME = LilliputTests;
 			};
 			name = Debug;
 		};
-		"_____Release_" /* Release */ = {
+		OBJ_55 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = __PBXFileRef_Lilliput.xcodeproj/Configs/Project.xcconfig /* Lilliput.xcodeproj/Configs/Project.xcconfig */;
 			buildSettings = {
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PLATFORM_DIR)/Developer/Library/Frameworks";
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = Lilliput.xcodeproj/LilliputTests_Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SWIFT_PACKAGE;
+				SWIFT_VERSION = 3.0;
+				TARGET_NAME = LilliputTests;
 			};
 			name = Release;
-		};
-		"_______Debug_" /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = __PBXFileRef_Lilliput.xcodeproj/Configs/Project.xcconfig /* Lilliput.xcodeproj/Configs/Project.xcconfig */;
-			buildSettings = {
-			};
-			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		"___RootConfs_" /* Build configuration list for PBXProject "Lilliput" */ = {
+		OBJ_2 /* Build configuration list for PBXProject "Lilliput" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				"_______Debug_" /* Debug */,
-				"_____Release_" /* Release */,
+				OBJ_3 /* Debug */,
+				OBJ_4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		"_______Confs_Lilliput" /* Build configuration list for PBXNativeTarget "Lilliput" */ = {
+		OBJ_32 /* Build configuration list for PBXNativeTarget "Lilliput" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				"___DebugConf_Lilliput" /* Debug */,
-				_ReleaseConf_Lilliput /* Release */,
+				OBJ_33 /* Debug */,
+				OBJ_34 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		"_______Confs_LilliputTests" /* Build configuration list for PBXNativeTarget "LilliputTests" */ = {
+		OBJ_53 /* Build configuration list for PBXNativeTarget "LilliputTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				"___DebugConf_LilliputTests" /* Debug */,
-				_ReleaseConf_LilliputTests /* Release */,
+				OBJ_54 /* Debug */,
+				OBJ_55 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = __RootObject_ /* Project object */;
+	rootObject = OBJ_1 /* Project object */;
 }

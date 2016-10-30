@@ -23,40 +23,24 @@
  */
 
 public protocol ReadableByteChannel : class {
-    func readData(_ data: UnsafeMutableRawPointer, numberOfBytes: Int) throws -> Int
+    func readBytes(_ bytes: UnsafeMutableRawPointer, count: Int) throws -> Int
 }
 
 extension ReadableByteChannel {
-    public func readBytes(_ bytes: UnsafeMutablePointer<UInt8>, numberOfBytes: Int) throws -> Int {
-        return try readData(bytes, numberOfBytes: numberOfBytes)
+    public func readBuffer(_ buffer: UnsafeBuffer, count: Int) throws -> Int {
+        precondition(count <= buffer.count)
+        return try readBytes(buffer.bytes, count: count)
     }
     
-    public func readBuffer(_ buffer: Buffer) throws -> Int {
-        return try readBuffer(buffer, numberOfBytes: buffer.count)
+    public func readBuffer<Order: ByteOrder>(_ buffer: UnsafeOrderedBuffer<Order>, count: Int) throws -> Int {
+        precondition(count <= buffer.remainingCount)
+        let readCount = try readBytes(buffer.remainingBytes, count: count)
+        buffer.position += readCount
+        return readCount
     }
     
-    public func readBuffer(_ buffer: Buffer, numberOfBytes: Int) throws -> Int {
-        precondition(numberOfBytes <= buffer.count)
-        var mutableBuffer = buffer
-        
-        return try mutableBuffer.withUnsafeMutableBytes { (pointer: UnsafeMutablePointer<UInt8>) -> Int in
-            return try readBytes(pointer, numberOfBytes: numberOfBytes)
-        }
-    }
-    
-    public func readByteBuffer<Order: ByteOrder>(_ buffer: ByteBuffer<Order>) throws -> Int {
-        return try readByteBuffer(buffer, numberOfBytes: buffer.remaining)
-    }
-    
-    public func readByteBuffer<Order: ByteOrder>(_ buffer: ByteBuffer<Order>, numberOfBytes: Int) throws -> Int {
-        precondition(numberOfBytes <= buffer.remaining)
-        
-        let bytesRead = try buffer.withUnsafeMutableBytes { (pointer: UnsafeMutablePointer<UInt8>) -> Int in
-            try readBytes(pointer.advanced(by: buffer.position), numberOfBytes: numberOfBytes)
-        }
-        
-        buffer.position += bytesRead
-        
-        return bytesRead
+    public func readBuffer<Order: ByteOrder>(_ buffer: UnsafeOrderedBuffer<Order>) throws {
+        let _ = try readBuffer(buffer, count: buffer.remainingCount)
+        precondition(buffer.remainingCount == 0)
     }
 }

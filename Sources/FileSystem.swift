@@ -23,20 +23,9 @@
  */
 
 public protocol FileSystem : class {
-    var pathSeparator: String { get }
-    var currentDirectory: String { get }
-    var parentDirectory: String { get }
-    var defaultRootDir: FilePath { get }
+    func openChannel(path: String, options: FileOpenOption) throws -> SeekableByteChannel
     
-    func openPath(_ path: FilePath, options: FileOpenOption) throws -> SeekableByteChannel
+    func createDirectory(path: String) throws -> Bool
     
-    func createDirectoryPath(_ path: FilePath) throws -> Bool
-    
-    func deletePath(_ path: FilePath) throws
-    
-    func absolutePath(_ components: String...) -> FilePath
-    
-    func parsePath(_ string: String) -> FilePath
-    
-    func formatPath(_ path: FilePath) -> String
+    func delete(path: String) throws
 }

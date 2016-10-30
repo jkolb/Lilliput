@@ -23,11 +23,11 @@
  */
 
 public protocol SeekableByteChannel : ByteChannel {
-    func position() throws -> FilePosition
+    func position() throws -> Int
     
-    func seek(_ position: FilePosition) throws -> FilePosition
+    func seekTo(_ position: Int) throws
     
-    func end() throws -> FilePosition
+    func end() throws -> Int
     
-    func truncate(_ position: FilePosition) throws
+    func truncateAt(_ position: Int) throws
 }

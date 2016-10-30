@@ -22,12 +22,13 @@
  SOFTWARE.
  */
 
-public protocol Memory : class {
-    func bufferWithSize(_ size: ByteSize) -> Buffer
+public protocol Memory {
+    func bufferWithSize(_ size: Int) -> UnsafeBuffer
 }
 
 extension Memory {
-    public func bufferWithSize<Order : ByteOrder>(_ size: ByteSize, order: Order.Type) -> ByteBuffer<Order> {
-        return ByteBuffer<Order>(buffer: bufferWithSize(size))
+    public func bufferWithSize<Order : ByteOrder>(_ size: Int, order: Order.Type) -> UnsafeOrderedBuffer<Order> {
+        let buffer = bufferWithSize(size)
+        return UnsafeOrderedBuffer<Order>(buffer: buffer)
     }
 }

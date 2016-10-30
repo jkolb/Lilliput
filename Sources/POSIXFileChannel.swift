@@ -43,63 +43,75 @@ public final class POSIXFileChannel : SeekableByteChannel {
         }
     }
 
-    public func readData(_ data: UnsafeMutableRawPointer, numberOfBytes: Int) throws -> Int {
-        precondition(numberOfBytes >= 0)
-        let numberOfBytesRead = read(fileDescriptor, data, numberOfBytes)
+    public func readBytes(_ bytes: UnsafeMutableRawPointer, count: Int) throws -> Int {
+        precondition(count >= 0)
         
-        if numberOfBytesRead < 0 {
+        if count == 0 {
+            return 0
+        }
+        
+        let readCount = read(fileDescriptor, bytes, count)
+        
+        if readCount < 0 {
             throw POSIXError(code: errno)
         }
         
-        return numberOfBytesRead
+        return readCount
     }
 
-    public func writeData(_ data: UnsafeRawPointer, numberOfBytes: Int) throws -> Int {
-        precondition(numberOfBytes >= 0)
-        let numberOfBytesWritten = write(fileDescriptor, data, numberOfBytes)
+    public func writeBytes(_ bytes: UnsafeMutableRawPointer, count: Int) throws -> Int {
+        precondition(count >= 0)
         
-        if numberOfBytesWritten < 0 {
+        if count == 0 {
+            return 0
+        }
+        
+        let writeCount = write(fileDescriptor, bytes, count)
+        
+        if writeCount < 0 {
             throw POSIXError(code: errno)
         }
         
-        return numberOfBytesWritten
+        return writeCount
     }
 
-    public func position() throws -> FilePosition {
-        let bytesFromStart = lseek(fileDescriptor, 0, SEEK_CUR)
+    public func position() throws -> Int {
+        let seekPosition = lseek(fileDescriptor, 0, SEEK_CUR)
         
-        if bytesFromStart < 0 {
+        if seekPosition < 0 {
             throw POSIXError(code: errno)
         }
         
-        return FilePosition(bytesFromStart)
+        return Int(seekPosition)
     }
     
-    @discardableResult public func seek(_ position: FilePosition) throws -> FilePosition {
-        let bytesFromStart = lseek(fileDescriptor, position.bytesFromStart, SEEK_SET)
+    public func seekTo(_ position: Int) throws {
+        precondition(position >= 0)
+
+        let seekPosition = lseek(fileDescriptor, off_t(position), SEEK_SET)
         
-        if bytesFromStart < 0 {
+        if seekPosition < 0 {
             throw POSIXError(code: errno)
         }
-        
-        return FilePosition(bytesFromStart)
     }
     
-    public func end() throws -> FilePosition {
+    public func end() throws -> Int {
         let currentPosition = try position()
-        let bytesFromStart = lseek(fileDescriptor, 0, SEEK_END)
+        let seekPosition = lseek(fileDescriptor, 0, SEEK_END)
         
-        if bytesFromStart < 0 {
+        if seekPosition < 0 {
             throw POSIXError(code: errno)
         }
         
-        try seek(currentPosition)
+        try seekTo(currentPosition)
         
-        return FilePosition(bytesFromStart)
+        return Int(seekPosition)
     }
     
-    public func truncate(_ end: FilePosition) throws {
-        let result = ftruncate(fileDescriptor, end.bytesFromStart)
+    public func truncateAt(_ position: Int) throws {
+        precondition(position >= 0)
+        
+        let result = ftruncate(fileDescriptor, off_t(position))
         
         if result < 0 {
             throw POSIXError(code: errno)

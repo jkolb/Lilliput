@@ -22,12 +22,23 @@
  SOFTWARE.
  */
 
-import Foundation
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
 
-public final class FoundationMemory : Memory {
-    public init() {}
+public final class POSIXUnsafeBuffer : UnsafeBuffer {
+    public let bytes: UnsafeMutableRawPointer
+    public let count: Int
     
-    public func bufferWithSize(_ size: ByteSize) -> Buffer {
-        return Data(count: size.numberOfBytes)
+    public init(count: Int) {
+        precondition(count >= 0)
+        self.bytes = malloc(count)
+        self.count = count
+    }
+
+    deinit {
+        free(bytes)
     }
 }

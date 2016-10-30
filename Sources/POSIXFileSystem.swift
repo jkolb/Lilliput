@@ -30,22 +30,9 @@
 
 public final class POSIXFileSystem : FileSystem {
     public init() {}
-    
-    public var pathSeparator: String {
-        return "/"
-    }
-    
-    public var currentDirectory: String {
-        return "."
-    }
-    
-    public var parentDirectory: String {
-        return ".."
-    }
 
-    public func openPath(_ path: FilePath, options: FileOpenOption) throws -> SeekableByteChannel {
-        let pathString = formatPath(path)
-        let fileDescriptor = open(pathString, openFlags(options))
+    public func openChannel(path: String, options: FileOpenOption) throws -> SeekableByteChannel {
+        let fileDescriptor = open(path, openFlags(options), 0o666)
         
         if fileDescriptor < 0 {
             throw POSIXError(code: errno)
@@ -85,9 +72,8 @@ public final class POSIXFileSystem : FileSystem {
         return openFlags
     }
     
-    public func createDirectoryPath(_ path: FilePath) throws -> Bool {
-        let pathString = formatPath(path)
-        let result = mkdir(pathString, 0o777)
+    public func createDirectory(path: String) throws -> Bool {
+        let result = mkdir(path, 0o777)
         
         if result < 0 {
             if errno == EEXIST {
@@ -101,33 +87,11 @@ public final class POSIXFileSystem : FileSystem {
         return true
     }
 
-    public func deletePath(_ path: FilePath) throws {
-        let pathString = formatPath(path)
-        let result = remove(pathString)
+    public func delete(path: String) throws {
+        let result = remove(path)
         
         if result < 0 {
             throw POSIXError(code: errno)
-        }
-    }
-
-    public var defaultRootDir: FilePath {
-        return FilePath("")
-    }
-    
-    public func absolutePath(_ components: String...) -> FilePath {
-        return FilePath(root: defaultRootDir, components: components)
-    }
-
-    public func parsePath(_ string: String) -> FilePath {
-        return FilePath(components: string.components(separatedBy: pathSeparator))
-    }
-    
-    public func formatPath(_ path: FilePath) -> String {
-        if path == defaultRootDir {
-            return pathSeparator
-        }
-        else {
-            return path.components.joined(separator: pathSeparator)
         }
     }
 }
