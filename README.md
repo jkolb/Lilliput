@@ -1,8 +1,11 @@
-#Lilliput 3.0.0
+#Lilliput 4.0.1
 
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 ##ChangeLog
+
+######4.0.1
+* Performance enhancements (10+ seconds on a project I'm working on)
 
 ######4.0.0
 * Got rid of ByteSize, FilePosition, and FilePath abstractions.

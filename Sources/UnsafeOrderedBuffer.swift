@@ -45,7 +45,7 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
         return count - position
     }
     
-    public func copyFromBuffer<T>(_ source: UnsafeOrderedBuffer<T>) {
+    @inline(__always) public func copyFromBuffer<T>(_ source: UnsafeOrderedBuffer<T>) {
         let count = min(remainingCount, source.remainingCount)
         
         if count == 0 {
@@ -57,7 +57,7 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
         position += count
     }
     
-    public func copyToBuffer<T>(_ destination: UnsafeOrderedBuffer<T>) {
+    @inline(__always) public func copyToBuffer<T>(_ destination: UnsafeOrderedBuffer<T>) {
         let count = min(remainingCount, destination.remainingCount)
         
         if count == 0 {
@@ -69,7 +69,7 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
         position += count
     }
     
-    public func copyFromBuffer(_ source: UnsafeBuffer) {
+    @inline(__always) public func copyFromBuffer(_ source: UnsafeBuffer) {
         let count = min(remainingCount, source.count)
         
         if count == 0 {
@@ -80,7 +80,7 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
         position += count
     }
 
-    public func copyToBuffer(_ destination: UnsafeBuffer) {
+    @inline(__always) public func copyToBuffer(_ destination: UnsafeBuffer) {
         let count = min(remainingCount, destination.count)
         
         if count == 0 {
@@ -90,59 +90,29 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
         destination.bytes.copyBytes(from: remainingBytes, count: count)
         position += count
     }
-    
-    @inline(__always) fileprivate func getValue<T>() -> T {
-        let value: T = getValueAt(position)
-        position += MemoryLayout<T>.size
+
+    @inline(__always) public func getRaw16Bits() -> (UInt8, UInt8) {
+        let value = buffer.bytes.advanced(by: position).bindMemory(to: (UInt8, UInt8).self, capacity: 1).pointee
+        position += MemoryLayout.size(ofValue: value)
         return value
     }
     
-    @inline(__always) fileprivate func putValue<T>(_ value: T) {
-        putValue(value, at: position)
-        position += MemoryLayout<T>.size
-    }
-    
-    @inline(__always) fileprivate func getValueAt<T>(_ position: Int) -> T {
-        return buffer.bytes.advanced(by: position).bindMemory(to: T.self, capacity: 1).pointee
-    }
-    
-    @inline(__always) fileprivate func putValue<T>(_ value: T, at position: Int) {
-        buffer.bytes.advanced(by: position).bindMemory(to: T.self, capacity: 1).pointee = value
-    }
-
-    fileprivate func getArray<T>(repeating: T, count: Int, getter: () -> T) -> [T] {
-        precondition(count <= remainingCount)
-        var array = [T](repeating: repeating, count: count)
-        array.withUnsafeMutableBytes { (arrayBytes) -> Void in
-            let stride = MemoryLayout<T>.stride
-            var byteOffset = 0
-            
-            for _ in 1...count {
-                arrayBytes.storeBytes(of: getter(), toByteOffset: byteOffset, as: T.self)
-                byteOffset += stride
-            }
-        }
-        return array
-    }
-    
-    fileprivate func putArray<T>(_ array: [T], putter: (T) -> Void) {
-        for value in array { putter(value) }
-    }
-
-    @inline(__always) public func getRaw16Bits() -> (UInt8, UInt8) {
-        return getValue()
-    }
-    
     @inline(__always) public func getRaw24Bits() -> (UInt8, UInt8, UInt8) {
-        return getValue()
+        let value = buffer.bytes.advanced(by: position).bindMemory(to: (UInt8, UInt8, UInt8).self, capacity: 1).pointee
+        position += MemoryLayout.size(ofValue: value)
+        return value
     }
     
     @inline(__always) public func getRaw32Bits() -> (UInt8, UInt8, UInt8, UInt8) {
-        return getValue()
+        let value = buffer.bytes.advanced(by: position).bindMemory(to: (UInt8, UInt8, UInt8, UInt8).self, capacity: 1).pointee
+        position += MemoryLayout.size(ofValue: value)
+        return value
     }
     
     @inline(__always) public func getRaw64Bits() -> (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8) {
-        return getValue()
+        let value = buffer.bytes.advanced(by: position).bindMemory(to: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8).self, capacity: 1).pointee
+        position += MemoryLayout.size(ofValue: value)
+        return value
     }
     
     @inline(__always) public func getInt8() -> Int8 {
@@ -162,19 +132,27 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
     }
     
     @inline(__always) public func getUInt8() -> UInt8 {
-        return getValue()
+        let value = buffer.bytes.advanced(by: position).bindMemory(to: UInt8.self, capacity: 1).pointee
+        position += MemoryLayout.size(ofValue: value)
+        return value
     }
     
     @inline(__always) public func getUInt16() -> UInt16 {
-        return Order.swapUInt16(getValue())
+        let value = buffer.bytes.advanced(by: position).bindMemory(to: UInt16.self, capacity: 1).pointee
+        position += MemoryLayout.size(ofValue: value)
+        return Order.swapUInt16(value)
     }
     
     @inline(__always) public func getUInt32() -> UInt32 {
-        return Order.swapUInt32(getValue())
+        let value = buffer.bytes.advanced(by: position).bindMemory(to: UInt32.self, capacity: 1).pointee
+        position += MemoryLayout.size(ofValue: value)
+        return Order.swapUInt32(value)
     }
     
     @inline(__always) public func getUInt64() -> UInt64 {
-        return Order.swapUInt64(getValue())
+        let value = buffer.bytes.advanced(by: position).bindMemory(to: UInt64.self, capacity: 1).pointee
+        position += MemoryLayout.size(ofValue: value)
+        return Order.swapUInt64(value)
     }
     
     @inline(__always) public func getFloat32() -> Float32 {
@@ -185,7 +163,7 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
         return unsafeBitCast(getUInt64(), to: Float64.self)
     }
     
-    public func getInt8(count: Int) -> [Int8] {
+    @inline(__always) public func getInt8(count: Int) -> [Int8] {
         precondition(count <= remainingCount)
         var array = [Int8](repeating: 0, count: count)
         array.withUnsafeMutableBytes { (pointer) -> Void in
@@ -195,19 +173,52 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
         return array
     }
     
-    public func getInt16(count: Int) -> [Int16] {
-        return getArray(repeating: 0, count: count, getter: getInt16)
+    @inline(__always) public func getInt16(count: Int) -> [Int16] {
+        precondition(count <= remainingCount)
+        var array = [Int16](repeating: 0, count: count)
+        array.withUnsafeMutableBytes { (arrayBytes) -> Void in
+            let stride = MemoryLayout<Int16>.stride
+            var byteOffset = 0
+            
+            for _ in 1...count {
+                arrayBytes.storeBytes(of: getInt16(), toByteOffset: byteOffset, as: Int16.self)
+                byteOffset += stride
+            }
+        }
+        return array
     }
     
-    public func getInt32(count: Int) -> [Int32] {
-        return getArray(repeating: 0, count: count, getter: getInt32)
+    @inline(__always) public func getInt32(count: Int) -> [Int32] {
+        precondition(count <= remainingCount)
+        var array = [Int32](repeating: 0, count: count)
+        array.withUnsafeMutableBytes { (arrayBytes) -> Void in
+            let stride = MemoryLayout<Int32>.stride
+            var byteOffset = 0
+            
+            for _ in 1...count {
+                arrayBytes.storeBytes(of: getInt32(), toByteOffset: byteOffset, as: Int32.self)
+                byteOffset += stride
+            }
+        }
+        return array
     }
     
-    public func getInt64(count: Int) -> [Int64] {
-        return getArray(repeating: 0, count: count, getter: getInt64)
+    @inline(__always) public func getInt64(count: Int) -> [Int64] {
+        precondition(count <= remainingCount)
+        var array = [Int64](repeating: 0, count: count)
+        array.withUnsafeMutableBytes { (arrayBytes) -> Void in
+            let stride = MemoryLayout<Int64>.stride
+            var byteOffset = 0
+            
+            for _ in 1...count {
+                arrayBytes.storeBytes(of: getInt64(), toByteOffset: byteOffset, as: Int64.self)
+                byteOffset += stride
+            }
+        }
+        return array
     }
     
-    public func getUInt8(count: Int) -> [UInt8] {
+    @inline(__always) public func getUInt8(count: Int) -> [UInt8] {
         precondition(count <= remainingCount)
         var array = [UInt8](repeating: 0, count: count)
         array.withUnsafeMutableBytes { (pointer) -> Void in
@@ -217,24 +228,79 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
         return array
     }
     
-    public func getUInt16(count: Int) -> [UInt16] {
-        return getArray(repeating: 0, count: count, getter: getUInt16)
+    @inline(__always) public func getUInt16(count: Int) -> [UInt16] {
+        precondition(count <= remainingCount)
+        var array = [UInt16](repeating: 0, count: count)
+        array.withUnsafeMutableBytes { (arrayBytes) -> Void in
+            let stride = MemoryLayout<UInt16>.stride
+            var byteOffset = 0
+            
+            for _ in 1...count {
+                arrayBytes.storeBytes(of: getUInt16(), toByteOffset: byteOffset, as: UInt16.self)
+                byteOffset += stride
+            }
+        }
+        return array
     }
     
-    public func getUInt32(count: Int) -> [UInt32] {
-        return getArray(repeating: 0, count: count, getter: getUInt32)
+    @inline(__always) public func getUInt32(count: Int) -> [UInt32] {
+        precondition(count <= remainingCount)
+        var array = [UInt32](repeating: 0, count: count)
+        array.withUnsafeMutableBytes { (arrayBytes) -> Void in
+            let stride = MemoryLayout<UInt32>.stride
+            var byteOffset = 0
+            
+            for _ in 1...count {
+                arrayBytes.storeBytes(of: getUInt32(), toByteOffset: byteOffset, as: UInt32.self)
+                byteOffset += stride
+            }
+        }
+        return array
     }
     
-    public func getUInt64(count: Int) -> [UInt64] {
-        return getArray(repeating: 0, count: count, getter: getUInt64)
+    @inline(__always) public func getUInt64(count: Int) -> [UInt64] {
+        precondition(count <= remainingCount)
+        var array = [UInt64](repeating: 0, count: count)
+        array.withUnsafeMutableBytes { (arrayBytes) -> Void in
+            let stride = MemoryLayout<UInt64>.stride
+            var byteOffset = 0
+            
+            for _ in 1...count {
+                arrayBytes.storeBytes(of: getUInt64(), toByteOffset: byteOffset, as: UInt64.self)
+                byteOffset += stride
+            }
+        }
+        return array
     }
     
-    public func getFloat32(count: Int) -> [Float32] {
-        return getArray(repeating: 0, count: count, getter: getFloat32)
+    @inline(__always) public func getFloat32(count: Int) -> [Float32] {
+        precondition(count <= remainingCount)
+        var array = [Float32](repeating: 0, count: count)
+        array.withUnsafeMutableBytes { (arrayBytes) -> Void in
+            let stride = MemoryLayout<Float32>.stride
+            var byteOffset = 0
+            
+            for _ in 1...count {
+                arrayBytes.storeBytes(of: getFloat32(), toByteOffset: byteOffset, as: Float32.self)
+                byteOffset += stride
+            }
+        }
+        return array
     }
     
-    public func getFloat64(count: Int) -> [Float64] {
-        return getArray(repeating: 0, count: count, getter: getFloat64)
+    @inline(__always) public func getFloat64(count: Int) -> [Float64] {
+        precondition(count <= remainingCount)
+        var array = [Float64](repeating: 0, count: count)
+        array.withUnsafeMutableBytes { (arrayBytes) -> Void in
+            let stride = MemoryLayout<Float64>.stride
+            var byteOffset = 0
+            
+            for _ in 1...count {
+                arrayBytes.storeBytes(of: getFloat64(), toByteOffset: byteOffset, as: Float64.self)
+                byteOffset += stride
+            }
+        }
+        return array
     }
     
     @inline(__always) public func getInt8At(_ position: Int) -> Int8 {
@@ -254,19 +320,19 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
     }
 
     @inline(__always) public func getUInt8At(_ position: Int) -> UInt8 {
-        return getValueAt(position)
+        return buffer.bytes.advanced(by: position).bindMemory(to: UInt8.self, capacity: 1).pointee
     }
     
     @inline(__always) public func getUInt16At(_ position: Int) -> UInt16 {
-        return Order.swapUInt16(getValueAt(position))
+        return Order.swapUInt16(buffer.bytes.advanced(by: position).bindMemory(to: UInt16.self, capacity: 1).pointee)
     }
     
     @inline(__always) public func getUInt32At(_ position: Int) -> UInt32 {
-        return Order.swapUInt32(getValueAt(position))
+        return Order.swapUInt32(buffer.bytes.advanced(by: position).bindMemory(to: UInt32.self, capacity: 1).pointee)
     }
     
     @inline(__always) public func getUInt64At(_ position: Int) -> UInt64 {
-        return Order.swapUInt64(getValueAt(position))
+        return Order.swapUInt64(buffer.bytes.advanced(by: position).bindMemory(to: UInt64.self, capacity: 1).pointee)
     }
     
     @inline(__always) public func getFloat32At(_ position: Int) -> Float32 {
@@ -277,19 +343,19 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
         return unsafeBitCast(getUInt64At(position), to: Float64.self)
     }
     
-    public func getUTF8(length: Int) -> String {
+    @inline(__always) public func getUTF8(length: Int) -> String {
         return decodeCodeUnits(getUInt8(count: length), codec: UTF8())
     }
     
-    public func getTerminatedUTF8(terminator: UInt8 = 0) -> String {
+    @inline(__always) public func getTerminatedUTF8(terminator: UInt8 = 0) -> String {
         return decodeCodeUnits(getTerminatedUInt8(terminator: terminator), codec: UTF8())
     }
     
-    public func getUTF16(length: Int) -> String {
+    @inline(__always) public func getUTF16(length: Int) -> String {
         return decodeCodeUnits(getUInt16(count: length), codec: UTF16())
     }
     
-    fileprivate func decodeCodeUnits<C : UnicodeCodec>(_ codeUnits: [C.CodeUnit], codec: C) -> String {
+    @inline(__always) fileprivate func decodeCodeUnits<C : UnicodeCodec>(_ codeUnits: [C.CodeUnit], codec: C) -> String {
         var decodeCodec = codec
         var generator = codeUnits.makeIterator()
         var characters = [Character]()
@@ -312,7 +378,7 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
         return String(characters)
     }
     
-    public func getTerminatedUInt8(terminator: UInt8 = 0) -> [UInt8] {
+    @inline(__always) public func getTerminatedUInt8(terminator: UInt8 = 0) -> [UInt8] {
         var array = [UInt8]()
         var done = true
         
@@ -330,19 +396,23 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
     }
     
     @inline(__always) public func putRaw16Bits(_ value: (UInt8, UInt8)) {
-        putValue(value)
+        buffer.bytes.advanced(by: position).bindMemory(to: (UInt8, UInt8).self, capacity: 1).pointee = value
+        position += MemoryLayout.size(ofValue: value)
     }
     
     @inline(__always) public func putRaw24Bits(_ value: (UInt8, UInt8, UInt8)) {
-        putValue(value)
+        buffer.bytes.advanced(by: position).bindMemory(to: (UInt8, UInt8, UInt8).self, capacity: 1).pointee = value
+        position += MemoryLayout.size(ofValue: value)
     }
     
     @inline(__always) public func putRaw32Bits(_ value: (UInt8, UInt8, UInt8, UInt8)) {
-        putValue(value)
+        buffer.bytes.advanced(by: position).bindMemory(to: (UInt8, UInt8, UInt8, UInt8).self, capacity: 1).pointee = value
+        position += MemoryLayout.size(ofValue: value)
     }
     
     @inline(__always) public func putRaw64Bits(_ value: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8)) {
-        putValue(value)
+        buffer.bytes.advanced(by: position).bindMemory(to: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8).self, capacity: 1).pointee = value
+        position += MemoryLayout.size(ofValue: value)
     }
 
     @inline(__always) public func putInt8(_ value: Int8) {
@@ -362,19 +432,23 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
     }
     
     @inline(__always) public func putUInt8(_ value: UInt8) {
-        putValue(value)
+        buffer.bytes.advanced(by: position).bindMemory(to: UInt8.self, capacity: 1).pointee = value
+        position += MemoryLayout.size(ofValue: value)
     }
     
     @inline(__always) public func putUInt16(_ value: UInt16) {
-        putValue(Order.swapUInt16(value))
+        buffer.bytes.advanced(by: position).bindMemory(to: UInt16.self, capacity: 1).pointee = Order.swapUInt16(value)
+        position += MemoryLayout.size(ofValue: value)
     }
     
     @inline(__always) public func putUInt32(_ value: UInt32) {
-        putValue(Order.swapUInt32(value))
+        buffer.bytes.advanced(by: position).bindMemory(to: UInt32.self, capacity: 1).pointee = Order.swapUInt32(value)
+        position += MemoryLayout.size(ofValue: value)
     }
     
     @inline(__always) public func putUInt64(_ value: UInt64) {
-        putValue(Order.swapUInt64(value))
+        buffer.bytes.advanced(by: position).bindMemory(to: UInt64.self, capacity: 1).pointee = Order.swapUInt64(value)
+        position += MemoryLayout.size(ofValue: value)
     }
     
     @inline(__always) public func putFloat32(_ value: Float32) {
@@ -385,44 +459,76 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
         putUInt64(unsafeBitCast(value, to: UInt64.self))
     }
     
-    public func putInt8(_ array: [Int8]) {
-        putArray(array, putter: putInt8)
+    @inline(__always) public func putInt8(_ array: [Int8]) {
+        for value in array { putInt8(value) }
     }
     
-    public func putInt16(_ array: [Int16]) {
-        putArray(array, putter: putInt16)
+    @inline(__always) public func putInt16(_ array: [Int16]) {
+        for value in array { putInt16(value) }
     }
     
-    public func putInt32(_ array: [Int32]) {
-        putArray(array, putter: putInt32)
+    @inline(__always) public func putInt32(_ array: [Int32]) {
+        for value in array { putInt32(value) }
     }
     
-    public func putInt64(_ array: [Int64]) {
-        putArray(array, putter: putInt64)
+    @inline(__always) public func putInt64(_ array: [Int64]) {
+        for value in array { putInt64(value) }
     }
     
-    public func putUInt8(_ array: [UInt8]) {
-        putArray(array, putter: putUInt8)
+    @inline(__always) public func putUInt8(_ array: [UInt8]) {
+        for value in array { putUInt8(value) }
     }
     
-    public func putUInt16(_ array: [UInt16]) {
-        putArray(array, putter: putUInt16)
+    @inline(__always) public func putUInt16(_ array: [UInt16]) {
+        for value in array { putUInt16(value) }
     }
     
-    public func putUInt32(_ array: [UInt32]) {
-        putArray(array, putter: putUInt32)
+    @inline(__always) public func putUInt32(_ array: [UInt32]) {
+        for value in array { putUInt32(value) }
     }
     
-    public func putUInt64(_ array: [UInt64]) {
-        putArray(array, putter: putUInt64)
+    @inline(__always) public func putUInt64(_ array: [UInt64]) {
+        for value in array { putUInt64(value) }
     }
     
-    public func putFloat32(_ array: [Float32]) {
-        putArray(array, putter: putFloat32)
+    @inline(__always) public func putFloat32(_ array: [Float32]) {
+        for value in array { putFloat32(value) }
     }
     
-    public func putFloat64(_ array: [Float64]) {
-        putArray(array, putter: putFloat64)
+    @inline(__always) public func putFloat64(_ array: [Float64]) {
+        for value in array { putFloat64(value) }
+    }
+    
+    @inline(__always) public func putRaw16Bits(_ array: [(UInt8, UInt8)]) {
+        for value in array { putRaw16Bits(value) }
+    }
+    
+    @inline(__always) public func putRaw24Bits(_ array: [(UInt8, UInt8, UInt8)]) {
+        for value in array { putRaw24Bits(value) }
+    }
+    
+    @inline(__always) public func putRaw32Bits(_ array: [(UInt8, UInt8, UInt8, UInt8)]) {
+        for value in array { putRaw32Bits(value) }
+    }
+    
+    @inline(__always) public func putRaw64Bits(_ array: [(UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8)]) {
+        for value in array { putRaw64Bits(value) }
+    }
+    
+    @inline(__always) public func putRaw16Bits(_ value: (UInt8, UInt8), at position: Int) {
+        buffer.bytes.advanced(by: position).bindMemory(to: (UInt8, UInt8).self, capacity: 1).pointee = value
+    }
+    
+    @inline(__always) public func putRaw24Bits(_ value: (UInt8, UInt8, UInt8), at position: Int) {
+        buffer.bytes.advanced(by: position).bindMemory(to: (UInt8, UInt8, UInt8).self, capacity: 1).pointee = value
+    }
+    
+    @inline(__always) public func putRaw32Bits(_ value: (UInt8, UInt8, UInt8, UInt8), at position: Int) {
+        buffer.bytes.advanced(by: position).bindMemory(to: (UInt8, UInt8, UInt8, UInt8).self, capacity: 1).pointee = value
+    }
+    
+    @inline(__always) public func putRaw64Bits(_ value: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8), at position: Int) {
+        buffer.bytes.advanced(by: position).bindMemory(to: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8).self, capacity: 1).pointee = value
     }
     
     @inline(__always) public func putInt8(_ value: Int8, at position: Int) {
@@ -442,18 +548,19 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
     }
     
     @inline(__always) public func putUInt8(_ value: UInt8, at position: Int) {
+        buffer.bytes.advanced(by: position).bindMemory(to: UInt8.self, capacity: 1).pointee = value
     }
     
     @inline(__always) public func putUInt16(_ value: UInt16, at position: Int) {
-        putValue(Order.swapUInt16(value), at: position)
+        buffer.bytes.advanced(by: position).bindMemory(to: UInt16.self, capacity: 1).pointee = Order.swapUInt16(value)
     }
     
     @inline(__always) public func putUInt32(_ value: UInt32, at position: Int) {
-        putValue(Order.swapUInt32(value), at: position)
+        buffer.bytes.advanced(by: position).bindMemory(to: UInt32.self, capacity: 1).pointee = Order.swapUInt32(value)
     }
     
     @inline(__always) public func putUInt64(_ value: UInt64, at position: Int) {
-        putValue(Order.swapUInt64(value), at: position)
+        buffer.bytes.advanced(by: position).bindMemory(to: UInt64.self, capacity: 1).pointee = Order.swapUInt64(value)
     }
     
     @inline(__always) public func putFloat32(_ value: Float32, at position: Int) {
@@ -464,16 +571,16 @@ public final class UnsafeOrderedBuffer<Order : ByteOrder> {
         putUInt64(unsafeBitCast(value, to: UInt64.self), at: position)
     }
     
-    public func putUTF8(_ value: String) {
+    @inline(__always) public func putUTF8(_ value: String) {
         value.utf8.forEach { putUInt8($0) }
     }
     
-    public func putTerminatedUTF8(_ value: String, terminator: UTF8.CodeUnit = 0) {
+    @inline(__always) public func putTerminatedUTF8(_ value: String, terminator: UTF8.CodeUnit = 0) {
         putUTF8(value)
         putUInt8(terminator)
     }
     
-    public func align(_ byteCount: Int) {
+    @inline(__always) public func align(_ byteCount: Int) {
         position += (byteCount - (position % byteCount)) % byteCount
     }
 }
