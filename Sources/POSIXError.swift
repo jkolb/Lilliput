@@ -24,14 +24,18 @@
 
 #if os(Linux)
     import Glibc
+
+    public typealias POSIXErrorType = Int32
 #else
     import Darwin
+
+    public typealias POSIXErrorType = errno_t
 #endif
 
 public struct POSIXError : Error, CustomStringConvertible {
-    public let code: errno_t
+    public let code: POSIXErrorType
     
-    public init(code: errno_t) {
+    public init(code: POSIXErrorType) {
         self.code = code
     }
     

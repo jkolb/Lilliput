@@ -4,6 +4,10 @@
 
 ##ChangeLog
 
+######4.0.2
+* Remove usages of @inline(__always), will not compile on Linux
+* Fixed POSIXError so that it will compile on Linux
+
 ######4.0.1
 * Performance enhancements (10+ seconds on a project I'm working on)
 
