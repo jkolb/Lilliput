@@ -1,20 +1,20 @@
-#Lilliput 4.0.3
+# Lilliput 4.0.3
 
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-##ChangeLog
+## ChangeLog
 
-######4.0.3
+###### 4.0.3
 * Forgot to push some changes
 
-######4.0.2
+###### 4.0.2
 * Remove usages of @inline(__always), will not compile on Linux
 * Fixed POSIXError so that it will compile on Linux
 
-######4.0.1
+###### 4.0.1
 * Performance enhancements (10+ seconds on a project I'm working on)
 
-######4.0.0
+###### 4.0.0
 * Got rid of ByteSize, FilePosition, and FilePath abstractions.
 * Renamed ByteBuffer to UnsafeOrderedBuffer.
 * Renamed Buffer to UnsafeBuffer.
@@ -24,40 +24,40 @@
 * Fix missing shared scheme required for Carthage support.
 * Rebuilt project file using Xcode 8.1 version of SwiftPM.
 
-######3.0.0
+###### 3.0.0
 * Updated to Swift 3.
 * Support for Swift Package Manager.
 * Foundation Data now conforms to Buffer protocol.
 
-######2.0.0
+###### 2.0.0
 * Added back in support for reading and writing files based on a generic protocols so that it should be easy to port to any operating system. Currently supports POSIX on Linux and OS X.
 * Added protocol to abstract out a generic memory buffer that tracks its size, and a protocol to abstract out generating buffers. Currently supports POSIX memory allocation on Linux and OS X.
 * Byte buffer now takes its byte order as a generic parameter, this should speed up operations as order is now known at compile time.
 * Simplified byte order to just use 3 swap methods.
 * Removed hex, oct, etc. string conversion utility methods.
 
-######1.1.3
+###### 1.1.3
 Provide accessor for direct access to the buffer's memory.
 
-######1.1.2
+###### 1.1.2
 Forgot to update README.
 
-######1.1.1
+###### 1.1.1
 Minor improvements and fixes.
 
-######1.1.0
+###### 1.1.0
 Updated to support Swift 2.
 
-######1.0.5
+###### 1.0.5
 Have to check for "arm" also to prevent compile errors on 32-bit devices.
 
-######1.0.4
+###### 1.0.4
 Missed two more tests that will not compile on 32-bit devices.
 
-######1.0.3
+###### 1.0.3
 Add compile configuration protection around tests that won't compile on 32-bit devices.
 
-######1.0.2
+###### 1.0.2
 Attempting to allow building for both iOS and OSX using one project file.
 
 
@@ -66,7 +66,7 @@ Attempting to allow building for both iOS and OSX using one project file.
 [Lilliput](http://en.wikipedia.org/wiki/Lilliput_and_Blefuscu) is a native [Swift](http://en.wikipedia.org/wiki/Jonathan_Swift) framework for working with binary data of varying [endianness](http://en.wikipedia.org/wiki/Endianness). For example you can use it to do custom loading of [PNG](http://www.libpng.org/pub/png/spec/1.2/PNG-DataRep.html#DR.Integers-and-byte-order) files which are written in big endian byte order, or tinker with reverse engineering [game](https://www.asheronscall.com) [data](http://www.ugcs.caltech.edu/~dsimpson/) files which is what I use it for.
 Functionality is loosely based on similar functionality found in Java.
 
-##Examples
+## Examples
 
 **Putting and getting a big endian 32 bit integer**
 
@@ -103,15 +103,15 @@ Functionality is loosely based on similar functionality found in Java.
     let chunkData = buffer.getUInt8(chunkLength)
     let chunkCRC = buffer.getUInt32()
 
-##Installation
+## Installation
 
 Can install via Carthage, or by dragging and dropping the project file into your project.
 
-##Contact
+## Contact
 
 [Justin Kolb](https://github.com/jkolb)  
 [@nabobnick](https://twitter.com/nabobnick)
 
-##License
+## License
 
 Lilliput is available under the MIT license. See the LICENSE file for more info.
