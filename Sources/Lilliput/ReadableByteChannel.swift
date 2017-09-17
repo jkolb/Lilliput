@@ -32,14 +32,14 @@ extension ReadableByteChannel {
         return try readBytes(buffer.bytes, count: count)
     }
     
-    public func readBuffer<Order: ByteOrder>(_ buffer: UnsafeOrderedBuffer<Order>, count: Int) throws -> Int {
+    public func readBuffer<Order>(_ buffer: UnsafeOrderedBuffer<Order>, count: Int) throws -> Int {
         precondition(count <= buffer.remainingCount)
         let readCount = try readBytes(buffer.remainingBytes, count: count)
         buffer.position += readCount
         return readCount
     }
     
-    public func readBuffer<Order: ByteOrder>(_ buffer: UnsafeOrderedBuffer<Order>) throws {
+    public func readBuffer<Order>(_ buffer: UnsafeOrderedBuffer<Order>) throws {
         let _ = try readBuffer(buffer, count: buffer.remainingCount)
         precondition(buffer.remainingCount == 0)
     }

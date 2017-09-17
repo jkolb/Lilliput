@@ -32,14 +32,14 @@ extension WritableByteChannel {
         return try writeBytes(buffer.bytes, count: count)
     }
     
-    public func writeBuffer<Order : ByteOrder>(_ buffer: UnsafeOrderedBuffer<Order>, count: Int) throws -> Int {
+    public func writeBuffer<Order>(_ buffer: UnsafeOrderedBuffer<Order>, count: Int) throws -> Int {
         precondition(count <= buffer.remainingCount)
         let writeCount = try writeBytes(buffer.remainingBytes, count: count)
         buffer.position += writeCount
         return writeCount
     }
     
-    public func writeBuffer<Order : ByteOrder>(_ buffer: UnsafeOrderedBuffer<Order>) throws {
+    public func writeBuffer<Order>(_ buffer: UnsafeOrderedBuffer<Order>) throws {
         let _ = try writeBuffer(buffer, count: buffer.remainingCount)
         precondition(buffer.remainingCount == 0)
     }

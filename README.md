@@ -4,6 +4,9 @@
 
 ## ChangeLog
 
+###### 5.0.0
+* Swift 4 support
+
 ###### 4.0.3
 * Forgot to push some changes
 

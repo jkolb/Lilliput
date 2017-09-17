@@ -27,6 +27,14 @@ import Lilliput
 import XCTest
 
 class UnsafeOrderedBufferTestCase: XCTestCase {
+    static var allTests = [
+        ("testPut", testPut),
+        ("testGetUInt16", testGetUInt16),
+        ("testGetUInt32", testGetUInt32),
+        ("testGetUInt64", testGetUInt64),
+        ("testGetFloat32", testGetFloat32),
+    ]
+
     let memory: Memory = POSIXMemory()
     
     func testPut() {
