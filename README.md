@@ -1,8 +1,13 @@
-# Lilliput 4.0.3
+# Lilliput
 
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 ## ChangeLog
+
+###### 6.0.0
+* Attempt to make sure unaligned memory is not accessed directly. The goal of this library is to read from files or other non-platform specific places that generally don't impose a specific alignment while still working on platforms that may crash on unaligned memory access.
+* Changed API so that getXAt becomes getX(at:) (For example: getUInt32(at: 13))
+* Added getInt24, getUInt24, putInt24, and putUInt24 (all of these are endian order independent as they rely on reading/writing three consecutive bytes)
 
 ###### 5.0.0
 * Swift 4 support
@@ -11,7 +16,7 @@
 * Forgot to push some changes
 
 ###### 4.0.2
-* Remove usages of @inline(__always), will not compile on Linux
+* Remove usages of `@inline(__always)`, will not compile on Linux
 * Fixed POSIXError so that it will compile on Linux
 
 ###### 4.0.1

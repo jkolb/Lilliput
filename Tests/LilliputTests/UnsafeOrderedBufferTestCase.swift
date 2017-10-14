@@ -29,8 +29,10 @@ import XCTest
 class UnsafeOrderedBufferTestCase: XCTestCase {
     static var allTests = [
         ("testPut", testPut),
+        ("testGetUInt8", testGetUInt8),
         ("testGetUInt16", testGetUInt16),
         ("testGetUInt32", testGetUInt32),
+        ("testGetUInt24", testGetUInt24),
         ("testGetUInt64", testGetUInt64),
         ("testGetFloat32", testGetFloat32),
     ]
@@ -47,18 +49,74 @@ class UnsafeOrderedBufferTestCase: XCTestCase {
         XCTAssertEqual(UInt8(4), byteBuffer.getUInt8(), "Fail")
     }
     
+    func testGetUInt8() {
+        let bigEndian = memory.bufferWithSize(2, order: BigEndian.self)
+        bigEndian.putUInt8([0x00, 0xFF])
+        bigEndian.position = 0
+        XCTAssertEqual(UInt8(0x00), bigEndian.getUInt8(), "Fail")
+        XCTAssertEqual(UInt8(0xFF), bigEndian.getUInt8(), "Fail")
+        XCTAssertEqual(UInt8(0x00), bigEndian.getUInt8(at: 0), "Fail")
+        XCTAssertEqual(UInt8(0xFF), bigEndian.getUInt8(at: 1), "Fail")
+        
+        let littleEndian = memory.bufferWithSize(2, order: LittleEndian.self)
+        littleEndian.putUInt8([0x00, 0xFF])
+        littleEndian.position = 0
+        XCTAssertEqual(UInt8(0x00), littleEndian.getUInt8(), "Fail")
+        XCTAssertEqual(UInt8(0xFF), littleEndian.getUInt8(), "Fail")
+        XCTAssertEqual(UInt8(0x00), littleEndian.getUInt8(at: 0), "Fail")
+        XCTAssertEqual(UInt8(0xFF), littleEndian.getUInt8(at: 1), "Fail")
+    }
+    
     func testGetUInt16() {
         let bigEndian = memory.bufferWithSize(2, order: BigEndian.self)
         bigEndian.putUInt8([0x00, 0xFF])
         bigEndian.position = 0
         XCTAssertEqual(UInt16(0x00FF), bigEndian.getUInt16(), "Fail")
+        XCTAssertEqual(UInt16(0x00FF), bigEndian.getUInt16(at: 0), "Fail")
         
         let littleEndian = memory.bufferWithSize(2, order: LittleEndian.self)
         littleEndian.putUInt8([0x00, 0xFF])
         littleEndian.position = 0
         XCTAssertEqual(UInt16(0xFF00), littleEndian.getUInt16(), "Fail")
+        XCTAssertEqual(UInt16(0xFF00), littleEndian.getUInt16(at: 0), "Fail")
     }
     
+    func testGetUInt24() {
+        let bigEndian = memory.bufferWithSize(4, order: BigEndian.self)
+        bigEndian.putInt24(-8388608)
+        bigEndian.position = 0
+        XCTAssertEqual(bigEndian.getInt24(), -8388608)
+        bigEndian.position = 0
+        bigEndian.putInt24(-1)
+        bigEndian.position = 0
+        XCTAssertEqual(bigEndian.getInt24(), -1)
+        bigEndian.position = 0
+        bigEndian.putInt24(8388607)
+        bigEndian.position = 0
+        XCTAssertEqual(bigEndian.getInt24(), 8388607)
+        bigEndian.position = 0
+        bigEndian.putUInt24(16777215)
+        bigEndian.position = 0
+        XCTAssertEqual(bigEndian.getUInt24(), 16777215)
+
+        let littleEndian = memory.bufferWithSize(4, order: LittleEndian.self)
+        littleEndian.putInt24(-8388608)
+        littleEndian.position = 0
+        XCTAssertEqual(littleEndian.getInt24(), -8388608)
+        littleEndian.position = 0
+        littleEndian.putInt24(-1)
+        littleEndian.position = 0
+        XCTAssertEqual(littleEndian.getInt24(), -1)
+        littleEndian.position = 0
+        littleEndian.putInt24(8388607)
+        littleEndian.position = 0
+        XCTAssertEqual(littleEndian.getInt24(), 8388607)
+        littleEndian.position = 0
+        littleEndian.putUInt24(16777215)
+        littleEndian.position = 0
+        XCTAssertEqual(littleEndian.getUInt24(), 16777215)
+    }
+
     func testGetUInt32() {
         let bigEndian = memory.bufferWithSize(4, order: BigEndian.self)
         bigEndian.putUInt8([0x00, 0x00, 0x00, 0xFF])
