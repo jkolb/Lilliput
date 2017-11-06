@@ -30,7 +30,6 @@ public struct POSIXError : Error, CustomStringConvertible {
     }
     
     public init(code: Int32) {
-        precondition(code < 0)
         self.code = code
     }
     

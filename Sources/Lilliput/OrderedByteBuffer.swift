@@ -59,7 +59,7 @@ public final class OrderedByteBuffer<Order : ByteOrder> {
         return count - position
     }
     
-    public func copyFromBuffer<T>(_ source: OrderedByteBuffer<T>) {
+    public func copy<T>(from source: OrderedByteBuffer<T>) {
         let count = min(remainingCount, source.remainingCount)
         
         if count == 0 {
@@ -71,7 +71,7 @@ public final class OrderedByteBuffer<Order : ByteOrder> {
         position += count
     }
     
-    public func copyToBuffer<T>(_ destination: OrderedByteBuffer<T>) {
+    public func copy<T>(to destination: OrderedByteBuffer<T>) {
         let count = min(remainingCount, destination.remainingCount)
         
         if count == 0 {
@@ -83,7 +83,7 @@ public final class OrderedByteBuffer<Order : ByteOrder> {
         position += count
     }
     
-    public func copyFromBuffer(_ source: ByteBuffer) {
+    public func copy(from source: ByteBuffer) {
         let count = min(remainingCount, source.count)
         
         if count == 0 {
@@ -94,7 +94,7 @@ public final class OrderedByteBuffer<Order : ByteOrder> {
         position += count
     }
     
-    public func copyToBuffer(_ destination: ByteBuffer) {
+    public func copy(to destination: ByteBuffer) {
         let count = min(remainingCount, destination.count)
         
         if count == 0 {
