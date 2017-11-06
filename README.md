@@ -4,6 +4,10 @@
 
 ## ChangeLog
 
+### 7.1.0
+* Fix dumb bug
+* Rename buffer copy methods
+
 ### 7.0.0
 * Major API change.
 * Reduced number of protocols.
