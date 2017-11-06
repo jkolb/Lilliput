@@ -1,7 +1,7 @@
 /*
  The MIT License (MIT)
  
- Copyright (c) 2016 Justin Kolb
+ Copyright (c) 2017 Justin Kolb
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,28 @@
  SOFTWARE.
  */
 
-#if os(Linux)
-    import Glibc
+public protocol ReadableFile {
+    func read(into buffer: UnsafeMutableRawPointer, count: Int) throws -> Int
+}
 
-    public typealias POSIXErrorType = Int32
-#else
-    import Darwin
-
-    public typealias POSIXErrorType = errno_t
-#endif
-
-public struct POSIXError : Error, CustomStringConvertible {
-    public let code: POSIXErrorType
-    
-    public init(code: POSIXErrorType) {
-        self.code = code
+extension ReadableFile {
+    public func read(into buffer: ByteBuffer, count: Int) throws -> Int {
+        precondition(count <= buffer.count)
+        return try read(into: buffer.bytes, count: count)
     }
     
-    public var description: String {
-        if let message = String(validatingUTF8: strerror(code)) {
-            return "errno: \(code): \(message)"
-        }
-        else {
-            return "errno: \(code)"
-        }
+    public func read(into buffer: ByteBuffer) throws -> Int {
+        return try read(into: buffer, count: buffer.count)
+    }
+    
+    public func read<Order>(into buffer: OrderedByteBuffer<Order>, count: Int) throws -> Int {
+        precondition(count <= buffer.remainingCount)
+        let readCount = try read(into: buffer.remainingBytes, count: count)
+        buffer.position += readCount
+        return readCount
+    }
+    
+    public func read<Order>(into buffer: OrderedByteBuffer<Order>) throws -> Int {
+        return try read(into: buffer, count: buffer.remainingCount)
     }
 }

@@ -1,7 +1,7 @@
 /*
  The MIT License (MIT)
  
- Copyright (c) 2016 Justin Kolb
+ Copyright (c) 2017 Justin Kolb
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,24 @@
  SOFTWARE.
  */
 
-public protocol FileSystem : class {
-    func openChannel(path: String, options: FileOpenOption) throws -> SeekableByteChannel
+public struct POSIXError : Error, CustomStringConvertible {
+    public let code: Int32
     
-    func createDirectory(path: String) throws -> Bool
+    public init() {
+        self.init(code: POSIX.errno)
+    }
     
-    func delete(path: String) throws
+    public init(code: Int32) {
+        precondition(code < 0)
+        self.code = code
+    }
+    
+    public var description: String {
+        if let message = String(validatingUTF8: POSIX.strerror(code)) {
+            return "errno: \(code): \(message)"
+        }
+        else {
+            return "errno: \(code)"
+        }
+    }
 }

@@ -1,7 +1,7 @@
 /*
  The MIT License (MIT)
  
- Copyright (c) 2016 Justin Kolb
+ Copyright (c) 2017 Justin Kolb
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -22,5 +22,30 @@
  SOFTWARE.
  */
 
-public protocol ByteChannel : ReadableByteChannel, WritableByteChannel {
+public protocol WritableFile {
+    func write(from buffer: UnsafeRawPointer, count: Int) throws -> Int
+    
+    func setEndOfFile(position: Int) throws
+}
+
+extension WritableFile {
+    public func write(from buffer: ByteBuffer, count: Int) throws -> Int {
+        precondition(count <= buffer.count)
+        return try write(from: buffer.bytes, count: count)
+    }
+    
+    public func write(from buffer: ByteBuffer) throws -> Int {
+        return try write(from: buffer, count: buffer.count)
+    }
+
+    public func write<Order>(from buffer: OrderedByteBuffer<Order>, count: Int) throws -> Int {
+        precondition(count <= buffer.remainingCount)
+        let writeCount = try write(from: buffer.remainingBytes, count: count)
+        buffer.position += writeCount
+        return writeCount
+    }
+    
+    public func write<Order>(from buffer: OrderedByteBuffer<Order>) throws -> Int {
+        return try write(from: buffer, count: buffer.remainingCount)
+    }
 }

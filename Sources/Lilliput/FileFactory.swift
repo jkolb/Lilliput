@@ -1,7 +1,7 @@
 /*
  The MIT License (MIT)
  
- Copyright (c) 2016 Justin Kolb
+ Copyright (c) 2017 Justin Kolb
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,8 @@
  SOFTWARE.
  */
 
-public protocol Memory {
-    func bufferWithSize(_ size: Int) -> UnsafeBuffer
-}
-
-extension Memory {
-    public func bufferWithSize<Order : ByteOrder>(_ size: Int, order: Order.Type) -> UnsafeOrderedBuffer<Order> {
-        let buffer = bufferWithSize(size)
-        return UnsafeOrderedBuffer<Order>(buffer: buffer)
-    }
+public protocol FileFactory : class {
+    func openFile(forReadingAtPath path: String) throws -> ReadableFile & SeekableFile
+    func openFile(forWritingAtPath path: String, create: Bool) throws -> WritableFile & SeekableFile
+    func openFile(forUpdatingAtPath path: String, create: Bool) throws -> ReadableFile & WritableFile & SeekableFile
 }

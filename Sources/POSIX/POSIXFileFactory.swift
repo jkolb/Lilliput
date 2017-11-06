@@ -1,7 +1,7 @@
 /*
  The MIT License (MIT)
  
- Copyright (c) 2016 Justin Kolb
+ Copyright (c) 2017 Justin Kolb
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +22,20 @@
  SOFTWARE.
  */
 
-public protocol ReadableByteChannel : class {
-    func readBytes(_ bytes: UnsafeMutableRawPointer, count: Int) throws -> Int
-}
+import Lilliput
 
-extension ReadableByteChannel {
-    public func readBuffer(_ buffer: UnsafeBuffer, count: Int) throws -> Int {
-        precondition(count <= buffer.count)
-        return try readBytes(buffer.bytes, count: count)
+public final class POSIXFileFactory : FileFactory {
+    public init() {}
+
+    public func openFile(forReadingAtPath path: String) throws -> ReadableFile & SeekableFile {
+        return try POSIXFile(forReadingAtPath: path)
     }
     
-    public func readBuffer<Order>(_ buffer: UnsafeOrderedBuffer<Order>, count: Int) throws -> Int {
-        precondition(count <= buffer.remainingCount)
-        let readCount = try readBytes(buffer.remainingBytes, count: count)
-        buffer.position += readCount
-        return readCount
+    public func openFile(forWritingAtPath path: String, create: Bool) throws -> WritableFile & SeekableFile {
+        return try POSIXFile(forWritingAtPath: path, create: create)
     }
     
-    public func readBuffer<Order>(_ buffer: UnsafeOrderedBuffer<Order>) throws {
-        let _ = try readBuffer(buffer, count: buffer.remainingCount)
-        precondition(buffer.remainingCount == 0)
+    public func openFile(forUpdatingAtPath path: String, create: Bool) throws -> ReadableFile & WritableFile & SeekableFile {
+        return try POSIXFile(forUpdatingAtPath: path, create: create)
     }
 }

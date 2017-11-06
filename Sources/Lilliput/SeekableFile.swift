@@ -1,7 +1,7 @@
 /*
  The MIT License (MIT)
  
- Copyright (c) 2016 Justin Kolb
+ Copyright (c) 2017 Justin Kolb
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +22,8 @@
  SOFTWARE.
  */
 
-public protocol WritableByteChannel : class {
-    func writeBytes(_ bytes: UnsafeMutableRawPointer, count: Int) throws -> Int
-}
-
-extension WritableByteChannel {
-    public func writeBuffer(_ buffer: UnsafeBuffer, count: Int) throws -> Int {
-        precondition(count <= buffer.count)
-        return try writeBytes(buffer.bytes, count: count)
-    }
-    
-    public func writeBuffer<Order>(_ buffer: UnsafeOrderedBuffer<Order>, count: Int) throws -> Int {
-        precondition(count <= buffer.remainingCount)
-        let writeCount = try writeBytes(buffer.remainingBytes, count: count)
-        buffer.position += writeCount
-        return writeCount
-    }
-    
-    public func writeBuffer<Order>(_ buffer: UnsafeOrderedBuffer<Order>) throws {
-        let _ = try writeBuffer(buffer, count: buffer.remainingCount)
-        precondition(buffer.remainingCount == 0)
-    }
+public protocol SeekableFile {
+    var currentPosition: Int { get set }
+    func seek(offsetFromCurrent: Int) throws
+    func seek(offsetFromEnd: Int) throws
 }

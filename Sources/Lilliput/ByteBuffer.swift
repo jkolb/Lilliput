@@ -1,7 +1,7 @@
 /*
  The MIT License (MIT)
  
- Copyright (c) 2016 Justin Kolb
+ Copyright (c) 2017 Justin Kolb
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +22,17 @@
  SOFTWARE.
  */
 
-public protocol SeekableByteChannel : ByteChannel {
-    func position() throws -> Int
+public final class ByteBuffer {
+    public let bytes: UnsafeMutableRawPointer
+    public let count: Int
     
-    func seekTo(_ position: Int) throws
+    public init(count: Int) {
+        precondition(count >= 0)
+        self.bytes = UnsafeMutableRawPointer.allocate(bytes: count * MemoryLayout<UInt8>.stride, alignedTo: MemoryLayout<UInt8>.alignment)
+        self.count = count
+    }
     
-    func end() throws -> Int
-    
-    func truncateAt(_ position: Int) throws
+    deinit {
+        bytes.deallocate(bytes: count, alignedTo: MemoryLayout<UInt8>.alignment)
+    }
 }

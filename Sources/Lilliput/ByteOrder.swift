@@ -1,7 +1,7 @@
 /*
  The MIT License (MIT)
  
- Copyright (c) 2016 Justin Kolb
+ Copyright (c) 2017 Justin Kolb
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -23,37 +23,17 @@
  */
 
 public protocol ByteOrder {
-    static func swapUInt16(_ value: UInt16) -> UInt16
-    
-    static func swapUInt32(_ value: UInt32) -> UInt32
-    
-    static func swapUInt64(_ value: UInt64) -> UInt64
+    static func swapOrder<T : FixedWidthInteger>(_ value: T) -> T
 }
 
 public final class LittleEndian : ByteOrder {
-    public static func swapUInt16(_ value: UInt16) -> UInt16 {
-        return value.littleEndian
-    }
-    
-    public static func swapUInt32(_ value: UInt32) -> UInt32 {
-        return value.littleEndian
-    }
-    
-    public static func swapUInt64(_ value: UInt64) -> UInt64 {
+    public static func swapOrder<T : FixedWidthInteger>(_ value: T) -> T {
         return value.littleEndian
     }
 }
 
 public final class BigEndian : ByteOrder {
-    public static func swapUInt16(_ value: UInt16) -> UInt16 {
-        return value.bigEndian
-    }
-    
-    public static func swapUInt32(_ value: UInt32) -> UInt32 {
-        return value.bigEndian
-    }
-    
-    public static func swapUInt64(_ value: UInt64) -> UInt64 {
+    public static func swapOrder<T : FixedWidthInteger>(_ value: T) -> T {
         return value.bigEndian
     }
 }
