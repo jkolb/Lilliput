@@ -4,6 +4,13 @@
 
 ## ChangeLog
 
+### 8.0.0
+* Another API change.
+* BinaryFile now a concrete platform specific class.
+* FileFactory was removed.
+* Improved performance by removing generic usages of FixedWidthInteger.
+* Improved performance by making use of copyBytes method.
+
 ### 7.1.0
 * Fix dumb bug
 * Rename buffer copy methods
