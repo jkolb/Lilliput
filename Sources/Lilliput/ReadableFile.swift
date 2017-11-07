@@ -22,7 +22,7 @@
  SOFTWARE.
  */
 
-public protocol ReadableFile {
+public protocol ReadableFile : class {
     func read(into buffer: UnsafeMutableRawPointer, count: Int) throws -> Int
 }
 

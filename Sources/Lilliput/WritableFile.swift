@@ -22,7 +22,7 @@
  SOFTWARE.
  */
 
-public protocol WritableFile {
+public protocol WritableFile : class {
     func write(from buffer: UnsafeRawPointer, count: Int) throws -> Int
     
     func setEndOfFile(position: Int) throws

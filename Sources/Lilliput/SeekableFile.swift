@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-public protocol SeekableFile {
-    var currentPosition: Int { get set }
+public protocol SeekableFile : class {
+    var position: Int { get set }
     func seek(offsetFromCurrent: Int) throws
     func seek(offsetFromEnd: Int) throws
 }

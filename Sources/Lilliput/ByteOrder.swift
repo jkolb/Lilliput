@@ -23,17 +23,44 @@
  */
 
 public protocol ByteOrder {
-    static func swapOrder<T : FixedWidthInteger>(_ value: T) -> T
+    static func swapOrder(_ value: UInt8) -> UInt8
+    static func swapOrder(_ value: UInt16) -> UInt16
+    static func swapOrder(_ value: UInt32) -> UInt32
+    static func swapOrder(_ value: UInt64) -> UInt64
 }
 
 public final class LittleEndian : ByteOrder {
-    public static func swapOrder<T : FixedWidthInteger>(_ value: T) -> T {
+    public static func swapOrder(_ value: UInt8) -> UInt8 {
+        return value.littleEndian
+    }
+
+    public static func swapOrder(_ value: UInt16) -> UInt16 {
+        return value.littleEndian
+    }
+
+    public static func swapOrder(_ value: UInt32) -> UInt32 {
+        return value.littleEndian
+    }
+
+    public static func swapOrder(_ value: UInt64) -> UInt64 {
         return value.littleEndian
     }
 }
 
 public final class BigEndian : ByteOrder {
-    public static func swapOrder<T : FixedWidthInteger>(_ value: T) -> T {
+    public static func swapOrder(_ value: UInt8) -> UInt8 {
+        return value.bigEndian
+    }
+
+    public static func swapOrder(_ value: UInt16) -> UInt16 {
+        return value.bigEndian
+    }
+
+    public static func swapOrder(_ value: UInt32) -> UInt32 {
+        return value.bigEndian
+    }
+
+    public static func swapOrder(_ value: UInt64) -> UInt64 {
         return value.bigEndian
     }
 }

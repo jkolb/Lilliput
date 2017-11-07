@@ -14,20 +14,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Lilliput::POSIX"
-               BuildableName = "POSIX.framework"
-               BlueprintName = "POSIX"
-               ReferencedContainer = "container:Lilliput.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "Lilliput::Lilliput"
                BuildableName = "Lilliput.framework"
                BlueprintName = "Lilliput"
@@ -71,9 +57,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "Lilliput::POSIX"
-            BuildableName = "POSIX.framework"
-            BlueprintName = "POSIX"
+            BlueprintIdentifier = "Lilliput::Lilliput"
+            BuildableName = "Lilliput.framework"
+            BlueprintName = "Lilliput"
             ReferencedContainer = "container:Lilliput.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
