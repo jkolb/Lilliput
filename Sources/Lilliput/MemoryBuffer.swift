@@ -22,19 +22,21 @@
  SOFTWARE.
  */
 
-public protocol WritableFile : class {
-    func write(from buffer: UnsafeRawPointer, count: Int) throws -> Int
+public final class MemoryBuffer : ByteBuffer {
+    public let bytes: UnsafeMutableRawPointer
+    public let count: Int
     
-    func setEndOfFile(position: Int) throws
-}
-
-extension WritableFile {
-    public func write(from buffer: ByteBuffer, count: Int) throws -> Int {
-        precondition(count <= buffer.count)
-        return try write(from: buffer.bytes, count: count)
+    public init(copyBytes: UnsafeMutableRawPointer? = nil, count: Int) {
+        precondition(count >= 0)
+        self.bytes = UnsafeMutableRawPointer.allocate(byteCount: count * MemoryLayout<UInt8>.stride, alignment: MemoryLayout<UInt8>.alignment)
+        self.count = count
+        
+        if let copyBytes = copyBytes {
+            bytes.copyMemory(from: copyBytes, byteCount: count)
+        }
     }
     
-    public func write(from buffer: ByteBuffer) throws -> Int {
-        return try write(from: buffer, count: buffer.count)
+    deinit {
+        bytes.deallocate()
     }
 }

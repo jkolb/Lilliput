@@ -31,125 +31,104 @@ class OrderedByteBufferTestCase: XCTestCase {
         ("testGetUInt8", testGetUInt8),
         ("testGetUInt16", testGetUInt16),
         ("testGetUInt32", testGetUInt32),
-        ("testGetUInt24", testGetUInt24),
         ("testGetUInt64", testGetUInt64),
         ("testGetFloat32", testGetFloat32),
         ]
     
     func testPut() {
-        let byteBuffer = OrderedByteBuffer<BigEndian>(count: 4)
-        byteBuffer.putUInt8([1, 2, 3, 4])
-        byteBuffer.position = 0
-        XCTAssertEqual(UInt8(1), byteBuffer.getUInt8(), "Fail")
-        XCTAssertEqual(UInt8(2), byteBuffer.getUInt8(), "Fail")
-        XCTAssertEqual(UInt8(3), byteBuffer.getUInt8(), "Fail")
-        XCTAssertEqual(UInt8(4), byteBuffer.getUInt8(), "Fail")
+        let byteBuffer = OrderedBuffer<BigEndian>(buffer: MemoryBuffer(count: 4))
+        byteBuffer.putUInt8(1, at: 0)
+        byteBuffer.putUInt8(2, at: 1)
+        byteBuffer.putUInt8(3, at: 2)
+        byteBuffer.putUInt8(4, at: 3)
+        XCTAssertEqual(UInt8(1), byteBuffer.getUInt8(at: 0), "Fail")
+        XCTAssertEqual(UInt8(2), byteBuffer.getUInt8(at: 1), "Fail")
+        XCTAssertEqual(UInt8(3), byteBuffer.getUInt8(at: 2), "Fail")
+        XCTAssertEqual(UInt8(4), byteBuffer.getUInt8(at: 3), "Fail")
     }
     
     func testGetUInt8() {
-        let bigEndian = OrderedByteBuffer<BigEndian>(count: 2)
-        bigEndian.putUInt8([0x00, 0xFF])
-        bigEndian.position = 0
-        XCTAssertEqual(UInt8(0x00), bigEndian.getUInt8(), "Fail")
-        XCTAssertEqual(UInt8(0xFF), bigEndian.getUInt8(), "Fail")
+        let bigEndian = OrderedBuffer<BigEndian>(buffer: MemoryBuffer(count: 2))
+        bigEndian.putUInt8(0x00, at: 0)
+        bigEndian.putUInt8(0xFF, at: 1)
         XCTAssertEqual(UInt8(0x00), bigEndian.getUInt8(at: 0), "Fail")
         XCTAssertEqual(UInt8(0xFF), bigEndian.getUInt8(at: 1), "Fail")
         
-        let littleEndian = OrderedByteBuffer<LittleEndian>(count: 2)
-        littleEndian.putUInt8([0x00, 0xFF])
-        littleEndian.position = 0
-        XCTAssertEqual(UInt8(0x00), littleEndian.getUInt8(), "Fail")
-        XCTAssertEqual(UInt8(0xFF), littleEndian.getUInt8(), "Fail")
+        let littleEndian = OrderedBuffer<LittleEndian>(buffer: MemoryBuffer(count: 2))
+        littleEndian.putUInt8(0x00, at: 0)
+        littleEndian.putUInt8(0xFF, at: 1)
         XCTAssertEqual(UInt8(0x00), littleEndian.getUInt8(at: 0), "Fail")
         XCTAssertEqual(UInt8(0xFF), littleEndian.getUInt8(at: 1), "Fail")
     }
     
     func testGetUInt16() {
-        let bigEndian = OrderedByteBuffer<BigEndian>(count: 2)
-        bigEndian.putUInt8([0x00, 0xFF])
-        bigEndian.position = 0
-        XCTAssertEqual(UInt16(0x00FF), bigEndian.getUInt16(), "Fail")
+        let bigEndian = OrderedBuffer<BigEndian>(buffer: MemoryBuffer(count: 2))
+        bigEndian.putUInt8(0x00, at: 0)
+        bigEndian.putUInt8(0xFF, at: 1)
         XCTAssertEqual(UInt16(0x00FF), bigEndian.getUInt16(at: 0), "Fail")
         
-        let littleEndian = OrderedByteBuffer<LittleEndian>(count: 2)
-        littleEndian.putUInt8([0x00, 0xFF])
-        littleEndian.position = 0
-        XCTAssertEqual(UInt16(0xFF00), littleEndian.getUInt16(), "Fail")
+        let littleEndian = OrderedBuffer<LittleEndian>(buffer: MemoryBuffer(count: 2))
+        littleEndian.putUInt8(0x00, at: 0)
+        littleEndian.putUInt8(0xFF, at: 1)
         XCTAssertEqual(UInt16(0xFF00), littleEndian.getUInt16(at: 0), "Fail")
     }
     
-    func testGetUInt24() {
-        let bigEndian = OrderedByteBuffer<BigEndian>(count: 4)
-        bigEndian.putInt24(-8388608)
-        bigEndian.position = 0
-        XCTAssertEqual(bigEndian.getInt24(), -8388608)
-        bigEndian.position = 0
-        bigEndian.putInt24(-1)
-        bigEndian.position = 0
-        XCTAssertEqual(bigEndian.getInt24(), -1)
-        bigEndian.position = 0
-        bigEndian.putInt24(8388607)
-        bigEndian.position = 0
-        XCTAssertEqual(bigEndian.getInt24(), 8388607)
-        bigEndian.position = 0
-        bigEndian.putUInt24(16777215)
-        bigEndian.position = 0
-        XCTAssertEqual(bigEndian.getUInt24(), 16777215)
-        
-        let littleEndian = OrderedByteBuffer<LittleEndian>(count: 4)
-        littleEndian.putInt24(-8388608)
-        littleEndian.position = 0
-        XCTAssertEqual(littleEndian.getInt24(), -8388608)
-        littleEndian.position = 0
-        littleEndian.putInt24(-1)
-        littleEndian.position = 0
-        XCTAssertEqual(littleEndian.getInt24(), -1)
-        littleEndian.position = 0
-        littleEndian.putInt24(8388607)
-        littleEndian.position = 0
-        XCTAssertEqual(littleEndian.getInt24(), 8388607)
-        littleEndian.position = 0
-        littleEndian.putUInt24(16777215)
-        littleEndian.position = 0
-        XCTAssertEqual(littleEndian.getUInt24(), 16777215)
-    }
-    
     func testGetUInt32() {
-        let bigEndian = OrderedByteBuffer<BigEndian>(count: 4)
-        bigEndian.putUInt8([0x00, 0x00, 0x00, 0xFF])
-        bigEndian.position = 0
-        XCTAssertEqual(UInt32(0x000000FF), bigEndian.getUInt32(), "Fail")
+        let bigEndian = OrderedBuffer<BigEndian>(buffer: MemoryBuffer(count: 4))
+        bigEndian.putUInt8(0x00, at: 0)
+        bigEndian.putUInt8(0x00, at: 1)
+        bigEndian.putUInt8(0x00, at: 2)
+        bigEndian.putUInt8(0xFF, at: 3)
+        XCTAssertEqual(UInt32(0x000000FF), bigEndian.getUInt32(at: 0), "Fail")
         
-        let littleEndian = OrderedByteBuffer<LittleEndian>(count: 4)
-        littleEndian.putUInt8([0x00, 0x00, 0x00, 0xFF])
-        littleEndian.position = 0
-        XCTAssertEqual(UInt32(0xFF000000), littleEndian.getUInt32(), "Fail")
+        let littleEndian = OrderedBuffer<LittleEndian>(buffer: MemoryBuffer(count: 4))
+        littleEndian.putUInt8(0x00, at: 0)
+        littleEndian.putUInt8(0x00, at: 1)
+        littleEndian.putUInt8(0x00, at: 2)
+        littleEndian.putUInt8(0xFF, at: 3)
+        XCTAssertEqual(UInt32(0xFF000000), littleEndian.getUInt32(at: 0), "Fail")
     }
     
     func testGetUInt64() {
-        let bigEndian = OrderedByteBuffer<BigEndian>(count: 8)
-        bigEndian.putUInt8([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF])
-        bigEndian.position = 0
-        XCTAssertEqual(UInt64(0x00000000000000FF), bigEndian.getUInt64(), "Fail")
+        let bigEndian = OrderedBuffer<BigEndian>(buffer: MemoryBuffer(count: 8))
+        bigEndian.putUInt8(0x00, at: 0)
+        bigEndian.putUInt8(0x00, at: 1)
+        bigEndian.putUInt8(0x00, at: 2)
+        bigEndian.putUInt8(0x00, at: 3)
+        bigEndian.putUInt8(0x00, at: 4)
+        bigEndian.putUInt8(0x00, at: 5)
+        bigEndian.putUInt8(0x00, at: 6)
+        bigEndian.putUInt8(0xFF, at: 7)
+        XCTAssertEqual(UInt64(0x00000000000000FF), bigEndian.getUInt64(at: 0), "Fail")
         
         #if !arch(i386) && !arch(arm)
-            // This won't compile on 32-bit
-            let littleEndian = OrderedByteBuffer<LittleEndian>(count: 8)
-            littleEndian.putUInt8([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00])
-            littleEndian.position = 0
-            XCTAssertEqual(UInt64(0x00FF000000000000), littleEndian.getUInt64(), "Fail")
+        // This won't compile on 32-bit
+        let littleEndian = OrderedBuffer<LittleEndian>(buffer: MemoryBuffer(count: 8))
+        littleEndian.putUInt8(0x00, at: 0)
+        littleEndian.putUInt8(0x00, at: 1)
+        littleEndian.putUInt8(0x00, at: 2)
+        littleEndian.putUInt8(0x00, at: 3)
+        littleEndian.putUInt8(0x00, at: 4)
+        littleEndian.putUInt8(0x00, at: 5)
+        littleEndian.putUInt8(0xFF, at: 6)
+        littleEndian.putUInt8(0x00, at: 7)
+        XCTAssertEqual(UInt64(0x00FF000000000000), littleEndian.getUInt64(at: 0), "Fail")
         #endif
     }
     
     func testGetFloat32() {
-        let bigEndian = OrderedByteBuffer<BigEndian>(count: 4)
-        bigEndian.putUInt8([0x3F, 0x80, 0x00, 0x00])
-        bigEndian.position = 0
-        XCTAssertEqual(Float32(1.0), bigEndian.getFloat32(), "Fail")
+        let bigEndian = OrderedBuffer<BigEndian>(buffer: MemoryBuffer(count: 4))
+        bigEndian.putUInt8(0x3F, at: 0)
+        bigEndian.putUInt8(0x80, at: 1)
+        bigEndian.putUInt8(0x00, at: 2)
+        bigEndian.putUInt8(0x00, at: 3)
+        XCTAssertEqual(Float32(1.0).bitPattern.bigEndian, bigEndian.getFloat32(at: 0).bitPattern, "Fail")
         
-        let littleEndian = OrderedByteBuffer<LittleEndian>(count: 4)
-        littleEndian.putUInt8([0x00, 0x00, 0x80, 0x3F])
-        littleEndian.position = 0
-        XCTAssertEqual(Float32(1.0), littleEndian.getFloat32(), "Fail")
+        let littleEndian = OrderedBuffer<LittleEndian>(buffer: MemoryBuffer(count: 4))
+        littleEndian.putUInt8(0x00, at: 0)
+        littleEndian.putUInt8(0x00, at: 1)
+        littleEndian.putUInt8(0x80, at: 2)
+        littleEndian.putUInt8(0x3F, at: 3)
+        XCTAssertEqual(Float32(1.0).bitPattern.littleEndian, littleEndian.getFloat32(at: 0).bitPattern, "Fail")
     }
 }

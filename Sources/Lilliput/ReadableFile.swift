@@ -1,7 +1,7 @@
 /*
  The MIT License (MIT)
  
- Copyright (c) 2017 Justin Kolb
+ Copyright (c) 2018 Justin Kolb
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -34,16 +34,5 @@ extension ReadableFile {
     
     public func read(into buffer: ByteBuffer) throws -> Int {
         return try read(into: buffer, count: buffer.count)
-    }
-    
-    public func read<Order>(into buffer: OrderedByteBuffer<Order>, count: Int) throws -> Int {
-        precondition(count <= buffer.remainingCount)
-        let readCount = try read(into: buffer.remainingBytes, count: count)
-        buffer.position += readCount
-        return readCount
-    }
-    
-    public func read<Order>(into buffer: OrderedByteBuffer<Order>) throws -> Int {
-        return try read(into: buffer, count: buffer.remainingCount)
     }
 }

@@ -1,7 +1,7 @@
 /*
  The MIT License (MIT)
  
- Copyright (c) 2017 Justin Kolb
+ Copyright (c) 2018 Justin Kolb
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -23,44 +23,25 @@
  */
 
 public protocol ByteOrder {
-    static func swapOrder(_ value: UInt8) -> UInt8
-    static func swapOrder(_ value: UInt16) -> UInt16
-    static func swapOrder(_ value: UInt32) -> UInt32
-    static func swapOrder(_ value: UInt64) -> UInt64
+    static func swapOrderUInt16(_ value: UInt16) -> UInt16
+    static func swapOrderUInt32(_ value: UInt32) -> UInt32
+    static func swapOrderUInt64(_ value: UInt64) -> UInt64
 }
 
-public final class LittleEndian : ByteOrder {
-    public static func swapOrder(_ value: UInt8) -> UInt8 {
-        return value.littleEndian
-    }
-
-    public static func swapOrder(_ value: UInt16) -> UInt16 {
-        return value.littleEndian
-    }
-
-    public static func swapOrder(_ value: UInt32) -> UInt32 {
-        return value.littleEndian
-    }
-
-    public static func swapOrder(_ value: UInt64) -> UInt64 {
-        return value.littleEndian
-    }
+public struct NativeEndian : ByteOrder {
+    @_transparent public static func swapOrderUInt16(_ value: UInt16) -> UInt16 { return value }
+    @_transparent public static func swapOrderUInt32(_ value: UInt32) -> UInt32 { return value }
+    @_transparent public static func swapOrderUInt64(_ value: UInt64) -> UInt64 { return value }
 }
 
-public final class BigEndian : ByteOrder {
-    public static func swapOrder(_ value: UInt8) -> UInt8 {
-        return value.bigEndian
-    }
+public struct LittleEndian : ByteOrder {
+    @_transparent public static func swapOrderUInt16(_ value: UInt16) -> UInt16 { return value.littleEndian }
+    @_transparent public static func swapOrderUInt32(_ value: UInt32) -> UInt32 { return value.littleEndian }
+    @_transparent public static func swapOrderUInt64(_ value: UInt64) -> UInt64 { return value.littleEndian }
+}
 
-    public static func swapOrder(_ value: UInt16) -> UInt16 {
-        return value.bigEndian
-    }
-
-    public static func swapOrder(_ value: UInt32) -> UInt32 {
-        return value.bigEndian
-    }
-
-    public static func swapOrder(_ value: UInt64) -> UInt64 {
-        return value.bigEndian
-    }
+public struct BigEndian : ByteOrder {
+    @_transparent public static func swapOrderUInt16(_ value: UInt16) -> UInt16 { return value.bigEndian }
+    @_transparent public static func swapOrderUInt32(_ value: UInt32) -> UInt32 { return value.bigEndian }
+    @_transparent public static func swapOrderUInt64(_ value: UInt64) -> UInt64 { return value.bigEndian }
 }

@@ -22,19 +22,16 @@
  SOFTWARE.
  */
 
-public protocol WritableFile : class {
-    func write(from buffer: UnsafeRawPointer, count: Int) throws -> Int
+public final class OrderedOutputStream<Order : ByteOrder> : ByteOutputStream {
+    public let stream: ByteOutputStream
     
-    func setEndOfFile(position: Int) throws
-}
+    public init(stream: ByteOutputStream) {
+        self.stream = stream
+    }
 
-extension WritableFile {
-    public func write(from buffer: ByteBuffer, count: Int) throws -> Int {
-        precondition(count <= buffer.count)
-        return try write(from: buffer.bytes, count: count)
-    }
-    
-    public func write(from buffer: ByteBuffer) throws -> Int {
-        return try write(from: buffer, count: buffer.count)
-    }
+    @inline(__always) public func writeUInt8 (_ value: UInt8 ) throws { try stream.writeUInt8(value) }
+    @inline(__always) public func writeUInt16(_ value: UInt16) throws { try stream.writeUInt16(Order.swapOrderUInt16(value)) }
+    @inline(__always) public func writeUInt32(_ value: UInt32) throws { try stream.writeUInt32(Order.swapOrderUInt32(value)) }
+    @inline(__always) public func writeUInt64(_ value: UInt64) throws { try stream.writeUInt64(Order.swapOrderUInt64(value)) }
+    @inline(__always) public func write(bytes: UnsafeRawPointer, count: Int) throws { try stream.write(bytes: bytes, count: count) }
 }

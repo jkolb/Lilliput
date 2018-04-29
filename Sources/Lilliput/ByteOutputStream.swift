@@ -22,19 +22,20 @@
  SOFTWARE.
  */
 
-public protocol WritableFile : class {
-    func write(from buffer: UnsafeRawPointer, count: Int) throws -> Int
-    
-    func setEndOfFile(position: Int) throws
+public protocol ByteOutputStream {
+    func writeUInt8 (_ value: UInt8 ) throws
+    func writeUInt16(_ value: UInt16) throws
+    func writeUInt32(_ value: UInt32) throws
+    func writeUInt64(_ value: UInt64) throws
+    func write(bytes: UnsafeRawPointer, count: Int) throws
 }
 
-extension WritableFile {
-    public func write(from buffer: ByteBuffer, count: Int) throws -> Int {
-        precondition(count <= buffer.count)
-        return try write(from: buffer.bytes, count: count)
-    }
+extension ByteOutputStream {
+    @_transparent public func write(_ value: Int8)  throws { try writeUInt8 (UInt8 (bitPattern: value)) }
+    @_transparent public func write(_ value: Int16) throws { try writeUInt16(UInt16(bitPattern: value)) }
+    @_transparent public func write(_ value: Int32) throws { try writeUInt32(UInt32(bitPattern: value)) }
+    @_transparent public func write(_ value: Int64) throws { try writeUInt64(UInt64(bitPattern: value)) }
     
-    public func write(from buffer: ByteBuffer) throws -> Int {
-        return try write(from: buffer, count: buffer.count)
-    }
+    @_transparent public func write(_ value: Float32) throws { try writeUInt32(value.bitPattern) }
+    @_transparent public func write(_ value: Float64) throws { try writeUInt64(value.bitPattern) }
 }

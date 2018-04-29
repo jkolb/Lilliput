@@ -4,6 +4,15 @@
 
 ## ChangeLog
 
+### 9.0.0
+* Updated Examples
+* File API stayed the same, but buffer API has changed drastically (again)
+* Addded UnalignedAccess extension for UnsafeRawPointer and UnsafeMutableRawPointer
+* Addded ByteBuffer, MemoryBuffer, OrderedBuffer, WrappedBuffer
+* Addded ByteInputStream, BufferInputStream, OrderedInputStream
+* Addded ByteOutputStream, BufferOutputStream, OrderedOutputStream
+* Removed support for odd types like 24bits & strings to concentrate on the most generic interface
+
 ### 8.0.0
 * Another API change.
 * BinaryFile now a concrete platform specific class.
@@ -89,49 +98,50 @@ Attempting to allow building for both iOS and OSX using one project file.
 
 ## Description
 
-[Lilliput](http://en.wikipedia.org/wiki/Lilliput_and_Blefuscu) is a native [Swift](http://en.wikipedia.org/wiki/Jonathan_Swift) framework for working with binary data of varying [endianness](http://en.wikipedia.org/wiki/Endianness). For example you can use it to do custom loading of [PNG](http://www.libpng.org/pub/png/spec/1.2/PNG-DataRep.html#DR.Integers-and-byte-order) files which are written in big endian byte order, or tinker with reverse engineering [game](https://www.asheronscall.com) [data](http://www.ugcs.caltech.edu/~dsimpson/) files which is what I use it for.
-Functionality is loosely based on similar functionality found in Java.
+[Lilliput](http://en.wikipedia.org/wiki/Lilliput_and_Blefuscu) is a native [Swift](http://en.wikipedia.org/wiki/Jonathan_Swift) framework for working with binary data of varying [endianness](http://en.wikipedia.org/wiki/Endianness). For example you can use it to do custom loading of [PNG](http://www.libpng.org/pub/png/spec/1.2/PNG-DataRep.html#DR.Integers-and-byte-order) files which are written in big endian byte order, or tinker with reverse engineering [game](https://www.asheronscall.com) [data](https://github.com/jkolb/Asheron) files which is what I use it for.
 
 ## Examples
 
-**Putting and getting a big endian 32 bit integer**
+**Open and read a file into a little endian buffer**
 
-    let memory = POSIXMemory()
-    let buffer = memory.buferWithSize(100, order: BigEndian.self)
-    buffer.putUInt32(1024) // Put this value at the current position of the buffer
-    buffer.flip() // Reset the position to 0 and set the limit to 4 (the amout of bytes written)
-    let value = buffer.getUInt32() // Get the value at the current position of the buffer
-
-
-
-**Rough parsing of a PNG file**
-
-    let filesystem = POSIXFileSystem()
-    let path = filesystem.parsePath("image.png")
-    let channel = try filesystem.openPath(path, [.Read])
-    let memory = POSIXMemory()
-    let buffer = memory.buferWithSize(4096, order: BigEndian.self)
-    let bytesRead = try channel.readByteBuffer(buffer)
-
-    if bytesRead < PNGHeaderLength {
-        throw PNGError.MissingHeader
+    let binaryFile = try BinaryFile.open(forUpdatingAtPath: path, create: false)
+    let headerBytes = OrderedBuffer<LittleEndian>(count: 1024)
+    let readCount = try binaryFile.read(into: headerBytes)
+        
+    if readCount < headerBytes.count {
+        // Handle error
     }
+        
+    let value1 = headerBytes.getUInt32(at: 0)
+    let value2 = headerBytes.getInt8(at: 4)
 
-    buffer.flip() // Must flip before reading after you fill the buffer
-    let signature = buffer.getUInt8(8)
+**Open and read a file into a big endian byte input stream**
 
-    if signature != [UInt8][137, 80, 78, 71, 13, 10, 26, 10] {
-        throw PNGError.NotAPNG
+    let binaryFile = try BinaryFile.open(forReadingAtPath: path)
+    let headerBytes = MemoryBuffer(count: 1024)
+    let readCount = try binaryFile.read(into: headerBytes)
+        
+    if readCount < headerBytes.count {
+        // Handle error
     }
+        
+    let stream = OrderedInputStream<BigEndian>(stream: BufferInputStream(buffer: headerBytes))
+    let value1 = try stream.readUInt32()
+    let value2 = try stream.readFloat32()
 
-    let chunkLength = buffer.getUInt32()
-    let chunkType = buffer.getUInt8(4)
-    let chunkData = buffer.getUInt8(chunkLength)
-    let chunkCRC = buffer.getUInt32()
+
+**Open and write to a file into native byte output stream**
+
+    let binaryFile = try BinaryFile.open(forWritingAtPath: path, create: true)
+    let headerBytes = MemoryBuffer(count: 1024)    
+    let stream = BufferOutputStream(buffer: headerBytes)
+    try stream.writeUInt32(4)
+    try stream.writeFloat32(3.14)
+    let writeCount = try binaryFile.write(from: headerBytes, count: 8)
 
 ## Installation
 
-Can install via Carthage, or by dragging and dropping the project file into your project.
+Can install via Carthage, as a Swift package, or by dragging and dropping the project file into your project.
 
 ## Contact
 

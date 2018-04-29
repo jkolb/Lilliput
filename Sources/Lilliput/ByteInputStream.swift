@@ -22,19 +22,20 @@
  SOFTWARE.
  */
 
-public protocol WritableFile : class {
-    func write(from buffer: UnsafeRawPointer, count: Int) throws -> Int
-    
-    func setEndOfFile(position: Int) throws
+public protocol ByteInputStream {
+    func readUInt8()  throws -> UInt8
+    func readUInt16() throws -> UInt16
+    func readUInt32() throws -> UInt32
+    func readUInt64() throws -> UInt64
+    func read(bytes: UnsafeMutableRawPointer, count: Int) throws
 }
 
-extension WritableFile {
-    public func write(from buffer: ByteBuffer, count: Int) throws -> Int {
-        precondition(count <= buffer.count)
-        return try write(from: buffer.bytes, count: count)
-    }
+extension ByteInputStream {
+    public func readInt8()  throws -> Int8  { return Int8 (bitPattern: try readUInt8() ) }
+    public func readInt16() throws -> Int16 { return Int16(bitPattern: try readUInt16()) }
+    public func readInt32() throws -> Int32 { return Int32(bitPattern: try readUInt32()) }
+    public func readInt64() throws -> Int64 { return Int64(bitPattern: try readUInt64()) }
     
-    public func write(from buffer: ByteBuffer) throws -> Int {
-        return try write(from: buffer, count: buffer.count)
-    }
+    public func readFloat32() throws -> Float32 { return Float32(bitPattern: try readUInt32()) }
+    public func readFloat64() throws -> Float64 { return Float64(bitPattern: try readUInt64()) }
 }

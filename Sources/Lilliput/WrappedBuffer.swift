@@ -22,19 +22,13 @@
  SOFTWARE.
  */
 
-public protocol WritableFile : class {
-    func write(from buffer: UnsafeRawPointer, count: Int) throws -> Int
-    
-    func setEndOfFile(position: Int) throws
-}
+public struct WrappedBuffer : ByteBuffer {
+    public let bytes: UnsafeMutableRawPointer
+    public let count: Int
 
-extension WritableFile {
-    public func write(from buffer: ByteBuffer, count: Int) throws -> Int {
-        precondition(count <= buffer.count)
-        return try write(from: buffer.bytes, count: count)
-    }
-    
-    public func write(from buffer: ByteBuffer) throws -> Int {
-        return try write(from: buffer, count: buffer.count)
+    public init(bytes: UnsafeMutableRawPointer, count: Int) {
+        precondition(count >= 0)
+        self.bytes = bytes
+        self.count = count
     }
 }
