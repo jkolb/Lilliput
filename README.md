@@ -4,6 +4,9 @@
 
 ## ChangeLog
 
+### 9.1.0
+* Renamed ByteOutputStream write methods to mirror ByteInputStream read methods.
+
 ### 9.0.0
 * Updated Examples
 * File API stayed the same, but buffer API has changed drastically (again)

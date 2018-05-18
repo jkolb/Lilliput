@@ -31,11 +31,11 @@ public protocol ByteOutputStream {
 }
 
 extension ByteOutputStream {
-    @_transparent public func write(_ value: Int8)  throws { try writeUInt8 (UInt8 (bitPattern: value)) }
-    @_transparent public func write(_ value: Int16) throws { try writeUInt16(UInt16(bitPattern: value)) }
-    @_transparent public func write(_ value: Int32) throws { try writeUInt32(UInt32(bitPattern: value)) }
-    @_transparent public func write(_ value: Int64) throws { try writeUInt64(UInt64(bitPattern: value)) }
+    public func writeInt8 (_ value: Int8)  throws { try writeUInt8 (UInt8 (bitPattern: value)) }
+    public func writeInt16(_ value: Int16) throws { try writeUInt16(UInt16(bitPattern: value)) }
+    public func writeInt32(_ value: Int32) throws { try writeUInt32(UInt32(bitPattern: value)) }
+    public func writeInt64(_ value: Int64) throws { try writeUInt64(UInt64(bitPattern: value)) }
     
-    @_transparent public func write(_ value: Float32) throws { try writeUInt32(value.bitPattern) }
-    @_transparent public func write(_ value: Float64) throws { try writeUInt64(value.bitPattern) }
+    public func writeFloat32(_ value: Float32) throws { try writeUInt32(value.bitPattern) }
+    public func writeFloat64(_ value: Float64) throws { try writeUInt64(value.bitPattern) }
 }
