@@ -29,6 +29,8 @@ public final class OrderedOutputStream<Order : ByteOrder> : ByteOutputStream {
         self.stream = stream
     }
 
+    public var bytesWritten: Int { @inline(__always) get { return stream.bytesWritten } }
+    @inline(__always) public func skip(count: Int) throws { try stream.skip(count: count) }
     @inline(__always) public func writeUInt8 (_ value: UInt8 ) throws { try stream.writeUInt8(value) }
     @inline(__always) public func writeUInt16(_ value: UInt16) throws { try stream.writeUInt16(Order.swapOrderUInt16(value)) }
     @inline(__always) public func writeUInt32(_ value: UInt32) throws { try stream.writeUInt32(Order.swapOrderUInt32(value)) }

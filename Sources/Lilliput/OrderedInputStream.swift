@@ -29,6 +29,8 @@ public final class OrderedInputStream<Order : ByteOrder> : ByteInputStream {
         self.stream = stream
     }
 
+    public var bytesRead: Int { @inline(__always) get { return stream.bytesRead } }
+    @inline(__always) public func skip(count: Int) throws { try stream.skip(count: count) }
     @inline(__always) public func readUInt8()  throws -> UInt8  { return try stream.readUInt8() }
     @inline(__always) public func readUInt16() throws -> UInt16 { return Order.swapOrderUInt16(try stream.readUInt16()) }
     @inline(__always) public func readUInt32() throws -> UInt32 { return Order.swapOrderUInt32(try stream.readUInt32()) }

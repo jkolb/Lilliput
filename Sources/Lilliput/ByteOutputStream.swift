@@ -23,6 +23,8 @@
  */
 
 public protocol ByteOutputStream {
+    var bytesWritten: Int { get }
+    func skip(count: Int) throws
     func writeUInt8 (_ value: UInt8 ) throws
     func writeUInt16(_ value: UInt16) throws
     func writeUInt32(_ value: UInt32) throws

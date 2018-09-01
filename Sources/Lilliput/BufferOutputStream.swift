@@ -31,6 +31,17 @@ public final class BufferOutputStream : ByteOutputStream {
         self.offset = 0
     }
     
+    public var bytesWritten: Int {
+        @inline(__always) get {
+            return offset
+        }
+    }
+    
+    @inline(__always)
+    public func skip(count: Int) throws {
+        offset += count
+    }
+
     public var remainingBytes: UnsafeMutableRawPointer {
         @inline(__always)
         get {

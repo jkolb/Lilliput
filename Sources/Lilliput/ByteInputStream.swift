@@ -23,6 +23,8 @@
  */
 
 public protocol ByteInputStream {
+    var bytesRead: Int { get }
+    func skip(count: Int) throws
     func readUInt8()  throws -> UInt8
     func readUInt16() throws -> UInt16
     func readUInt32() throws -> UInt32
