@@ -1,156 +1,149 @@
 # Lilliput
 
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[Lilliput](http://en.wikipedia.org/wiki/Lilliput_and_Blefuscu) is a native Swift framework for working with binary data.
 
-## ChangeLog
+## Design Decisions
 
-### 9.1.0
-* Renamed ByteOutputStream write methods to mirror ByteInputStream read methods.
+* Does not support streaming data, it only works with data that can fit in memory.
+* Allows types to have multiple encodings/decodings, this means that a UInt32 could be easily represented as little endian, big endian, or some custom compressed encoding.
+* Does not support the idea of "native" endianness, when working with data where endianess matters you must always be specific. 
 
-### 9.0.0
-* Updated Examples
-* File API stayed the same, but buffer API has changed drastically (again)
-* Addded UnalignedAccess extension for UnsafeRawPointer and UnsafeMutableRawPointer
-* Addded ByteBuffer, MemoryBuffer, OrderedBuffer, WrappedBuffer
-* Addded ByteInputStream, BufferInputStream, OrderedInputStream
-* Addded ByteOutputStream, BufferOutputStream, OrderedOutputStream
-* Removed support for odd types like 24bits & strings to concentrate on the most generic interface
+## Basic Usage
 
-### 8.0.0
-* Another API change.
-* BinaryFile now a concrete platform specific class.
-* FileFactory was removed.
-* Improved performance by removing generic usages of FixedWidthInteger.
-* Improved performance by making use of copyBytes method.
+```swift
+import Lilliput
 
-### 7.1.0
-* Fix dumb bug
-* Rename buffer copy methods
+// Allocate enough storage for a 32-bit unsigned integer
+let buffer = ByteBuffer(count: 4)
 
-### 7.0.0
-* Major API change.
-* Reduced number of protocols.
-* Removed lots of cruft.
-* Use FixedWidthInteger protocol to share more code.
-* Separate POSIX specific code into its own module.
+// Write a UInt32 to that storage in little endian encoding
+var writer = ByteSpanWriter(buffer)
+try writer.write(UInt32(100), as: UInt32.LittleEndian.self)
 
-### 6.0.0
-* Attempt to make sure unaligned memory is not accessed directly. The goal of this library is to read from files or other non-platform specific places that generally don't impose a specific alignment while still working on platforms that may crash on unaligned memory access.
-* Changed API so that getXAt becomes getX(at:) (For example: getUInt32(at: 13))
-* Added getInt24, getUInt24, putInt24, and putUInt24 (all of these are endian order independent as they rely on reading/writing three consecutive bytes)
+// Read a UInt32 from that stroage in little endian encoding 
+var reader = ByteSpanReader(buffer)
+let value = try reader.read(UInt32.LittleEndian.self)
+```
 
-### 5.0.0
-* Swift 4 support
+## Custom Byte Decodable/Encodable Types
 
-### 4.0.3
-* Forgot to push some changes
+```swift
+struct MyType {
+    var value0: Int
+    var value1: Int8
+    var value3: Double
+}
 
-### 4.0.2
-* Remove usages of `@inline(__always)`, will not compile on Linux
-* Fixed POSIXError so that it will compile on Linux
-
-### 4.0.1
-* Performance enhancements (10+ seconds on a project I'm working on)
-
-### 4.0.0
-* Got rid of ByteSize, FilePosition, and FilePath abstractions.
-* Renamed ByteBuffer to UnsafeOrderedBuffer.
-* Renamed Buffer to UnsafeBuffer.
-* No longer attempt to work with Foundation, the API is awkward and it currently has bugs.
-* Fixed permission issue with creating files using POSIXFileSystem.
-* Removed the limit and mark functionality from UnsafeOrderedBuffer.
-* Fix missing shared scheme required for Carthage support.
-* Rebuilt project file using Xcode 8.1 version of SwiftPM.
-
-### 3.0.0
-* Updated to Swift 3.
-* Support for Swift Package Manager.
-* Foundation Data now conforms to Buffer protocol.
-
-### 2.0.0
-* Added back in support for reading and writing files based on a generic protocols so that it should be easy to port to any operating system. Currently supports POSIX on Linux and OS X.
-* Added protocol to abstract out a generic memory buffer that tracks its size, and a protocol to abstract out generating buffers. Currently supports POSIX memory allocation on Linux and OS X.
-* Byte buffer now takes its byte order as a generic parameter, this should speed up operations as order is now known at compile time.
-* Simplified byte order to just use 3 swap methods.
-* Removed hex, oct, etc. string conversion utility methods.
-
-### 1.1.3
-Provide accessor for direct access to the buffer's memory.
-
-### 1.1.2
-Forgot to update README.
-
-### 1.1.1
-Minor improvements and fixes.
-
-### 1.1.0
-Updated to support Swift 2.
-
-### 1.0.5
-Have to check for "arm" also to prevent compile errors on 32-bit devices.
-
-### 1.0.4
-Missed two more tests that will not compile on 32-bit devices.
-
-### 1.0.3
-Add compile configuration protection around tests that won't compile on 32-bit devices.
-
-### 1.0.2
-Attempting to allow building for both iOS and OSX using one project file.
-
-
-## Description
-
-[Lilliput](http://en.wikipedia.org/wiki/Lilliput_and_Blefuscu) is a native [Swift](http://en.wikipedia.org/wiki/Jonathan_Swift) framework for working with binary data of varying [endianness](http://en.wikipedia.org/wiki/Endianness). For example you can use it to do custom loading of [PNG](http://www.libpng.org/pub/png/spec/1.2/PNG-DataRep.html#DR.Integers-and-byte-order) files which are written in big endian byte order, or tinker with reverse engineering [game](https://www.asheronscall.com) [data](https://github.com/jkolb/Asheron) files which is what I use it for.
-
-## Examples
-
-**Open and read a file into a little endian buffer**
-
-    let binaryFile = try BinaryFile.open(forUpdatingAtPath: path, create: false)
-    let headerBytes = OrderedBuffer<LittleEndian>(count: 1024)
-    let readCount = try binaryFile.read(into: headerBytes)
-        
-    if readCount < headerBytes.count {
-        // Handle error
+extension MyType : ByteDecoder {
+    static func decode<R: Reader>(from reader: R) throws -> MyType {
+        return MyType(
+            value0: Int(try reader.read(UInt32.LittleEndian.self)),
+            value1: try reader.read(Int8.self),
+            value2: try reader.read(Float64.LittleEndian.self)
+        )
     }
-        
-    let value1 = headerBytes.getUInt32(at: 0)
-    let value2 = headerBytes.getInt8(at: 4)
+}
 
-**Open and read a file into a big endian byte input stream**
-
-    let binaryFile = try BinaryFile.open(forReadingAtPath: path)
-    let headerBytes = MemoryBuffer(count: 1024)
-    let readCount = try binaryFile.read(into: headerBytes)
-        
-    if readCount < headerBytes.count {
-        // Handle error
+extension MyType : ByteEncoder {
+    static func encode<W: Writer>(_ value: MyType, to writer: inout W) throws {
+        try writer.write(UInt32(value.value0), as: UInt32.LittleEndian.self)
+        try writer.write(value.value1)
+        try writer.write(value.value2, as: Float64.LittleEndian.self)
     }
-        
-    let stream = OrderedInputStream<BigEndian>(stream: BufferInputStream(buffer: headerBytes))
-    let value1 = try stream.readUInt32()
-    let value2 = try stream.readFloat32()
+}
+```
 
+## Advanced Byte Decodable/Encodable Types
 
-**Open and write to a file into native byte output stream**
+```swift
+public extension MyType {
+    @frozen enum Custom {}
+}
 
-    let binaryFile = try BinaryFile.open(forWritingAtPath: path, create: true)
-    let headerBytes = MemoryBuffer(count: 1024)    
-    let stream = BufferOutputStream(buffer: headerBytes)
-    try stream.writeUInt32(4)
-    try stream.writeFloat32(3.14)
-    let writeCount = try binaryFile.write(from: headerBytes, count: 8)
+extension MyType.Custom : ByteDecoder {
+    static func decode<R: Reader>(from reader: R) throws -> MyType {
+        // Values are loaded/stored in reverse order from the type definition and using big endian
+        let value2 = try reader.read(Float64.BigEndian.self)
+        let value1 = try reader.read(Int8.self)
+        let value0 = Int(try reader.read(UInt32.BigEndian.self))
+         
+        return MyType(
+            value0: value0,
+            value1: value1,
+            value2: value2
+        )
+    }
+}
 
-## Installation
+extension MyType.Custom : ByteEncoder {
+    static func encode<W: Writer>(_ value: MyType, to writer: inout W) throws {
+        // Values are loaded/stored in reverse order from the type definition and using big endian
+        try writer.write(value.value2, as: Float64.BigEndian.self)
+        try writer.write(value.value1)
+        try writer.write(UInt32(value.value0), as: UInt32.BigEndian.self)
+    }
+}
+```
 
-Can install via Carthage, as a Swift package, or by dragging and dropping the project file into your project.
+## Reading Custom Types From Disk
 
-## Contact
+```swift
+import Lilliput
+import SystemPackage
 
-[Justin Kolb](https://github.com/jkolb)  
-[@nabobnick](https://twitter.com/nabobnick)
+let file = try FileDescriptor.open(path, .readOnly)
+let buffer = ByteBuffer(count: 13)
+try file.readAll(into: buffer)
+var reader = ByteSpanReader(buffer)
+let myType = try reader.read(MyType.self)
+
+// If the data was stored on disk using the Custom encoding instead
+let myTypeCustom = try reader.read(MyType.Custom.self)
+```
+
+## Writing Custom Types To Disk
+```swift
+import Lilliput
+import SystemPackage
+
+let myType = MyType(value0: 100, value1: 8, value2: 300.56)
+let buffer = ByteBuffer(count: 13)
+var writer = SpanByteWriter(buffer)
+try writer.write(myType)
+
+// If we wanted to store the data using the Custom encoding instead
+try writer.write(myType, as: MyType.Custom.self)
+
+let file = try FileDescriptor.open(path, .writeOnly)
+file.writeAll(buffer)
+```
+
+## Adding `Lilliput` as a Dependency
+
+To use the `Lilliput` library in a SwiftPM project, add the following line to the dependencies in your `Package.swift` file:
+
+```swift
+.package(url: "https://github.com/jkolb/Lilliput.git", from: "10.0.0"),
+```
+
+Finally, include `"Lilliput"` as a dependency for your target:
+
+```swift
+let package = Package(
+    // name, platforms, products, etc.
+    dependencies: [
+        .package(url: "https://github.com/jkolb/c.git", from: "10.0.0"),
+        // other dependencies
+    ],
+    targets: [
+        .target(name: "MyTarget", dependencies: [
+            .product(name: "Lilliput", package: "Lilliput"),
+        ]),
+        // other targets
+    ]
+)
+```
 
 ## License
 
-Lilliput is available under the MIT license. See the LICENSE file for more info.
+Lilliput is available under the MIT license. See the [LICENSE](LICENSE) file for more info.
