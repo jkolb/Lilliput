@@ -2,13 +2,15 @@
 
 [Lilliput](http://en.wikipedia.org/wiki/Lilliput_and_Blefuscu) is a native Swift framework for working with binary data.
 
-## Design Decisions
+## Design decisions
 
 * Does not support streaming data, it only works with data that can fit in memory.
 * Allows types to have multiple encodings/decodings, this means that a UInt32 could be easily represented as little endian, big endian, or some custom compressed encoding.
 * Does not support the idea of "native" endianness, when working with data where endianess matters you must always be specific. 
+* Currently does not use the Foundation package so there are no APIs for integrating with it.
+* Makes use of the [swift-system](https://github.com/apple/swift-system) package for reading/writing files.
 
-## Basic Usage
+## Basic usage
 
 ```swift
 import Lilliput
@@ -25,7 +27,7 @@ var reader = ByteSpanReader(buffer)
 let value = try reader.read(UInt32.LittleEndian.self)
 ```
 
-## Custom Byte Decodable/Encodable Types
+## Custom byte decodable/encodable types
 
 ```swift
 struct MyType {
@@ -53,10 +55,10 @@ extension MyType : ByteEncoder {
 }
 ```
 
-## Advanced Byte Decodable/Encodable Types
+## Mutiple ways to decode/encode the same type
 
 ```swift
-public extension MyType {
+extension MyType {
     @frozen enum Custom {}
 }
 
@@ -65,6 +67,7 @@ extension MyType.Custom : ByteDecoder {
         // Values are loaded/stored in reverse order from the type definition and using big endian
         let value2 = try reader.read(Float64.BigEndian.self)
         let value1 = try reader.read(Int8.self)
+        let _ = try reader.read(reader.readCount.offset(alignment: 4)) // Make sure next read occurs after three padding bytes
         let value0 = Int(try reader.read(UInt32.BigEndian.self))
          
         return MyType(
@@ -80,12 +83,13 @@ extension MyType.Custom : ByteEncoder {
         // Values are loaded/stored in reverse order from the type definition and using big endian
         try writer.write(value.value2, as: Float64.BigEndian.self)
         try writer.write(value.value1)
+        try writer.write((0, 0, 0), as: UInt8.Tuple3.self) // Add three padding bytes
         try writer.write(UInt32(value.value0), as: UInt32.BigEndian.self)
     }
 }
 ```
 
-## Reading Custom Types From Disk
+## Reading types from disk
 
 ```swift
 import Lilliput
@@ -101,7 +105,7 @@ let myType = try reader.read(MyType.self)
 let myTypeCustom = try reader.read(MyType.Custom.self)
 ```
 
-## Writing Custom Types To Disk
+## Writing types to disk
 ```swift
 import Lilliput
 import SystemPackage
@@ -118,6 +122,49 @@ let file = try FileDescriptor.open(path, .writeOnly)
 file.writeAll(buffer)
 ```
 
+## Reading arrays of decodable types
+
+```swift
+let count = Int(try reader.read(UInt32.LittleEndian.self))
+let arrayOfMyType = try reader.read(Element<MyType>.self, count: count)
+```
+
+## Writing arrays of encodable types
+
+```swift
+try writer.write(UInt32(arrayOfMyType.count), as: UInt32.LittleEndian.self)
+try writer.write(arrayOfMyType, as: Element<MyType>.self)
+```
+
+## Custom array decoding/encoding
+
+```swift
+// Note: This is not built in to the library due to decisions on how to encode the count value could differ wildly across use cases.
+@frozen struct MyArray<E> {}
+
+extension MyArray : ByteDecoder where E : ByteDecoder {
+    static func decode<R: Reader>(from reader: R) throws -> [E.Decodable] {
+        let count = Int(try reader.read(UInt32.LittleEndian.self))
+        return try reader.read(Element<E>.self, count: count)
+    }
+}
+
+extension MyArray : ByteEncoder where E: ByteEncoder {
+    static func encode<W: ByteWriter>(_ value: [E.Encodable], to writer: inout W) throws {
+        try writer.write(UInt32(value.count), as: UInt32.LittleEndian.self)
+        
+        for element in value {
+            try writer.write(element, as: E.self)
+        }
+    }
+}
+
+// Usage (note that the count value is handled without extra work now)
+let arrayOfMyType = try reader.read(MyArray<MyType>.self)
+
+try writer.write(arrayOfMyType, as: MyArray<MyType>.self)
+```
+
 ## Adding `Lilliput` as a Dependency
 
 To use the `Lilliput` library in a SwiftPM project, add the following line to the dependencies in your `Package.swift` file:
@@ -132,7 +179,7 @@ Finally, include `"Lilliput"` as a dependency for your target:
 let package = Package(
     // name, platforms, products, etc.
     dependencies: [
-        .package(url: "https://github.com/jkolb/c.git", from: "10.0.0"),
+        .package(url: "https://github.com/jkolb/Lilliput.git", from: "10.0.0"),
         // other dependencies
     ],
     targets: [
