@@ -44,10 +44,6 @@ public extension ByteWriter {
         return span.count
     }
     
-    public init(_ byteBuffer: ByteBuffer) {
-        self.init(byteBuffer[...])
-    }
-    
     public init(_ buffer: UnsafeMutableRawBufferPointer) {
         self.init(span: MutableByteSpan(buffer))
     }

@@ -13,34 +13,36 @@ public final class ByteBuffer {
         bytes.deallocate()
     }
     
-    @inlinable public subscript(bounds: Range<Int>) -> UnsafeMutableRawBufferPointer {
-        return UnsafeMutableRawBufferPointer(rebasing: bytes[bounds])
+    @inlinable public func slice<T>(_ bounds: Range<Int>, body: (UnsafeMutableRawBufferPointer) throws -> T) rethrows -> T {
+        return try body(UnsafeMutableRawBufferPointer(rebasing: bytes[bounds]))
     }
 
-    @inlinable public subscript<R>(r: R) -> UnsafeMutableRawBufferPointer where R : RangeExpression, Int == R.Bound {
-        return self[r.relative(to: bytes.indices)]
+    @inlinable public func slice<R: RangeExpression, T>(_ r: R, body: (UnsafeMutableRawBufferPointer) throws -> T) rethrows -> T where Int == R.Bound {
+        return try slice(r.relative(to: bytes.indices), body: body)
     }
 
-    @inlinable public subscript(x: (UnboundedRange_) -> ()) -> UnsafeMutableRawBufferPointer {
-        return bytes
+    @inlinable public func slice<T>(_ x: (UnboundedRange_) -> (), body: (UnsafeMutableRawBufferPointer) throws -> T) rethrows -> T {
+        return try body(bytes)
     }
     
-    @inlinable public subscript(start: Int , count countValue: Int) -> UnsafeMutableRawBufferPointer {
-        return UnsafeMutableRawBufferPointer(rebasing: UnsafeMutableRawBufferPointer(rebasing: bytes[start...])[..<countValue])
+    @inlinable public func slice<T>(start: Int , count: Int, body: (UnsafeMutableRawBufferPointer) throws -> T) rethrows -> T {
+        return try body(UnsafeMutableRawBufferPointer(rebasing: UnsafeMutableRawBufferPointer(rebasing: bytes[start...])[..<count]))
     }
 }
 
 extension ByteBuffer : CollectionByteDecoder {
     @inlinable public static func decode<R: ByteReader>(from reader: inout R, count: Int) throws -> ByteBuffer {
         let buffer = ByteBuffer(count: count)
-        buffer[...].copyMemory(from: try reader.read(count).buffer)
+        try buffer.slice(...) { $0.copyMemory(from: try reader.read(count).buffer) }
         return buffer
     }
 }
 
 extension ByteBuffer : ByteEncoder {
-    @inlinable public static func encode<W>(_ value: ByteBuffer, to writer: inout W) throws where W : ByteWriter {
-        let span = ByteSpan(value[...])
-        try writer.write(span)
+    @inlinable public static func encode<W>(_ buffer: ByteBuffer, to writer: inout W) throws where W : ByteWriter {
+        try buffer.slice(...) {
+            let span = ByteSpan($0)
+            try writer.write(span)
+        }
     }
 }

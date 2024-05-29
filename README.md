@@ -170,7 +170,7 @@ try writer.write(arrayOfMyType, as: MyArray<MyType>.self)
 To use the `Lilliput` library in a SwiftPM project, add the following line to the dependencies in your `Package.swift` file:
 
 ```swift
-.package(url: "https://github.com/jkolb/Lilliput.git", from: "10.0.0"),
+.package(url: "https://github.com/jkolb/Lilliput.git", from: "11.0.0"),
 ```
 
 Finally, include `"Lilliput"` as a dependency for your target:
@@ -179,7 +179,7 @@ Finally, include `"Lilliput"` as a dependency for your target:
 let package = Package(
     // name, platforms, products, etc.
     dependencies: [
-        .package(url: "https://github.com/jkolb/Lilliput.git", from: "10.0.0"),
+        .package(url: "https://github.com/jkolb/Lilliput.git", from: "11.0.0"),
         // other dependencies
     ],
     targets: [
