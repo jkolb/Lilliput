@@ -17,14 +17,15 @@ import Lilliput
 
 // Allocate enough storage for a 32-bit unsigned integer
 let buffer = ByteBuffer(count: 4)
+try buffer.slice(...) { bytes in
+    // Write a UInt32 to that storage in little endian encoding
+    var writer = ByteSpanWriter(bytes)
+    try writer.write(UInt32(100), as: UInt32.LittleEndian.self)
 
-// Write a UInt32 to that storage in little endian encoding
-var writer = ByteSpanWriter(buffer)
-try writer.write(UInt32(100), as: UInt32.LittleEndian.self)
-
-// Read a UInt32 from that stroage in little endian encoding 
-var reader = ByteSpanReader(buffer)
-let value = try reader.read(UInt32.LittleEndian.self)
+    // Read a UInt32 from that stroage in little endian encoding 
+    var reader = ByteSpanReader(bytes)
+    let value = try reader.read(UInt32.LittleEndian.self)
+}
 ```
 
 ## Custom byte decodable/encodable types
@@ -37,7 +38,7 @@ struct MyType {
 }
 
 extension MyType : ByteDecoder {
-    static func decode<R: Reader>(from reader: R) throws -> MyType {
+    static func decode<R: Reader>(from reader: inout R) throws -> MyType {
         return MyType(
             value0: Int(try reader.read(UInt32.LittleEndian.self)),
             value1: try reader.read(Int8.self),
@@ -63,7 +64,7 @@ extension MyType {
 }
 
 extension MyType.Custom : ByteDecoder {
-    static func decode<R: Reader>(from reader: R) throws -> MyType {
+    static func decode<R: Reader>(from reader: inout R) throws -> MyType {
         // Values are loaded/stored in reverse order from the type definition and using big endian
         let value2 = try reader.read(Float64.BigEndian.self)
         let value1 = try reader.read(Int8.self)
@@ -97,9 +98,11 @@ import SystemPackage
 
 let file = try FileDescriptor.open(path, .readOnly)
 let buffer = ByteBuffer(count: 13)
-try file.readAll(into: buffer)
-var reader = ByteSpanReader(buffer)
-let myType = try reader.read(MyType.self)
+let myType = try buffer.slice(...) { bytes in
+    try file.readAll(into: bytes)
+    var reader = ByteSpanReader(bytes)
+    return try reader.read(MyType.self)
+}
 
 // If the data was stored on disk using the Custom encoding instead
 let myTypeCustom = try reader.read(MyType.Custom.self)
@@ -143,7 +146,7 @@ try writer.write(arrayOfMyType, as: Element<MyType>.self)
 @frozen struct MyArray<E> {}
 
 extension MyArray : ByteDecoder where E : ByteDecoder {
-    static func decode<R: Reader>(from reader: R) throws -> [E.Decodable] {
+    static func decode<R: Reader>(from reader: inout R) throws -> [E.Decodable] {
         let count = Int(try reader.read(UInt32.LittleEndian.self))
         return try reader.read(Element<E>.self, count: count)
     }
