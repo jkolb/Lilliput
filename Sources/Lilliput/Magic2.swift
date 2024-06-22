@@ -1,4 +1,4 @@
-@frozen public struct Magic2 : RawRepresentable, Hashable, CustomStringConvertible, ExpressibleByArrayLiteral, ExpressibleByStringLiteral {
+@frozen public struct Magic2: RawRepresentable {
     public let rawValue: (UInt8, UInt8)
     
     @inlinable public init(_ byte0: UInt8, _ byte1: UInt8) {
@@ -19,11 +19,45 @@
         self.init(rawValue: (ascii0, ascii1))
     }
     
-    @inlinable public init(arrayLiteral elements: Character...) {
-        precondition(elements.count == 2)
-        self.init(ascii: (elements[0], elements[1]))
+    @inlinable public var stringValue: String {
+        return String(
+            String.UnicodeScalarView([
+                UnicodeScalar(rawValue.0),
+                UnicodeScalar(rawValue.1),
+            ])
+        )
     }
-    
+}
+
+extension Magic2: Equatable {
+    public static func == (lhs: Magic2, rhs: Magic2) -> Bool {
+        return lhs.rawValue == rhs.rawValue
+    }
+}
+
+extension Magic2: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(rawValue.0)
+        hasher.combine(rawValue.1)
+    }
+}
+
+extension Magic2: CustomStringConvertible {
+    @inlinable public var description: String {
+        return stringValue.debugDescription
+    }
+}
+
+extension Magic2: CustomDebugStringConvertible {
+    @inlinable public var debugDescription: String {
+        return [
+            rawValue.0.hex,
+            rawValue.1.hex,
+        ].joined(separator: ", ")
+    }
+}
+
+extension Magic2: ExpressibleByStringLiteral {
     @inlinable public init(stringLiteral value: String) {
         precondition(value.count == 2)
         let characters = [Character](unsafeUninitializedCapacity: 2) { buffer, initializedCount in
@@ -34,45 +68,23 @@
         }
         self.init(ascii: (characters[0], characters[1]))
     }
-    
-    @inlinable public var stringValue: String {
-        return String(
-            String.UnicodeScalarView([
-                UnicodeScalar(rawValue.0),
-                UnicodeScalar(rawValue.1),
-            ])
-        )
-    }
-    
-    @inlinable public var description: String {
-        return stringValue.debugDescription
-    }
-    
-    @inlinable public var debugDescription: String {
-        return [
-            rawValue.0.hex,
-            rawValue.1.hex,
-        ].joined(separator: ", ")
-    }
-    
-    public static func == (lhs: Magic2, rhs: Magic2) -> Bool {
-        return lhs.rawValue == rhs.rawValue
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(rawValue.0)
-        hasher.combine(rawValue.1)
+}
+
+extension Magic2: ExpressibleByArrayLiteral {
+    @inlinable public init(arrayLiteral elements: Character...) {
+        precondition(elements.count == 2)
+        self.init(ascii: (elements[0], elements[1]))
     }
 }
 
-extension Magic2 : ByteDecoder {
+extension Magic2: ByteDecoder {
     @inlinable public static func decode<R: ByteReader>(from reader: inout R) throws -> Magic2 {
         return Magic2(rawValue: try reader.read(UInt8.Tuple2.self))
     }
 }
 
-extension Magic2 : ByteEncoder {
-    @inlinable public static func encode<W>(_ value: Magic2, to writer: inout W) throws where W : ByteWriter {
+extension Magic2: ByteEncoder {
+    @inlinable public static func encode<W: ByteWriter>(_ value: Magic2, to writer: inout W) throws {
         try writer.write(value.rawValue, as: UInt8.Tuple2.self)
     }
 }

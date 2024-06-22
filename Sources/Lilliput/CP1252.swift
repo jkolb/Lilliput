@@ -93,7 +93,7 @@ extension CP1252: Unicode.Encoding {
     public typealias ReverseParser = Parser
 }
 
-extension CP1252.Parser : Unicode.Parser {
+extension CP1252.Parser: Unicode.Parser {
     public typealias Encoding = CP1252
     
     @inlinable public mutating func parseScalar<I: IteratorProtocol>(from input: inout I) -> Unicode.ParseResult<Encoding.EncodedScalar> where I.Element == Encoding.CodeUnit {
@@ -111,8 +111,9 @@ extension CP1252.Parser : Unicode.Parser {
     }
 }
 
-extension CP1252 : CollectionByteDecoder {
+extension CP1252: CollectionByteDecoder {
     @inlinable public static func decode<R: ByteReader>(from reader: inout R, count: Int) throws -> String {
-        return String(decoding: try reader.read(count).buffer, as: CP1252.self)
+        try reader.ensure(count)
+        return String(decoding: reader.read(count).buffer, as: CP1252.self)
     }
 }

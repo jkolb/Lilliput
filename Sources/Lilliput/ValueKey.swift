@@ -1,6 +1,6 @@
 @frozen public enum ValueKey<V, K> {}
 
-extension ValueKey : CollectionByteDecoder where V: ByteDecoder, K: ByteDecoder, K.Decodable: Hashable {
+extension ValueKey: CollectionByteDecoder where V: ByteDecoder, K: ByteDecoder, K.Decodable: Hashable {
     @inlinable public static func decode<R: ByteReader>(from reader: inout R, count: Int) throws -> [K.Decodable : V.Decodable] {
         var keyValues = [K.Decodable : V.Decodable](minimumCapacity: count)
         
@@ -14,8 +14,8 @@ extension ValueKey : CollectionByteDecoder where V: ByteDecoder, K: ByteDecoder,
     }
 }
 
-extension ValueKey : ByteEncoder where V: ByteEncoder, K: ByteEncoder, K.Encodable: Hashable {
-    @inlinable public static func encode<W>(_ keyValues: [K.Encodable : V.Encodable], to writer: inout W) throws where W : ByteWriter {
+extension ValueKey: ByteEncoder where V: ByteEncoder, K: ByteEncoder, K.Encodable: Hashable {
+    @inlinable public static func encode<W: ByteWriter>(_ keyValues: [K.Encodable : V.Encodable], to writer: inout W) throws {
         for (key, value) in keyValues {
             try V.encode(value, to: &writer)
             try K.encode(key, to: &writer)

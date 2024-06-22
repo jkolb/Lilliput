@@ -1,12 +1,13 @@
 public protocol ByteWriter {
     var writeCount: Int { get }
     var remainingCount: Int { get }
-    mutating func write(_ bytes: ByteSpan) throws
+    mutating func write(_ byte: UInt8)
+    mutating func write(_ bytes: ByteSpan)
 }
 
 public extension ByteWriter {
-    @inlinable mutating func write(_ bytes: MutableByteSpan) throws {
-        try write(ByteSpan(bytes.buffer))
+    @inlinable mutating func write(_ bytes: MutableByteSpan) {
+        write(ByteSpan(bytes.buffer))
     }
 }
 
@@ -20,7 +21,7 @@ public extension ByteWriter {
     }
 }
 
-@frozen public struct ByteSizeWriter : ByteWriter {
+@frozen public struct ByteSizeWriter: ByteWriter {
     public private(set) var writeCount: Int
     
     public var remainingCount: Int {
@@ -31,12 +32,16 @@ public extension ByteWriter {
         self.writeCount = 0
     }
     
-    public mutating func write(_ bytes: ByteSpan) throws {
+    public mutating func write(_ byte: UInt8) {
+        writeCount += 1
+    }
+    
+    public mutating func write(_ bytes: ByteSpan) {
         writeCount += bytes.count
     }
 }
 
-@frozen public struct ByteSpanWriter : ByteWriter {
+@frozen public struct ByteSpanWriter: ByteWriter {
     private var span: MutableByteSpan
     public private(set) var writeCount: Int
     
@@ -53,13 +58,24 @@ public extension ByteWriter {
         self.writeCount = 0
     }
     
-    public mutating func write(_ bytes: ByteSpan) throws {
+    public mutating func write(_ byte: UInt8) {
+        span[0] = byte
+        span = span[1...]
+        writeCount += 1
+    }
+    
+    public mutating func write(_ bytes: ByteSpan) {
         let count = bytes.count
-        guard count <= remainingCount else {
-            throw ByteError.tooManyBytes
-        }
         span[0..<count].buffer.copyMemory(from: bytes.buffer)
         span = span[count...]
         writeCount += count
+    }
+}
+
+public extension ByteWriter {
+    @inlinable func ensure(_ count: Int) throws {
+        guard count <= remainingCount else {
+            throw ByteError.tooManyBytes
+        }
     }
 }

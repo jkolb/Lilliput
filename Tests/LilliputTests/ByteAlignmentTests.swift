@@ -1,7 +1,7 @@
 import XCTest
 import Lilliput
 
-final class ByteAlignmentTests : XCTestCase {
+final class ByteAlignmentTests: XCTestCase {
     func testOffsets() {
         XCTAssertEqual(0.offset(alignment: 4), 0)
         XCTAssertEqual(1.offset(alignment: 4), 3)

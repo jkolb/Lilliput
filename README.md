@@ -7,7 +7,6 @@
 * Does not support streaming data, it only works with data that can fit in memory.
 * Allows types to have multiple encodings/decodings, this means that a UInt32 could be easily represented as little endian, big endian, or some custom compressed encoding.
 * Does not support the idea of "native" endianness, when working with data where endianess matters you must always be specific. 
-* Currently does not use the Foundation package so there are no APIs for integrating with it.
 * Makes use of the [swift-system](https://github.com/apple/swift-system) package for reading/writing files.
 
 ## Basic usage
@@ -37,7 +36,7 @@ struct MyType {
     var value3: Double
 }
 
-extension MyType : ByteDecoder {
+extension MyType: ByteDecoder {
     static func decode<R: Reader>(from reader: inout R) throws -> MyType {
         return MyType(
             value0: Int(try reader.read(UInt32.LittleEndian.self)),
@@ -47,7 +46,7 @@ extension MyType : ByteDecoder {
     }
 }
 
-extension MyType : ByteEncoder {
+extension MyType: ByteEncoder {
     static func encode<W: Writer>(_ value: MyType, to writer: inout W) throws {
         try writer.write(UInt32(value.value0), as: UInt32.LittleEndian.self)
         try writer.write(value.value1)
@@ -63,7 +62,7 @@ extension MyType {
     @frozen enum Custom {}
 }
 
-extension MyType.Custom : ByteDecoder {
+extension MyType.Custom: ByteDecoder {
     static func decode<R: Reader>(from reader: inout R) throws -> MyType {
         // Values are loaded/stored in reverse order from the type definition and using big endian
         let value2 = try reader.read(Float64.BigEndian.self)
@@ -79,7 +78,7 @@ extension MyType.Custom : ByteDecoder {
     }
 }
 
-extension MyType.Custom : ByteEncoder {
+extension MyType.Custom: ByteEncoder {
     static func encode<W: Writer>(_ value: MyType, to writer: inout W) throws {
         // Values are loaded/stored in reverse order from the type definition and using big endian
         try writer.write(value.value2, as: Float64.BigEndian.self)
@@ -145,14 +144,14 @@ try writer.write(arrayOfMyType, as: Element<MyType>.self)
 // Note: This is not built in to the library due to decisions on how to encode the count value could differ wildly across use cases.
 @frozen struct MyArray<E> {}
 
-extension MyArray : ByteDecoder where E : ByteDecoder {
+extension MyArray: ByteDecoder where E: ByteDecoder {
     static func decode<R: Reader>(from reader: inout R) throws -> [E.Decodable] {
         let count = Int(try reader.read(UInt32.LittleEndian.self))
         return try reader.read(Element<E>.self, count: count)
     }
 }
 
-extension MyArray : ByteEncoder where E: ByteEncoder {
+extension MyArray: ByteEncoder where E: ByteEncoder {
     static func encode<W: ByteWriter>(_ value: [E.Encodable], to writer: inout W) throws {
         try writer.write(UInt32(value.count), as: UInt32.LittleEndian.self)
         
@@ -168,12 +167,38 @@ let arrayOfMyType = try reader.read(MyArray<MyType>.self)
 try writer.write(arrayOfMyType, as: MyArray<MyType>.self)
 ```
 
+## Foundation Integration
+```swift
+let data = Data(...) // Get data somehow
+var reader = DataReader(data: data, maxReadCount: 8) // Choose a value that represents the maximum amount of bytes read in one call to `read`
+let myType = try reader.read(MyType.self)
+```
+
+## Small Gotcha In Version 12.0.0+ API
+
+All of the `read` methods on `ByteReader` and `write` methods on `ByteWriter` that do not involve a `ByteDecoder`/`ByteEncoder` no longer check to see if there are enough bytes to complete the operation. This is now handled separately be calling `ensure`. For example `try reader.ensure(5)` will throw if there are not enough bytes left to read.
+
+A side effect of this change is that when you write a single `UInt8` it no longer triggers the `UInt8` implementation of `ByteEncoder`.
+```swift
+// Previously you would do this and it would throw if there was not enough space to write
+try writer.write(UInt8(7))
+
+// Now the new `write` method on `ByteWriter` that takes a single `UInt8` superceeds this
+// To get the new behavior do this:
+try ensure(1)
+writer.write(UInt8(7))
+
+// OR
+
+try writer.write(UInt8(7), as: UInt8.self) // This triggers the `ByteEncoder` implementation manually 
+```
+
 ## Adding `Lilliput` as a Dependency
 
 To use the `Lilliput` library in a SwiftPM project, add the following line to the dependencies in your `Package.swift` file:
 
 ```swift
-.package(url: "https://github.com/jkolb/Lilliput.git", from: "11.0.0"),
+.package(url: "https://github.com/jkolb/Lilliput.git", from: "12.0.0"),
 ```
 
 Finally, include `"Lilliput"` as a dependency for your target:
@@ -182,7 +207,7 @@ Finally, include `"Lilliput"` as a dependency for your target:
 let package = Package(
     // name, platforms, products, etc.
     dependencies: [
-        .package(url: "https://github.com/jkolb/Lilliput.git", from: "11.0.0"),
+        .package(url: "https://github.com/jkolb/Lilliput.git", from: "12.0.0"),
         // other dependencies
     ],
     targets: [

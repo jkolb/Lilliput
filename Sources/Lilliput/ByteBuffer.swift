@@ -30,19 +30,23 @@ public final class ByteBuffer {
     }
 }
 
-extension ByteBuffer : CollectionByteDecoder {
+extension ByteBuffer: CollectionByteDecoder {
     @inlinable public static func decode<R: ByteReader>(from reader: inout R, count: Int) throws -> ByteBuffer {
+        try reader.ensure(count)
         let buffer = ByteBuffer(count: count)
-        try buffer.slice(...) { $0.copyMemory(from: try reader.read(count).buffer) }
+        buffer.slice(...) {
+            $0.copyMemory(from: reader.read(count).buffer)
+        }
         return buffer
     }
 }
 
-extension ByteBuffer : ByteEncoder {
-    @inlinable public static func encode<W>(_ buffer: ByteBuffer, to writer: inout W) throws where W : ByteWriter {
-        try buffer.slice(...) {
+extension ByteBuffer: ByteEncoder {
+    @inlinable public static func encode<W: ByteWriter>(_ buffer: ByteBuffer, to writer: inout W) throws {
+        try writer.ensure(buffer.count)
+        buffer.slice(...) {
             let span = ByteSpan($0)
-            try writer.write(span)
+            writer.write(span)
         }
     }
 }

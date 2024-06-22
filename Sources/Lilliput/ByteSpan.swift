@@ -13,6 +13,10 @@ public struct ByteSpan {
         self.buffer = buffer
     }
     
+    @inlinable public var bytes: UnsafeBufferPointer<UInt8> {
+        return buffer.assumingMemoryBound(to: UInt8.self)
+    }
+    
     @inlinable public var count: Int {
         return buffer.count
     }
@@ -25,7 +29,7 @@ public struct ByteSpan {
         return ByteSpan(buffer[bounds])
     }
 
-    @inlinable public subscript<R>(r: R) -> ByteSpan where R : RangeExpression, Int == R.Bound {
+    @inlinable public subscript<R: RangeExpression>(r: R) -> ByteSpan where Int == R.Bound {
         return self[r.relative(to: buffer.indices)]
     }
 
@@ -49,6 +53,10 @@ public struct MutableByteSpan {
         self.buffer = buffer
     }
     
+    @inlinable public var bytes: UnsafeMutableBufferPointer<UInt8> {
+        return buffer.assumingMemoryBound(to: UInt8.self)
+    }
+    
     @inlinable public var count: Int {
         return buffer.count
     }
@@ -66,7 +74,7 @@ public struct MutableByteSpan {
         return MutableByteSpan(buffer[bounds])
     }
 
-    @inlinable public subscript<R>(r: R) -> MutableByteSpan where R : RangeExpression, Int == R.Bound {
+    @inlinable public subscript<R: RangeExpression>(r: R) -> MutableByteSpan where Int == R.Bound {
         return self[r.relative(to: buffer.indices)]
     }
 

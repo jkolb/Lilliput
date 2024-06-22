@@ -1,4 +1,4 @@
-@frozen public enum ByteError : Error {
+@frozen public enum ByteError: Error {
     case tooManyBytes
     case notEnoughBytes
     case leftOverBytes
