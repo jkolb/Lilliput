@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "swift-system",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-system",
+      "state" : {
+        "revision" : "f9266c85189c2751589a50ea5aec72799797e471",
+        "version" : "1.3.0"
+      }
+    }
+  ],
+  "version" : 2
+}
