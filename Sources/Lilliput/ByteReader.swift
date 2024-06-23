@@ -14,7 +14,7 @@ public extension ByteReader {
         return try T.decode(from: &self, count: count)
     }
     
-    @inlinable mutating func peek<T: ByteDecoder>(_ type: T.Type) throws -> T.Decodable {
+    @inlinable func peek<T: ByteDecoder>(_ type: T.Type) throws -> T.Decodable {
         var peekSelf = self
         return try peekSelf.read(type)
     }
@@ -61,5 +61,16 @@ public extension ByteReader {
         guard count <= remainingCount else {
             throw ByteError.notEnoughBytes
         }
+    }
+    
+    @inlinable mutating func skip(_ count: Int) {
+        _ = read(count)
+    }
+    
+    @inlinable mutating func alignTo(_ powerOfTwo: Int) throws {
+        let byteCount = readCount.offset(alignment: powerOfTwo)
+        guard byteCount > 0 else { return }
+        try ensure(byteCount)
+        skip(byteCount)
     }
 }
